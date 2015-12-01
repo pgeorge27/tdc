@@ -137,29 +137,30 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
 
     }
 
-    //Iteramos sobre idsActivities y obtenemos las actividades, deacuerdo a las actividades hacemos visible los botones de mantenimiento
+    //Iteramos sobre idsActivities2 y obtenemos las actividades, deacuerdo a las actividades y el idMain hacemos visible los botones de mantenimiento
     private void mostrarBotonesAzules() {
-        for (String temp : AgendaActivity.idsActivities) {
-            System.out.println(temp);
-            if (temp.equalsIgnoreCase("1")){
+        for (String temp : AgendaActivity.idsActivities2) {
+            System.out.println(temp + " idM " + idMain);
+
+            if (temp.equalsIgnoreCase("1,"+idMain)){
                 IDEN.setVisibility(View.VISIBLE);
             }
-            if (temp.equalsIgnoreCase("2")){
+            if (temp.equalsIgnoreCase("2,"+idMain)){
                 TRESG.setVisibility(View.VISIBLE);
             }
-            if (temp.equalsIgnoreCase("3")){
+            if (temp.equalsIgnoreCase("3,"+idMain)){
                 FAENA.setVisibility(View.VISIBLE);
             }
-            if (temp.equalsIgnoreCase("4")){
+            if (temp.equalsIgnoreCase("4,"+idMain)){
                 DC.setVisibility(View.VISIBLE);
             }
-            if (temp.equalsIgnoreCase("5")){
+            if (temp.equalsIgnoreCase("5,"+idMain)){
                 SG.setVisibility(View.VISIBLE);
             }
-            if (temp.equalsIgnoreCase("6")){
+            if (temp.equalsIgnoreCase("6,"+idMain)){
                 AIR.setVisibility(View.VISIBLE);
             }
-            if (temp.equalsIgnoreCase("7")){
+            if (temp.equalsIgnoreCase("7,"+idMain)){
                 TRANSPORTE.setVisibility(View.VISIBLE);
             }
         }
