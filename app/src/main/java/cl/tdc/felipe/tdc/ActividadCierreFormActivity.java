@@ -401,19 +401,25 @@ public class ActividadCierreFormActivity extends Activity {
                                         if (pos != -100) {
                                             ((RadioButton) ((RadioGroup) Q.getView()).getChildAt(pos)).setChecked(true);
                                         }
-//                                        if(Q.getValues())
 
-
-//                                        if (I.getQuestions().size() > 0 ) {
-//                                            for (int x = 0; x < I.getQuestions().size(); x++) {
-//                                                Log.i("QUESTION", "Valor ID: " + I.getValues().get(x).getIdValue());
-//                                                Log.i("QUESTION", "Valor NAME: " + I.getValues().get(x).getNameValue());
+//                                        RadioGroup  group= (RadioGroup) Q.getView().findViewById(R.id.radioGroup);
+//                                        group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+//                                            @Override
+//                                            public void onCheckedChanged(RadioGroup radioGroup, int i) {
+//                                                View radioButton = radioGroup.findViewById(i);
+//                                                int index = radioGroup.indexOfChild(radioButton);
 //                                            }
+//                                        });
 //
-//                                            for (int x = 0; x < I.getValues().size(); x++) {
-//                                                Log.i("VALUE", "Valor ID: " + I.getValues().get(x).getIdValue());
-//                                                Log.i("VALUE", "Valor NAME: " + I.getValues().get(x).getNameValue());
-//                                            }
+//                                        if ("TRANSPORTE".equalsIgnoreCase(TITLE) && Q.getIdQuestion().equalsIgnoreCase("349")){
+//
+//                                            Log.i("TITTLE", "EL Titulo es " + TITLE);
+//                                            Log.i("TITTLE", "EL Titulo es " + TITLE);
+//                                            Log.i("TITTLE", "EL Titulo es " + TITLE);
+//                                            Log.i("TITTLE", "EL Titulo es " + TITLE);
+//                                            Log.i("TITTLE", "EL Titulo es " + TITLE);
+//                                            Log.i("TITTLE", "EL Titulo es " + TITLE);
+//                                            Log.i("TITTLE", "EL Titulo es " + TITLE);
 //                                        }
                                     }
                                     if (Q.getIdType().equals(Constantes.NUM)) {
@@ -1486,7 +1492,6 @@ public class ActividadCierreFormActivity extends Activity {
     }
     //TODO FIN SAVEDATA
 
-
     public void enviar(View v) {
 
         if (TITLE.equals("IDEN")) {
@@ -1669,7 +1674,6 @@ public class ActividadCierreFormActivity extends Activity {
 
 
     }
-
 
     private class EnviarIden extends AsyncTask<String, String, String> {
         boolean ok = false;
@@ -2176,7 +2180,6 @@ public class ActividadCierreFormActivity extends Activity {
 
         }
     }
-
     //End S G
     public void subir_fotos(String mensaje) {
         AlertDialog.Builder b = new AlertDialog.Builder(actividad);

@@ -217,36 +217,18 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ActividadCierreActivity.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="ActividadCierreActivity.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/ActividadCierreActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.75718015">
-              <caret line="162" column="12" selection-start-line="162" selection-start-column="12" selection-end-line="164" selection-end-column="13" />
+            <state vertical-scroll-proportion="-0.0">
+              <caret line="78" column="28" selection-start-line="78" selection-start-column="28" selection-end-line="78" selection-end-column="28" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="method#onClick_back#0;class#ActividadCierreActivity#0" expanded="false" />
                 <element signature="method#onClick#0;class#ActividadCierreActivity#0" expanded="false" />
                 <element signature="method#getAction#0;class#ActividadCierreActivity#0" expanded="false" />
                 <element signature="method#onActivityResult#0;class#ActividadCierreActivity#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="MainActivity.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/MainActivity.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="71" column="29" selection-start-line="71" selection-start-column="29" selection-end-line="71" selection-end-column="29" />
-              <folding>
-                <element signature="method#onActivityResult#0;class#MainActivity#0" expanded="false" />
-                <element signature="method#onClick_apagar#0;class#MainActivity#0" expanded="false" />
-                <element signature="method#onClick_Signature#0;class#MainActivity#0" expanded="false" />
-                <element signature="method#onClick_QR#0;class#MainActivity#0" expanded="false" />
-                <element signature="method#onClick_btn2#0;class#MainActivity#0" expanded="false" />
-                <element signature="method#onClick_btn4#0;class#MainActivity#0" expanded="false" />
-                <element signature="method#onClick_btn6#0;class#MainActivity#0" expanded="false" />
-                <element signature="method#onClick_preasbuilt#0;class#MainActivity#0" expanded="false" />
+                <element signature="class#Cierre#0;class#ActividadCierreActivity#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -255,12 +237,66 @@
       <file leaf-file-name="AgendaActivity.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/AgendaActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-39.962963">
-              <caret line="484" column="0" selection-start-line="484" selection-start-column="0" selection-end-line="484" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="486" column="173" selection-start-line="486" selection-start-column="173" selection-end-line="486" selection-end-column="173" />
               <folding>
                 <element signature="method#onClick_apagar#0;class#AgendaActivity#0" expanded="false" />
-                <element signature="e#20802#22482#0" expanded="true" />
-                <element signature="e#22481#22482#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ActividadCierreFormActivity.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/ActividadCierreFormActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.61945033">
+              <caret line="776" column="45" selection-start-line="776" selection-start-column="45" selection-end-line="776" selection-end-column="45" />
+              <folding>
+                <element signature="class#3613:4115" expanded="false" />
+                <element signature="e#6283#6284#0" expanded="true" />
+                <element signature="e#6317#6318#0" expanded="true" />
+                <element signature="method#onClick_back#0;class#ActividadCierreFormActivity#0" expanded="false" />
+                <element signature="method#create_questionLayout#0;class#ActividadCierreFormActivity#0" expanded="false" />
+                <element signature="method#create_photoButton#0;class#ActividadCierreFormActivity#0" expanded="false" />
+                <element signature="method#create_normalVerticalLayout#0;class#ActividadCierreFormActivity#0" expanded="false" />
+                <element signature="method#cargar_fotos#0;class#ActividadCierreFormActivity#0" expanded="false" />
+                <element signature="method#crear_botonRepeat#0;class#ActividadCierreFormActivity#0" expanded="false" />
+                <element signature="e#27548#28527#0" expanded="true" />
+                <element signature="e#28526#28527#0" expanded="true" />
+                <element signature="e#36904#37883#0" expanded="true" />
+                <element signature="e#37882#37883#0" expanded="true" />
+                <element signature="method#enviar#0;class#ActividadCierreFormActivity#0" expanded="false" />
+                <element signature="method#verFotos#0;class#ActividadCierreFormActivity#0" expanded="false" />
+                <element signature="method#tomarFoto#0;class#ActividadCierreFormActivity#0" expanded="false" />
+                <element signature="method#tomarFotos#0;class#ActividadCierreFormActivity#0" expanded="false" />
+                <element signature="method#onActivityResult#0;class#ActividadCierreFormActivity#0" expanded="false" />
+                <element signature="class#EnviarIden#0;class#ActividadCierreFormActivity#0" expanded="false" />
+                <element signature="class#Enviar3G#0;class#ActividadCierreFormActivity#0" expanded="false" />
+                <element signature="class#Enviar#0;class#ActividadCierreFormActivity#0" expanded="false" />
+                <element signature="class#EnviarTransport#0;class#ActividadCierreFormActivity#0" expanded="false" />
+                <element signature="class#EnviarSG#0;class#ActividadCierreFormActivity#0" expanded="false" />
+                <element signature="class#EnviarDC#0;class#ActividadCierreFormActivity#0" expanded="false" />
+                <element signature="class#EnviarAir#0;class#ActividadCierreFormActivity#0" expanded="false" />
+                <element signature="class#EnviarGE#0;class#ActividadCierreFormActivity#0" expanded="false" />
+                <element signature="method#subir_fotos#0;class#ActividadCierreFormActivity#0" expanded="false" />
+                <element signature="class#UploadImage#0;class#ActividadCierreFormActivity#0" expanded="false" />
+                <element signature="method#onDestroy#0;class#ActividadCierreFormActivity#0" expanded="false" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ITEM.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/objects/FormularioCierre/ITEM.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="215" column="13" selection-start-line="215" selection-start-column="13" selection-end-line="215" selection-end-column="13" />
+              <folding>
+                <element signature="method#getAnswer3G#0;class#ITEM#0" expanded="false" />
+                <element signature="method#getTitle#0;class#ITEM#0" expanded="false" />
+                <element signature="method#addListSet#0;class#ITEM#0" expanded="false" />
+                <element signature="e#13854#13855#0" expanded="true" />
+                <element signature="e#13883#13884#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -1656,10 +1692,11 @@
         <option value="$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/objects/FormularioCierre/QUESTION.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/FormCheckActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_cierre_actividad.xml" />
-        <option value="$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/ActividadCierreFormActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/MainActivity.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/AgendaActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/ActividadCierreActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/AgendaActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/objects/FormularioCierre/ITEM.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/ActividadCierreFormActivity.java" />
       </list>
     </option>
   </component>
@@ -1726,6 +1763,7 @@
       <sortByType />
     </navigator>
     <panes>
+      <pane id="Scratches" />
       <pane id="AndroidView">
         <subPane>
           <PATH>
@@ -1789,9 +1827,68 @@
               <option name="myItemId" value="app" />
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
             </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tdc" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="objects" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tdc" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tdc" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="objects" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="FormularioCierre" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tdc" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
+      <pane id="ProjectPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="tdc" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+      <pane id="Scope" />
       <pane id="PackagesPane">
         <subPane>
           <PATH>
@@ -1802,18 +1899,6 @@
             <PATH_ELEMENT>
               <option name="myItemId" value="app" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
-            </PATH_ELEMENT>
-          </PATH>
-        </subPane>
-      </pane>
-      <pane id="Scope" />
-      <pane id="Scratches" />
-      <pane id="ProjectPane">
-        <subPane>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="tdc" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
@@ -2136,7 +2221,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1280" height="720" extended-state="0" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32781458" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.27980134" sideWeight="0.51615506" order="7" side_tool="false" content_ui="tabs" />
@@ -2146,7 +2231,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.29139072" sideWeight="0.51615506" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32889125" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.42384106" sideWeight="0.49353796" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.54966885" sideWeight="0.49353796" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.26490065" sideWeight="0.47334412" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32781458" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -2154,12 +2239,12 @@
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32893288" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.16397415" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.16397415" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.16397415" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24962178" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Android Model" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.19667171" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.23013245" sideWeight="0.4838449" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.12582782" sideWeight="0.4838449" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -2333,48 +2418,18 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/ActividadCierreFormActivity.java</url>
-          <line>1186</line>
+          <line>1192</line>
           <properties />
           <option name="timeStamp" value="798" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/ActividadCierreFormActivity.java</url>
-          <line>1292</line>
+          <line>1298</line>
           <properties />
           <option name="timeStamp" value="799" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/ActividadCierreFormActivity.java</url>
-          <line>667</line>
-          <properties />
-          <option name="timeStamp" value="819" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/ActividadCierreFormActivity.java</url>
-          <line>825</line>
-          <properties />
-          <option name="timeStamp" value="820" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/ActividadCierreFormActivity.java</url>
-          <line>1006</line>
-          <properties />
-          <option name="timeStamp" value="821" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/ActividadCierreFormActivity.java</url>
-          <line>518</line>
-          <properties />
-          <option name="timeStamp" value="822" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/ActividadCierreFormActivity.java</url>
-          <line>420</line>
-          <properties />
-          <option name="timeStamp" value="823" />
-        </line-breakpoint>
       </breakpoints>
-      <option name="time" value="826" />
+      <option name="time" value="834" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -2463,24 +2518,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://$USER_HOME$/Library/Android/sdk/platforms/android-22/android.jar!/android/view/ViewGroup.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-1.6851852">
-          <caret line="649" column="16" selection-start-line="649" selection-start-column="16" selection-end-line="649" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$USER_HOME$/Library/Android/sdk/platforms/android-22/android.jar!/android/widget/CompoundButton.class">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-1.6851852">
           <caret line="54" column="16" selection-start-line="54" selection-start-column="16" selection-end-line="54" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$USER_HOME$/Library/Android/sdk/platforms/android-22/android.jar!/android/util/Log.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.4015748">
-          <caret line="35" column="22" selection-start-line="35" selection-start-column="22" selection-end-line="35" selection-end-column="22" />
         </state>
       </provider>
     </entry>
@@ -2515,13 +2556,13 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/.navigation/app/raw/main.nvg.xml">
-      <provider selected="true" editor-type-id="navigationeditor">
-        <state />
-      </provider>
       <provider editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
+      </provider>
+      <provider selected="true" editor-type-id="navigationeditor">
+        <state />
       </provider>
     </entry>
     <entry file="jar://$USER_HOME$/Library/Android/sdk/platforms/android-22/android.jar!/android/view/View.class">
@@ -2542,26 +2583,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/objects/FormularioCierre/QUESTION.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-1.4038461">
-          <caret line="37" column="13" selection-start-line="37" selection-start-column="13" selection-end-line="37" selection-end-column="13" />
-          <folding>
-            <element signature="method#getAswerIDEN#0;class#QUESTION#0" expanded="false" />
-            <element signature="method#getAswer3G#0;class#QUESTION#0" expanded="false" />
-            <element signature="method#generateView#0;class#QUESTION#0" expanded="false" />
-            <element signature="method#getTitle#0;class#QUESTION#0" expanded="false" />
-            <element signature="method#addFoto#0;class#QUESTION#0" expanded="false" />
-            <element signature="method#removeFoto#0;class#QUESTION#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/objects/Maintenance/Maintenance.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.22435898">
           <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2569,7 +2594,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.16025642">
           <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2577,21 +2601,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-0.057692308">
           <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$USER_HOME$/Library/Android/sdk/platforms/android-22/android.jar!/android/widget/TextView.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3768116">
-          <caret line="559" column="22" selection-start-line="559" selection-start-column="22" selection-end-line="559" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/objects/FormularioCierre/VALUE.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.63965887">
-          <caret line="28" column="0" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
         </state>
       </provider>
     </entry>
@@ -2613,7 +2622,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.18716578">
           <caret line="9" column="13" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2621,7 +2629,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.18716578">
           <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2673,7 +2680,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-2.3155081">
           <caret line="24" column="13" selection-start-line="24" selection-start-column="13" selection-end-line="24" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2681,7 +2687,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.053475935">
           <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2689,7 +2694,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.18716578">
           <caret line="84" column="0" selection-start-line="84" selection-start-column="0" selection-end-line="84" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2697,9 +2701,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.3478261">
           <caret line="36" column="0" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
-          <folding>
-            <element signature="e#1033#1034#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -2707,62 +2708,8 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.3478261">
           <caret line="34" column="0" selection-start-line="34" selection-start-column="0" selection-end-line="34" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/objects/FormularioCierre/ITEM.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.201373">
-          <caret line="395" column="0" selection-start-line="395" selection-start-column="0" selection-end-line="395" selection-end-column="0" />
           <folding>
-            <element signature="method#generateView#0;class#ITEM#0" expanded="false" />
-            <element signature="e#13846#13847#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/ActividadCierreFormActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.07317073">
-          <caret line="453" column="37" selection-start-line="453" selection-start-column="37" selection-end-line="453" selection-end-column="37" />
-          <folding>
-            <element signature="class#3613:4115" expanded="false" />
-            <element signature="method#onCreate#0;class#ActividadCierreFormActivity#0" expanded="false" />
-            <element signature="method#create_itemLayout#0;class#ActividadCierreFormActivity#0" expanded="false" />
-            <element signature="method#create_setLayout#0;class#ActividadCierreFormActivity#0" expanded="false" />
-            <element signature="method#create_normalVerticalLayout#0;class#ActividadCierreFormActivity#0" expanded="false" />
-            <element signature="method#cargar_fotos#0;class#ActividadCierreFormActivity#0" expanded="false" />
-            <element signature="method#crear_botonRepeat#0;class#ActividadCierreFormActivity#0" expanded="false" />
-            <element signature="method#copiar_question#0;class#ActividadCierreFormActivity#0" expanded="false" />
-            <element signature="e#36372#37351#0" expanded="true" />
-            <element signature="e#37350#37351#0" expanded="true" />
-            <element signature="e#55464#55726#0" expanded="true" />
-            <element signature="e#55725#55726#0" expanded="true" />
-            <element signature="e#87008#88532#0" expanded="true" />
-            <element signature="e#87457#87699#0" expanded="true" />
-            <element signature="e#87698#87699#0" expanded="true" />
-            <element signature="e#87748#88388#0" expanded="true" />
-            <element signature="e#88387#88388#0" expanded="true" />
-            <element signature="e#88531#88532#0" expanded="true" />
-            <element signature="e#90202#90863#0" expanded="true" />
-            <element signature="e#90862#90863#0" expanded="true" />
-            <element signature="e#90914#91197#0" expanded="true" />
-            <element signature="e#91196#91197#0" expanded="true" />
-            <element signature="e#91644#92357#0" expanded="true" />
-            <element signature="e#92356#92357#0" expanded="true" />
-            <element signature="e#92408#92691#0" expanded="true" />
-            <element signature="e#92690#92691#0" expanded="true" />
-            <element signature="class#EnviarIden#0;class#ActividadCierreFormActivity#0" expanded="false" />
-            <element signature="class#Enviar3G#0;class#ActividadCierreFormActivity#0" expanded="false" />
-            <element signature="class#Enviar#0;class#ActividadCierreFormActivity#0" expanded="false" />
-            <element signature="class#EnviarTransport#0;class#ActividadCierreFormActivity#0" expanded="false" />
-            <element signature="class#EnviarSG#0;class#ActividadCierreFormActivity#0" expanded="false" />
-            <element signature="class#EnviarDC#0;class#ActividadCierreFormActivity#0" expanded="false" />
-            <element signature="class#EnviarAir#0;class#ActividadCierreFormActivity#0" expanded="false" />
-            <element signature="class#EnviarGE#0;class#ActividadCierreFormActivity#0" expanded="false" />
-            <element signature="method#subir_fotos#0;class#ActividadCierreFormActivity#0" expanded="false" />
-            <element signature="class#UploadImage#0;class#ActividadCierreFormActivity#0" expanded="false" />
-            <element signature="method#onDestroy#0;class#ActividadCierreFormActivity#0" expanded="false" />
+            <element signature="e#1025#1026#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2777,6 +2724,14 @@
             <element signature="method#onClick_back#0;class#FormCheckActivity#0" expanded="false" />
             <element signature="method#makeOnlyOneCheckable#0;class#FormCheckActivity#0" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/preferences/FormCierreReg.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3125">
+          <caret line="14" column="11" selection-start-line="14" selection-start-column="11" selection-end-line="14" selection-end-column="11" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -2802,29 +2757,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/preferences/FormCierreReg.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3125">
-          <caret line="14" column="11" selection-start-line="14" selection-start-column="11" selection-end-line="14" selection-end-column="11" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/AgendaActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-39.962963">
-          <caret line="484" column="0" selection-start-line="484" selection-start-column="0" selection-end-line="484" selection-end-column="0" />
-          <folding>
-            <element signature="method#onClick_apagar#0;class#AgendaActivity#0" expanded="false" />
-            <element signature="e#20802#22482#0" expanded="true" />
-            <element signature="e#22481#22482#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/MainActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
+        <state vertical-scroll-proportion="-14.377574">
           <caret line="71" column="29" selection-start-line="71" selection-start-column="29" selection-end-line="71" selection-end-column="29" />
           <folding>
             <element signature="method#onActivityResult#0;class#MainActivity#0" expanded="false" />
@@ -2839,16 +2774,137 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/objects/FormularioCierre/VALUE.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="5" column="13" selection-start-line="5" selection-start-column="13" selection-end-line="5" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/Library/Android/sdk/platforms/android-22/android.jar!/android/util/Log.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-2.074074">
+          <caret line="35" column="22" selection-start-line="35" selection-start-column="22" selection-end-line="35" selection-end-column="22" />
+          <folding>
+            <element signature="e#938#939#0" expanded="true" />
+            <element signature="e#989#990#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/objects/FormularioCierre/QUESTION.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="120" column="16" selection-start-line="120" selection-start-column="16" selection-end-line="120" selection-end-column="16" />
+          <folding>
+            <element signature="method#getAswerIDEN#0;class#QUESTION#0" expanded="false" />
+            <element signature="method#getAswer3G#0;class#QUESTION#0" expanded="false" />
+            <element signature="e#3430#3431#0" expanded="true" />
+            <element signature="e#3458#3459#0" expanded="true" />
+            <element signature="method#generateView#0;class#QUESTION#0" expanded="false" />
+            <element signature="method#getTitle#0;class#QUESTION#0" expanded="false" />
+            <element signature="method#addFoto#0;class#QUESTION#0" expanded="false" />
+            <element signature="method#removeFoto#0;class#QUESTION#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/Library/Android/sdk/platforms/android-22/android.jar!/android/widget/TextView.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3678161">
+          <caret line="559" column="22" selection-start-line="559" selection-start-column="22" selection-end-line="559" selection-end-column="22" />
+          <folding>
+            <element signature="e#14954#14955#0" expanded="true" />
+            <element signature="e#15005#15006#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/AgendaActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="486" column="173" selection-start-line="486" selection-start-column="173" selection-end-line="486" selection-end-column="173" />
+          <folding>
+            <element signature="method#onClick_apagar#0;class#AgendaActivity#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/ActividadCierreActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.75718015">
-          <caret line="162" column="12" selection-start-line="162" selection-start-column="12" selection-end-line="164" selection-end-column="13" />
+        <state vertical-scroll-proportion="0.0">
+          <caret line="78" column="28" selection-start-line="78" selection-start-column="28" selection-end-line="78" selection-end-column="28" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="method#onClick_back#0;class#ActividadCierreActivity#0" expanded="false" />
             <element signature="method#onClick#0;class#ActividadCierreActivity#0" expanded="false" />
             <element signature="method#getAction#0;class#ActividadCierreActivity#0" expanded="false" />
             <element signature="method#onActivityResult#0;class#ActividadCierreActivity#0" expanded="false" />
+            <element signature="class#Cierre#0;class#ActividadCierreActivity#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/Library/Android/sdk/platforms/android-22/android.jar!/android/view/ViewGroup.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3721973">
+          <caret line="389" column="16" selection-start-line="389" selection-start-column="16" selection-end-line="389" selection-end-column="16" />
+          <folding>
+            <element signature="e#11911#11912#0" expanded="true" />
+            <element signature="e#11962#11963#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/objects/FormularioCierre/ITEM.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="215" column="13" selection-start-line="215" selection-start-column="13" selection-end-line="215" selection-end-column="13" />
+          <folding>
+            <element signature="method#getAnswer3G#0;class#ITEM#0" expanded="false" />
+            <element signature="method#getTitle#0;class#ITEM#0" expanded="false" />
+            <element signature="method#addListSet#0;class#ITEM#0" expanded="false" />
+            <element signature="e#13854#13855#0" expanded="true" />
+            <element signature="e#13883#13884#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/ActividadCierreFormActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.61945033">
+          <caret line="776" column="45" selection-start-line="776" selection-start-column="45" selection-end-line="776" selection-end-column="45" />
+          <folding>
+            <element signature="class#3613:4115" expanded="false" />
+            <element signature="e#6283#6284#0" expanded="true" />
+            <element signature="e#6317#6318#0" expanded="true" />
+            <element signature="method#onClick_back#0;class#ActividadCierreFormActivity#0" expanded="false" />
+            <element signature="method#create_questionLayout#0;class#ActividadCierreFormActivity#0" expanded="false" />
+            <element signature="method#create_photoButton#0;class#ActividadCierreFormActivity#0" expanded="false" />
+            <element signature="method#create_normalVerticalLayout#0;class#ActividadCierreFormActivity#0" expanded="false" />
+            <element signature="method#cargar_fotos#0;class#ActividadCierreFormActivity#0" expanded="false" />
+            <element signature="method#crear_botonRepeat#0;class#ActividadCierreFormActivity#0" expanded="false" />
+            <element signature="e#27548#28527#0" expanded="true" />
+            <element signature="e#28526#28527#0" expanded="true" />
+            <element signature="e#36904#37883#0" expanded="true" />
+            <element signature="e#37882#37883#0" expanded="true" />
+            <element signature="method#enviar#0;class#ActividadCierreFormActivity#0" expanded="false" />
+            <element signature="method#verFotos#0;class#ActividadCierreFormActivity#0" expanded="false" />
+            <element signature="method#tomarFoto#0;class#ActividadCierreFormActivity#0" expanded="false" />
+            <element signature="method#tomarFotos#0;class#ActividadCierreFormActivity#0" expanded="false" />
+            <element signature="method#onActivityResult#0;class#ActividadCierreFormActivity#0" expanded="false" />
+            <element signature="class#EnviarIden#0;class#ActividadCierreFormActivity#0" expanded="false" />
+            <element signature="class#Enviar3G#0;class#ActividadCierreFormActivity#0" expanded="false" />
+            <element signature="class#Enviar#0;class#ActividadCierreFormActivity#0" expanded="false" />
+            <element signature="class#EnviarTransport#0;class#ActividadCierreFormActivity#0" expanded="false" />
+            <element signature="class#EnviarSG#0;class#ActividadCierreFormActivity#0" expanded="false" />
+            <element signature="class#EnviarDC#0;class#ActividadCierreFormActivity#0" expanded="false" />
+            <element signature="class#EnviarAir#0;class#ActividadCierreFormActivity#0" expanded="false" />
+            <element signature="class#EnviarGE#0;class#ActividadCierreFormActivity#0" expanded="false" />
+            <element signature="method#subir_fotos#0;class#ActividadCierreFormActivity#0" expanded="false" />
+            <element signature="class#UploadImage#0;class#ActividadCierreFormActivity#0" expanded="false" />
+            <element signature="method#onDestroy#0;class#ActividadCierreFormActivity#0" expanded="false" />
           </folding>
         </state>
       </provider>

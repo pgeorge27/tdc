@@ -212,7 +212,7 @@ public class ITEM {
             ((TextView)view).setTextSize(TypedValue.COMPLEX_UNIT_SP,15);
             view.setBackgroundResource(R.drawable.fondo_edittext);
             if(idType.equals(Constantes.NUM)){
-                ((TextView)view).setInputType(InputType.TYPE_CLASS_NUMBER);
+                ((TextView)view).setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
             }
         }
 
