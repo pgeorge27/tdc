@@ -163,6 +163,12 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             if (temp.equalsIgnoreCase("7,"+idMain)){
                 TRANSPORTE.setVisibility(View.VISIBLE);
             }
+            if (temp.equalsIgnoreCase("8,"+idMain)){
+                AC.setVisibility(View.VISIBLE);
+            }
+            if (temp.equalsIgnoreCase("9,"+idMain)){
+                GE.setVisibility(View.VISIBLE);
+            }
         }
     }
 

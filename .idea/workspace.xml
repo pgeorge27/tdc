@@ -193,11 +193,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="SoapRequestTDC.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="SoapRequestTDC.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/webservice/SoapRequestTDC.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="1363" column="0" selection-start-line="1363" selection-start-column="0" selection-end-line="1363" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.67">
+              <caret line="1804" column="30" selection-start-line="1804" selection-start-column="30" selection-end-line="1804" selection-end-column="30" />
               <folding>
                 <element signature="method#getNewHttpClient#0;class#SoapRequestTDC#0" expanded="false" />
                 <element signature="method#getPlanningMaintenance#0;class#SoapRequestTDC#0" expanded="false" />
@@ -220,8 +220,8 @@
       <file leaf-file-name="ActividadCierreActivity.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/ActividadCierreActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.0">
-              <caret line="78" column="28" selection-start-line="78" selection-start-column="28" selection-end-line="78" selection-end-column="28" />
+            <state vertical-scroll-proportion="-10.0">
+              <caret line="166" column="31" selection-start-line="166" selection-start-column="31" selection-end-line="166" selection-end-column="31" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="method#onClick_back#0;class#ActividadCierreActivity#0" expanded="false" />
@@ -246,10 +246,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ActividadCierreFormActivity.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="ActividadCierreFormActivity.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/ActividadCierreFormActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.61945033">
+            <state vertical-scroll-proportion="-10.851851">
               <caret line="776" column="45" selection-start-line="776" selection-start-column="45" selection-end-line="776" selection-end-column="45" />
               <folding>
                 <element signature="class#3613:4115" expanded="false" />
@@ -1687,16 +1687,16 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/app/build.gradle" />
-        <option value="$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/webservice/SoapRequestTDC.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/objects/FormularioCierre/VALUE.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/objects/FormularioCierre/QUESTION.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/FormCheckActivity.java" />
-        <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_cierre_actividad.xml" />
         <option value="$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/MainActivity.java" />
-        <option value="$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/ActividadCierreActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/AgendaActivity.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/objects/FormularioCierre/ITEM.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/ActividadCierreFormActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/res/layout/activity_cierre_actividad.xml" />
+        <option value="$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/ActividadCierreActivity.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/webservice/SoapRequestTDC.java" />
       </list>
     </option>
   </component>
@@ -2232,6 +2232,7 @@
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32889125" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Android Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.54966885" sideWeight="0.49353796" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.23454158" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.26490065" sideWeight="0.47334412" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32781458" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
@@ -2253,7 +2254,6 @@
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.23454158" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Thumbnails" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32893288" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.63484085" sideWeight="0.554371" order="7" side_tool="false" content_ui="tabs" x="1769" y="114" width="970" height="470" />
       <window_info id="Memory Monitor" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.5764576" sideWeight="0.4706823" order="7" side_tool="true" content_ui="tabs" />
@@ -2406,15 +2406,9 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/ActividadCierreActivity.java</url>
-          <line>423</line>
+          <line>429</line>
           <properties />
           <option name="timeStamp" value="757" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/webservice/SoapRequestTDC.java</url>
-          <line>1743</line>
-          <properties />
-          <option name="timeStamp" value="779" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/ActividadCierreFormActivity.java</url>
@@ -2555,16 +2549,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.navigation/app/raw/main.nvg.xml">
-      <provider editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-      <provider selected="true" editor-type-id="navigationeditor">
-        <state />
-      </provider>
-    </entry>
     <entry file="jar://$USER_HOME$/Library/Android/sdk/platforms/android-22/android.jar!/android/view/View.class">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.33333334">
@@ -2572,21 +2556,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_cierre_actividad.xml">
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3446602">
-          <caret line="295" column="52" selection-start-line="295" selection-start-column="52" selection-end-line="295" selection-end-column="52" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/objects/Maintenance/Maintenance.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.22435898">
           <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -2601,6 +2575,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-0.057692308">
           <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -2680,6 +2655,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-2.3155081">
           <caret line="24" column="13" selection-start-line="24" selection-start-column="13" selection-end-line="24" selection-end-column="13" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -2687,6 +2663,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.053475935">
           <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -2694,6 +2671,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.18716578">
           <caret line="84" column="0" selection-start-line="84" selection-start-column="0" selection-end-line="84" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -2701,6 +2679,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.3478261">
           <caret line="36" column="0" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
+          <folding>
+            <element signature="e#1033#1034#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
@@ -2732,28 +2713,6 @@
         <state vertical-scroll-proportion="0.3125">
           <caret line="14" column="11" selection-start-line="14" selection-start-column="11" selection-end-line="14" selection-end-column="11" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/webservice/SoapRequestTDC.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="1363" column="0" selection-start-line="1363" selection-start-column="0" selection-end-line="1363" selection-end-column="0" />
-          <folding>
-            <element signature="method#getNewHttpClient#0;class#SoapRequestTDC#0" expanded="false" />
-            <element signature="method#getPlanningMaintenance#0;class#SoapRequestTDC#0" expanded="false" />
-            <element signature="method#getFormularioCierre#0;class#SoapRequestTDC#0" expanded="false" />
-            <element signature="method#sendAnswerIDEN#0;class#SoapRequestTDC#0" expanded="false" />
-            <element signature="method#sendAnswer3G#0;class#SoapRequestTDC#0" expanded="false" />
-            <element signature="method#sendAnswer#0;class#SoapRequestTDC#0" expanded="false" />
-            <element signature="method#sendAnswerTransport#0;class#SoapRequestTDC#0" expanded="false" />
-            <element signature="method#sendAnswerSG#0;class#SoapRequestTDC#0" expanded="false" />
-            <element signature="method#sendAnswerDC#0;class#SoapRequestTDC#0" expanded="false" />
-            <element signature="method#sendAnswerAir#0;class#SoapRequestTDC#0" expanded="false" />
-            <element signature="method#sendAnswerGE#0;class#SoapRequestTDC#0" expanded="false" />
-            <element signature="method#cerrarMantenimiento#0;class#SoapRequestTDC#0" expanded="false" />
-            <element signature="method#updateApk#0;class#SoapRequestTDC#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -2821,31 +2780,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/AgendaActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="486" column="173" selection-start-line="486" selection-start-column="173" selection-end-line="486" selection-end-column="173" />
-          <folding>
-            <element signature="method#onClick_apagar#0;class#AgendaActivity#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/ActividadCierreActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="78" column="28" selection-start-line="78" selection-start-column="28" selection-end-line="78" selection-end-column="28" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="method#onClick_back#0;class#ActividadCierreActivity#0" expanded="false" />
-            <element signature="method#onClick#0;class#ActividadCierreActivity#0" expanded="false" />
-            <element signature="method#getAction#0;class#ActividadCierreActivity#0" expanded="false" />
-            <element signature="method#onActivityResult#0;class#ActividadCierreActivity#0" expanded="false" />
-            <element signature="class#Cierre#0;class#ActividadCierreActivity#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$USER_HOME$/Library/Android/sdk/platforms/android-22/android.jar!/android/view/ViewGroup.class">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.3721973">
@@ -2871,9 +2805,56 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/ActividadCierreActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-10.0">
+          <caret line="166" column="31" selection-start-line="166" selection-start-column="31" selection-end-line="166" selection-end-column="31" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#onClick_back#0;class#ActividadCierreActivity#0" expanded="false" />
+            <element signature="method#onClick#0;class#ActividadCierreActivity#0" expanded="false" />
+            <element signature="method#getAction#0;class#ActividadCierreActivity#0" expanded="false" />
+            <element signature="method#onActivityResult#0;class#ActividadCierreActivity#0" expanded="false" />
+            <element signature="class#Cierre#0;class#ActividadCierreActivity#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/AgendaActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="486" column="173" selection-start-line="486" selection-start-column="173" selection-end-line="486" selection-end-column="173" />
+          <folding>
+            <element signature="method#onClick_apagar#0;class#AgendaActivity#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_cierre_actividad.xml">
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.7006369">
+          <caret line="219" column="47" selection-start-line="219" selection-start-column="47" selection-end-line="219" selection-end-column="47" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.navigation/app/raw/main.nvg.xml">
+      <provider editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+      <provider selected="true" editor-type-id="navigationeditor">
+        <state />
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/ActividadCierreFormActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.61945033">
+        <state vertical-scroll-proportion="-10.851851">
           <caret line="776" column="45" selection-start-line="776" selection-start-column="45" selection-end-line="776" selection-end-column="45" />
           <folding>
             <element signature="class#3613:4115" expanded="false" />
@@ -2905,6 +2886,28 @@
             <element signature="method#subir_fotos#0;class#ActividadCierreFormActivity#0" expanded="false" />
             <element signature="class#UploadImage#0;class#ActividadCierreFormActivity#0" expanded="false" />
             <element signature="method#onDestroy#0;class#ActividadCierreFormActivity#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/cl/tdc/felipe/tdc/webservice/SoapRequestTDC.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.67">
+          <caret line="1804" column="30" selection-start-line="1804" selection-start-column="30" selection-end-line="1804" selection-end-column="30" />
+          <folding>
+            <element signature="method#getNewHttpClient#0;class#SoapRequestTDC#0" expanded="false" />
+            <element signature="method#getPlanningMaintenance#0;class#SoapRequestTDC#0" expanded="false" />
+            <element signature="method#getFormularioCierre#0;class#SoapRequestTDC#0" expanded="false" />
+            <element signature="method#sendAnswerIDEN#0;class#SoapRequestTDC#0" expanded="false" />
+            <element signature="method#sendAnswer3G#0;class#SoapRequestTDC#0" expanded="false" />
+            <element signature="method#sendAnswer#0;class#SoapRequestTDC#0" expanded="false" />
+            <element signature="method#sendAnswerTransport#0;class#SoapRequestTDC#0" expanded="false" />
+            <element signature="method#sendAnswerSG#0;class#SoapRequestTDC#0" expanded="false" />
+            <element signature="method#sendAnswerDC#0;class#SoapRequestTDC#0" expanded="false" />
+            <element signature="method#sendAnswerAir#0;class#SoapRequestTDC#0" expanded="false" />
+            <element signature="method#sendAnswerGE#0;class#SoapRequestTDC#0" expanded="false" />
+            <element signature="method#cerrarMantenimiento#0;class#SoapRequestTDC#0" expanded="false" />
+            <element signature="method#updateApk#0;class#SoapRequestTDC#0" expanded="false" />
           </folding>
         </state>
       </provider>
