@@ -43,7 +43,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
     FormCierreReg REG, IDENREG, TRESGREG, FAENAREG, TRANSPREG, SGREG, DCREG, AIRREG, GEREG;
     MaintenanceReg MAINREG;
 
-    Button IDEN, TRESG, AC, DC, SG, AIR, FAENA, TRANSPORTE, GE;
+    Button IDEN, TRESG, AC, DC, SG, AIR, FAENA, TRANSPORTE, GE, RAN;
 
 
     @Override
@@ -52,6 +52,8 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         setContentView(R.layout.activity_cierre_actividad);
         actividad = this;
         mContext = this;
+
+        idMain = getIntent().getStringExtra("MAINTENANCE");
 
         REG = new FormCierreReg(this, "LISTADO");
         IDENREG = new FormCierreReg(this, "IDEN");
@@ -64,7 +66,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         GEREG = new FormCierreReg(this, "GE");
         MAINREG = new MaintenanceReg(this);
 
-        idMain = getIntent().getStringExtra("MAINTENANCE");
+
 
         TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         IMEI = telephonyManager.getDeviceId();
@@ -81,6 +83,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         FAENA = (Button) this.findViewById(R.id.FAENA);
         TRANSPORTE = (Button) this.findViewById(R.id.TRANSPORTE);
         GE = (Button) this.findViewById(R.id.GE);
+        RAN = (Button) this.findViewById(R.id.RAN);
         IDEN.setOnClickListener(this);
         TRESG.setOnClickListener(this);
         AC.setOnClickListener(this);
@@ -90,6 +93,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         FAENA.setOnClickListener(this);
         TRANSPORTE.setOnClickListener(this);
         GE.setOnClickListener(this);
+        RAN.setOnClickListener(this);
 
         boolean state = REG.getBoolean("IDEN" + idMain);
         if (state)
@@ -133,43 +137,83 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             GE.setEnabled(false);
         }
 
-        mostrarBotonesAzules();
+        mostrarBotonesAzules(1);
 
     }
 
     //Iteramos sobre idsActivities2 y obtenemos las actividades, deacuerdo a las actividades y el idMain hacemos visible los botones de mantenimiento
-    private void mostrarBotonesAzules() {
+    private void mostrarBotonesAzules(int num) {
         for (String temp : AgendaActivity.idsActivities2) {
-            System.out.println(temp + " idM " + idMain);
-
-            if (temp.equalsIgnoreCase("1,"+idMain)){
+//            System.out.println(temp + " idM " + idMain);
+            if (temp.equalsIgnoreCase("1," + idMain)) {
                 IDEN.setVisibility(View.VISIBLE);
             }
-            if (temp.equalsIgnoreCase("2,"+idMain)){
+            if (temp.equalsIgnoreCase("2," + idMain)) {
                 TRESG.setVisibility(View.VISIBLE);
             }
-            if (temp.equalsIgnoreCase("3,"+idMain)){
+            if (temp.equalsIgnoreCase("3," + idMain)) {
                 FAENA.setVisibility(View.VISIBLE);
             }
-            if (temp.equalsIgnoreCase("4,"+idMain)){
-                DC.setVisibility(View.VISIBLE);
-            }
-            if (temp.equalsIgnoreCase("5,"+idMain)){
-                SG.setVisibility(View.VISIBLE);
-            }
-            if (temp.equalsIgnoreCase("6,"+idMain)){
-                AIR.setVisibility(View.VISIBLE);
-            }
-            if (temp.equalsIgnoreCase("7,"+idMain)){
-                TRANSPORTE.setVisibility(View.VISIBLE);
-            }
-            if (temp.equalsIgnoreCase("8,"+idMain)){
-                AC.setVisibility(View.VISIBLE);
-            }
-            if (temp.equalsIgnoreCase("9,"+idMain)){
-                GE.setVisibility(View.VISIBLE);
+            //Determinamos si mostramos el boton de RAN o no
+
+            if (temp.equalsIgnoreCase("4," + idMain) || temp.equalsIgnoreCase("5," + idMain)
+                    || temp.equalsIgnoreCase("6," + idMain) || temp.equalsIgnoreCase("7," + idMain)
+                    || temp.equalsIgnoreCase("8," + idMain) || temp.equalsIgnoreCase("9," + idMain))
+                muestraRan();
+
+            //Al pulsar sobre RAN
+            if (num == 2) {
+                if (temp.equalsIgnoreCase("4," + idMain)) {
+                    if (DC.getVisibility() == View.GONE) {
+                        DC.setVisibility(View.VISIBLE);
+                    } else {
+                        DC.setVisibility(View.GONE);
+                    }
+                }
+                if (temp.equalsIgnoreCase("5," + idMain)) {
+                    if (SG.getVisibility() == View.GONE) {
+                        SG.setVisibility(View.VISIBLE);
+                    } else {
+                        SG.setVisibility(View.GONE);
+                    }
+                }
+                if (temp.equalsIgnoreCase("6," + idMain)) {
+                    if (AIR.getVisibility() == View.GONE) {
+                        AIR.setVisibility(View.VISIBLE);
+                    } else {
+                        AIR.setVisibility(View.GONE);
+                    }
+                }
+                if (temp.equalsIgnoreCase("7," + idMain)) {
+                    if (TRANSPORTE.getVisibility() == View.GONE) {
+                        TRANSPORTE.setVisibility(View.VISIBLE);
+                    } else {
+                        TRANSPORTE.setVisibility(View.GONE);
+                    }
+                }
+                if (temp.equalsIgnoreCase("8," + idMain)) {
+                    if (GE.getVisibility() == View.GONE) {
+                        GE.setVisibility(View.VISIBLE);
+                    } else {
+                        GE.setVisibility(View.GONE);
+                    }
+                }
+//                if (temp.equalsIgnoreCase("9," + idMain)) {
+//                    if (AC.getVisibility() == View.GONE) {
+//                        AC.setVisibility(View.VISIBLE);
+//                    } else {
+//                        AC.setVisibility(View.GONE);
+//                    }
+//                }
+
+
             }
         }
+    }
+
+    private void muestraRan(){
+        if (RAN.getVisibility() == View.GONE)
+            RAN.setVisibility(View.VISIBLE);
     }
 
     public void onClick_apagar(View v) {
@@ -259,6 +303,9 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             buscar_form task = new buscar_form("GRUPO ELECTROGEN");
             task.execute();
         }
+        if (view.getId() == R.id.RAN) {
+            mostrarBotonesAzules(2);
+        }
     }
 
     private String getAction(String type) {
@@ -299,11 +346,10 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         protected String doInBackground(String... strings) {
             try {
                 query = SoapRequestTDC.getFormularioCierre(IMEI, idMain, getAction(type));
-//                query = "<SOAP-ENV:Envelope SOAP-ENV:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:SOAP-ENC=\"http://schemas.xmlsoap.org/soap/encoding/\" xmlns:tns=\"urn:Configurationwsdl\"><SOAP-ENV:Body><ns1:checkTransportResponse xmlns:ns1=\"urn:Configurationwsdl\"><Response xsi:type=\"tns:Response\"><Code xsi:type=\"xsd:string\">0</Code><Description xsi:type=\"xsd:string\">Se ha realizado correctamente la operacion</Description><Check xsi:type=\"tns:Check\"><Systems xsi:type=\"tns:Systems\"><System xsi:type=\"tns:System\"><IdSystem xsi:type=\"xsd:string\">14</IdSystem><NameSystem xsi:type=\"xsd:string\">RF &amp; TRANSPORT SITE INFRASTRUCTURE</NameSystem><Areas xsi:type=\"tns:Areas\"><Area xsi:type=\"tns:Area\"><IdArea xsi:type=\"xsd:string\">21</IdArea><NameArea xsi:type=\"xsd:string\">Base</NameArea><Items xsi:type=\"tns:Items\"><Item xsi:type=\"tns:Item\"><IdItem xsi:type=\"xsd:string\">47</IdItem><IdType xsi:nil=\"true\" xsi:type=\"xsd:string\"/><NameType xsi:nil=\"true\" xsi:type=\"xsd:string\"/><NameItem xsi:type=\"xsd:string\">Impacto Ambiental</NameItem><Answer xsi:nil=\"true\" xsi:type=\"xsd:string\"/><Questions xsi:type=\"tns:Questions\"><Question xsi:type=\"tns:Question\"><IdQuestion xsi:type=\"xsd:string\">323</IdQuestion><NameQuestion xsi:type=\"xsd:string\">Existencia de aceites para retiro</NameQuestion><NameType xsi:type=\"xsd:string\">RADIO</NameType><Photo xsi:type=\"xsd:string\">NOK</Photo><NumberPhoto xsi:type=\"xsd:string\">0</NumberPhoto><IdType xsi:type=\"xsd:string\">1</IdType><Values xsi:type=\"tns:Values\"><Value xsi:type=\"tns:Value\"><NameValue xsi:type=\"xsd:string\">SI</NameValue><IdValue xsi:type=\"xsd:string\">3</IdValue></Value><Value xsi:type=\"tns:Value\"><NameValue xsi:type=\"xsd:string\">NO</NameValue><IdValue xsi:type=\"xsd:string\">4</IdValue></Value></Values></Question><Question xsi:type=\"tns:Question\"><IdQuestion xsi:type=\"xsd:string\">324</IdQuestion><NameQuestion xsi:type=\"xsd:string\">Existencia de filtros para retiro</NameQuestion><NameType xsi:type=\"xsd:string\">RADIO</NameType><Photo xsi:type=\"xsd:string\">NOK</Photo><NumberPhoto xsi:type=\"xsd:string\">0</NumberPhoto><IdType xsi:type=\"xsd:string\">1</IdType><Values xsi:type=\"tns:Values\"><Value xsi:type=\"tns:Value\"><NameValue xsi:type=\"xsd:string\">SI</NameValue><IdValue xsi:type=\"xsd:string\">3</IdValue></Value><Value xsi:type=\"tns:Value\"><NameValue xsi:type=\"xsd:string\">NO</NameValue><IdValue xsi:type=\"xsd:string\">4</IdValue></Value></Values></Question><Question xsi:type=\"tns:Question\"><IdQuestion xsi:type=\"xsd:string\">325</IdQuestion><NameQuestion xsi:type=\"xsd:string\">Existencia cilindros refrigerante para retiro</NameQuestion><NameType xsi:type=\"xsd:string\">RADIO</NameType><Photo xsi:type=\"xsd:string\">NOK</Photo><NumberPhoto xsi:type=\"xsd:string\">0</NumberPhoto><IdType xsi:type=\"xsd:string\">1</IdType><Values xsi:type=\"tns:Values\"><Value xsi:type=\"tns:Value\"><NameValue xsi:type=\"xsd:string\">SI</NameValue><IdValue xsi:type=\"xsd:string\">3</IdValue></Value><Value xsi:type=\"tns:Value\"><NameValue xsi:type=\"xsd:string\">NO</NameValue><IdValue xsi:type=\"xsd:string\">4</IdValue></Value></Values></Question><Question xsi:type=\"tns:Question\"><IdQuestion xsi:type=\"xsd:string\">326</IdQuestion><NameQuestion xsi:type=\"xsd:string\">Existencia de trapos, envaces y materiales contaminados o tóxicos</NameQuestion><NameType xsi:type=\"xsd:string\">RADIO</NameType><Photo xsi:type=\"xsd:string\">NOK</Photo><NumberPhoto xsi:type=\"xsd:string\">0</NumberPhoto><IdType xsi:type=\"xsd:string\">1</IdType><Values xsi:type=\"tns:Values\"><Value xsi:type=\"tns:Value\"><NameValue xsi:type=\"xsd:string\">SI</NameValue><IdValue xsi:type=\"xsd:string\">3</IdValue></Value><Value xsi:type=\"tns:Value\"><NameValue xsi:type=\"xsd:string\">NO</NameValue><IdValue xsi:type=\"xsd:string\">4</IdValue></Value></Values></Question><Question xsi:type=\"tns:Question\"><IdQuestion xsi:type=\"xsd:string\">327</IdQuestion><NameQuestion xsi:type=\"xsd:string\">Existencia de repuestos reemplazados e insumos utilizados para retiro</NameQuestion><NameType xsi:type=\"xsd:string\">RADIO</NameType><Photo xsi:type=\"xsd:string\">NOK</Photo><NumberPhoto xsi:type=\"xsd:string\">0</NumberPhoto><IdType xsi:type=\"xsd:string\">1</IdType><Values xsi:type=\"tns:Values\"><Value xsi:type=\"tns:Value\"><NameValue xsi:type=\"xsd:string\">SI</NameValue><IdValue xsi:type=\"xsd:string\">3</IdValue></Value><Value xsi:type=\"tns:Value\"><NameValue xsi:type=\"xsd:string\">NO</NameValue><IdValue xsi:type=\"xsd:string\">4</IdValue></Value></Values></Question><Question xsi:type=\"tns:Question\"><IdQuestion xsi:type=\"xsd:string\">328</IdQuestion><NameQuestion xsi:type=\"xsd:string\">Existencia de derrames de combustible, aceites u otros tóxicos</NameQuestion><NameType xsi:type=\"xsd:string\">RADIO</NameType><Photo xsi:type=\"xsd:string\">NOK</Photo><NumberPhoto xsi:type=\"xsd:string\">0</NumberPhoto><IdType xsi:type=\"xsd:string\">1</IdType><Values xsi:type=\"tns:Values\"><Value xsi:type=\"tns:Value\"><NameValue xsi:type=\"xsd:string\">SI</NameValue><IdValue xsi:type=\"xsd:string\">3</IdValue></Value><Value xsi:type=\"tns:Value\"><NameValue xsi:type=\"xsd:string\">NO</NameValue><IdValue xsi:type=\"xsd:string\">4</IdValue></Value></Values></Question><Question xsi:type=\"tns:Question\"><IdQuestion xsi:type=\"xsd:string\">329</IdQuestion><NameQuestion xsi:type=\"xsd:string\">Observaciones</NameQuestion><NameType xsi:type=\"xsd:string\">TEXT</NameType><Photo xsi:type=\"xsd:string\">NOK</Photo><NumberPhoto xsi:type=\"xsd:string\">0</NumberPhoto><IdType xsi:type=\"xsd:string\">3</IdType></Question><Question xsi:type=\"tns:Question\"><IdQuestion xsi:type=\"xsd:string\">330</IdQuestion><NameQuestion xsi:type=\"xsd:string\">Fotografia del perimetro o desechos</NameQuestion><NameType xsi:type=\"xsd:string\">PHOTO</NameType><Photo xsi:type=\"xsd:string\">OK</Photo><NumberPhoto xsi:type=\"xsd:string\">3</NumberPhoto><IdType xsi:type=\"xsd:string\">5</IdType></Question></Questions></Item><Item xsi:type=\"tns:Item\"><IdItem xsi:type=\"xsd:string\">48</IdItem><IdType xsi:nil=\"true\" xsi:type=\"xsd:string\"/><NameType xsi:nil=\"true\" xsi:type=\"xsd:string\"/><NameItem xsi:type=\"xsd:string\">Estructura Accesos y Seguridad</NameItem><Answer xsi:nil=\"true\" xsi:type=\"xsd:string\"/><Questions xsi:type=\"tns:Questions\"><Question xsi:type=\"tns:Question\"><IdQuestion xsi:type=\"xsd:string\">331</IdQuestion><NameQuestion xsi:type=\"xsd:string\">Control corrosión y reparación puertas, rejillas ventilación, cerraduras,bisagras,llaves, candados, rejas, perímetro y sistema drenaje.</NameQuestion><NameType xsi:type=\"xsd:string\">RADIO</NameType><Photo xsi:type=\"xsd:string\">NOK</Photo><NumberPhoto xsi:type=\"xsd:string\">0</NumberPhoto><IdType xsi:type=\"xsd:string\">1</IdType><Values xsi:type=\"tns:Values\"><Value xsi:type=\"tns:Value\"><NameValue xsi:type=\"xsd:string\">SI</NameValue><IdValue xsi:type=\"xsd:string\">3</IdValue></Value><Value xsi:type=\"tns:Value\"><NameValue xsi:type=\"xsd:string\">NO</NameValue><IdValue xsi:type=\"xsd:string\">4</IdValue></Value></Values></Question><Question xsi:type=\"tns:Question\"><IdQuestion xsi:type=\"xsd:string\">332</IdQuestion><NameQuestion xsi:type=\"xsd:string\">Limpieza interior y exterior del Site</NameQuestion><NameType xsi:type=\"xsd:string\">RADIO</NameType><Photo xsi:type=\"xsd:string\">NOK</Photo><NumberPhoto xsi:type=\"xsd:string\">0</NumberPhoto><IdType xsi:type=\"xsd:string\">1</IdType><Values xsi:type=\"tns:Values\"><Value xsi:type=\"tns:Value\"><NameValue xsi:type=\"xsd:string\">SI</NameValue><IdValue xsi:type=\"xsd:string\">3</IdValue></Value><Value xsi:type=\"tns:Value\"><NameValue xsi:type=\"xsd:string\">NO</NameValue><IdValue xsi:type=\"xsd:string\">4</IdValue></Value></Values></Question><Question xsi:type=\"tns:Question\"><IdQuestion xsi:type=\"xsd:string\">333</IdQuestion><NameQuestion xsi:type=\"xsd:string\">Control de drenaje de las filtraciones de aire acondicionado</NameQuestion><NameType xsi:type=\"xsd:string\">RADIO</NameType><Photo xsi:type=\"xsd:string\">NOK</Photo><NumberPhoto xsi:type=\"xsd:string\">0</NumberPhoto><IdType xsi:type=\"xsd:string\">1</IdType><Values xsi:type=\"tns:Values\"><Value xsi:type=\"tns:Value\"><NameValue xsi:type=\"xsd:string\">SI</NameValue><IdValue xsi:type=\"xsd:string\">3</IdValue></Value><Value xsi:type=\"tns:Value\"><NameValue xsi:type=\"xsd:string\">NO</NameValue><IdValue xsi:type=\"xsd:string\">4</IdValue></Value></Values></Question><Question xsi:type=\"tns:Question\"><IdQuestion xsi:type=\"xsd:string\">334</IdQuestion><NameQuestion xsi:type=\"xsd:string\">Control de plagas de insectos y roedores (fumigacion, si es necesario)</NameQuestion><NameType xsi:type=\"xsd:string\">RADIO</NameType><Photo xsi:type=\"xsd:string\">NOK</Photo><NumberPhoto xsi:type=\"xsd:string\">0</NumberPhoto><IdType xsi:type=\"xsd:string\">1</IdType><Values xsi:type=\"tns:Values\"><Value xsi:type=\"tns:Value\"><NameValue xsi:type=\"xsd:string\">SI</NameValue><IdValue xsi:type=\"xsd:string\">3</IdValue></Value><Value xsi:type=\"tns:Value\"><NameValue xsi:type=\"xsd:string\">NO</NameValue><IdValue xsi:type=\"xsd:string\">4</IdValue></Value></Values></Question><Question xsi:type=\"tns:Question\"><IdQuestion xsi:type=\"xsd:string\">335</IdQuestion><NameQuestion xsi:type=\"xsd:string\">Reemplazos de extintores</NameQuestion><NameType xsi:type=\"xsd:string\">RADIO</NameType><Photo xsi:type=\"xsd:string\">NOK</Photo><NumberPhoto xsi:type=\"xsd:string\">0</NumberPhoto><IdType xsi:type=\"xsd:string\">1</IdType><Values xsi:type=\"tns:Values\"><Value xsi:type=\"tns:Value\"><NameValue xsi:type=\"xsd:string\">SI</NameValue><IdValue xsi:type=\"xsd:string\">3</IdValue></Value><Value xsi:type=\"tns:Value\"><NameValue xsi:type=\"xsd:string\">NO</NameValue><IdValue xsi:type=\"xsd:string\">4</IdValue></Value></Values></Question><Question xsi:type=\"tns:Question\"><IdQuestion xsi:type=\"xsd:string\">336</IdQuestion><NameQuestion xsi:type=\"xsd:string\">Mantenimiento de torre. Incluye pintado y suministro de pintura, si es necesario</NameQuestion><NameType xsi:type=\"xsd:string\">RADIO</NameType><Photo xsi:type=\"xsd:string\">NOK</Photo><NumberPhoto xsi:type=\"xsd:string\">0</NumberPhoto><IdType xsi:type=\"xsd:string\">1</IdType><Values xsi:type=\"tns:Values\"><Value xsi:type=\"tns:Value\"><NameValue xsi:type=\"xsd:string\">SI</NameValue><IdValue xsi:type=\"xsd:string\">3</IdValue></Value><Value xsi:type=\"tns:Value\"><NameValue xsi:type=\"xsd:string\">NO</NameValue><IdValue xsi:type=\"xsd:string\">4</IdValue></Value></Values></Question><Question xsi:type=\"tns:Question\"><IdQuestion xsi:type=\"xsd:string\">337</IdQuestion><NameQuestion xsi:type=\"xsd:string\">Mantenimiento de bases de torres</NameQuestion><NameType xsi:type=\"xsd:string\">RADIO</NameType><Photo xsi:type=\"xsd:string\">NOK</Photo><NumberPhoto xsi:type=\"xsd:string\">0</NumberPhoto><IdType xsi:type=\"xsd:string\">1</IdType><Values xsi:type=\"tns:Values\"><Value xsi:type=\"tns:Value\"><NameValue xsi:type=\"xsd:string\">SI</NameValue><IdValue xsi:type=\"xsd:string\">3</IdValue></Value><Value xsi:type=\"tns:Value\"><NameValue xsi:type=\"xsd:string\">NO</NameValue><IdValue xsi:type=\"xsd:string\">4</IdValue></Value></Values></Question><Question xsi:type=\"tns:Question\"><IdQuestion xsi:type=\"xsd:string\">338</IdQuestion><NameQuestion xsi:type=\"xsd:string\">Revisar y reemplazar la perneria de la torre, si es necesario</NameQuestion><NameType xsi:type=\"xsd:string\">RADIO</NameType><Photo xsi:type=\"xsd:string\">NOK</Photo><NumberPhoto xsi:type=\"xsd:string\">0</NumberPhoto><IdType xsi:type=\"xsd:string\">1</IdType><Values xsi:type=\"tns:Values\"><Value xsi:type=\"tns:Value\"><NameValue xsi:type=\"xsd:string\">SI</NameValue><IdValue xsi:type=\"xsd:string\">3</IdValue></Value><Value xsi:type=\"tns:Value\"><NameValue xsi:type=\"xsd:string\">NO</NameValue><IdValue xsi:type=\"xsd:string\">4</IdValue></Value></Values></Question><Question xsi:type=\"tns:Question\"><IdQuestion xsi:type=\"xsd:string\">339</IdQuestion><NameQuestion xsi:type=\"xsd:string\">Revisar y reemplazar elementos de sujeccion, abrazaderas, abarcones, perneria oxidados y soporte de elementos en torre</NameQuestion><NameType xsi:type=\"xsd:string\">RADIO</NameType><Photo xsi:type=\"xsd:string\">NOK</Photo><NumberPhoto xsi:type=\"xsd:string\">0</NumberPhoto><IdType xsi:type=\"xsd:string\">1</IdType><Values xsi:type=\"tns:Values\"><Value xsi:type=\"tns:Value\"><NameValue xsi:type=\"xsd:string\">SI</NameValue><IdValue xsi:type=\"xsd:string\">3</IdValue></Value><Value xsi:type=\"tns:Value\"><NameValue xsi:type=\"xsd:string\">NO</NameValue><IdValue xsi:type=\"xsd:string\">4</IdValue></Value></Values></Question><Question xsi:type=\"tns:Question\"><IdQuestion xsi:type=\"xsd:string\">340</IdQuestion><NameQuestion xsi:type=\"xsd:string\">Mantenimiento de drenajes</NameQuestion><NameType xsi:type=\"xsd:string\">RADIO</NameType><Photo xsi:type=\"xsd:string\">NOK</Photo><NumberPhoto xsi:type=\"xsd:string\">0</NumberPhoto><IdType xsi:type=\"xsd:string\">1</IdType><Values xsi:type=\"tns:Values\"><Value xsi:type=\"tns:Value\"><NameValue xsi:type=\"xsd:string\">SI</NameValue><IdValue xsi:type=\"xsd:string\">3</IdValue></Value><Value xsi:type=\"tns:Value\"><NameValue xsi:type=\"xsd:string\">NO</NameValue><IdValue xsi:type=\"xsd:string\">4</IdValue></Value></Values></Question><Question xsi:type=\"tns:Question\"><IdQuestion xsi:type=\"xsd:string\">341</IdQuestion><NameQuestion xsi:type=\"xsd:string\">Verificar la verticalidad de la torre</NameQuestion><NameType xsi:type=\"xsd:string\">RADIO</NameType><Photo xsi:type=\"xsd:string\">NOK</Photo><NumberPhoto xsi:type=\"xsd:string\">0</NumberPhoto><IdType xsi:type=\"xsd:string\">1</IdType><Values xsi:type=\"tns:Values\"><Value xsi:type=\"tns:Value\"><NameValue xsi:type=\"xsd:string\">SI</NameValue><IdValue xsi:type=\"xsd:string\">3</IdValue></Value><Value xsi:type=\"tns:Value\"><NameValue xsi:type=\"xsd:string\">NO</NameValue><IdValue xsi:type=\"xsd:string\">4</IdValue></Value></Values></Question><Question xsi:type=\"tns:Question\"><IdQuestion xsi:type=\"xsd:string\">342</IdQuestion><NameQuestion xsi:type=\"xsd:string\">Cuaderno de Novedades (anotar última visita)</NameQuestion><NameType xsi:type=\"xsd:string\">RADIO</NameType><Photo xsi:type=\"xsd:string\">NOK</Photo><NumberPhoto xsi:type=\"xsd:string\">0</NumberPhoto><IdType xsi:type=\"xsd:string\">1</IdType><Values xsi:type=\"tns:Values\"><Value xsi:type=\"tns:Value\"><NameValue xsi:type=\"xsd:string\">SI</NameValue><IdValue xsi:type=\"xsd:string\">3</IdValue></Value><Value xsi:type=\"tns:Value\"><NameValue xsi:type=\"xsd:string\">NO</NameValue><IdValue xsi:type=\"xsd:string\">4</IdValue></Value></Values></Question><Question xsi:type=\"tns:Question\"><IdQuestion xsi:type=\"xsd:string\">343</IdQuestion><NameQuestion xsi:type=\"xsd:string\">Caminos de acceso al Site</NameQuestion><NameType xsi:type=\"xsd:string\">RADIO</NameType><Photo xsi:type=\"xsd:string\">NOK</Photo><NumberPhoto xsi:type=\"xsd:string\">0</NumberPhoto><IdType xsi:type=\"xsd:string\">1</IdType><Values xsi:type=\"tns:Values\"><Value xsi:type=\"tns:Value\"><NameValue xsi:type=\"xsd:string\">SI</NameValue><IdValue xsi:type=\"xsd:string\">3</IdValue></Value><Value xsi:type=\"tns:Value\"><NameValue xsi:type=\"xsd:string\">NO</NameValue><IdValue xsi:type=\"xsd:string\">4</IdValue></Value></Values></Question><Question xsi:type=\"tns:Question\"><IdQuestion xsi:type=\"xsd:string\">344</IdQuestion><NameQuestion xsi:type=\"xsd:string\">Luminaria peímetro del Site y en Sala de GE (reemplazar si es necesario)</NameQuestion><NameType xsi:type=\"xsd:string\">RADIO</NameType><Photo xsi:type=\"xsd:string\">NOK</Photo><NumberPhoto xsi:type=\"xsd:string\">0</NumberPhoto><IdType xsi:type=\"xsd:string\">1</IdType><Values xsi:type=\"tns:Values\"><Value xsi:type=\"tns:Value\"><NameValue xsi:type=\"xsd:string\">SI</NameValue><IdValue xsi:type=\"xsd:string\">3</IdValue></Value><Value xsi:type=\"tns:Value\"><NameValue xsi:type=\"xsd:string\">NO</NameValue><IdValue xsi:type=\"xsd:string\">4</IdValue></Value></Values></Question><Question xsi:type=\"tns:Question\"><IdQuestion xsi:type=\"xsd:string\">345</IdQuestion><NameQuestion xsi:type=\"xsd:string\">Luz de emergencia del shelter (reemplazar si es necesario)</NameQuestion><NameType xsi:type=\"xsd:string\">RADIO</NameType><Photo xsi:type=\"xsd:string\">NOK</Photo><NumberPhoto xsi:type=\"xsd:string\">0</NumberPhoto><IdType xsi:type=\"xsd:string\">1</IdType><Values xsi:type=\"tns:Values\"><Value xsi:type=\"tns:Value\"><NameValue xsi:type=\"xsd:string\">SI</NameValue><IdValue xsi:type=\"xsd:string\">3</IdValue></Value><Value xsi:type=\"tns:Value\"><NameValue xsi:type=\"xsd:string\">NO</NameValue><IdValue xsi:type=\"xsd:string\">4</IdValue></Value></Values></Question><Question xsi:type=\"tns:Question\"><IdQuestion xsi:type=\"xsd:string\">346</IdQuestion><NameQuestion xsi:type=\"xsd:string\">Funcionamiento de luz de balizaje (reemplazar si es necesario)</NameQuestion><NameType xsi:type=\"xsd:string\">RADIO</NameType><Photo xsi:type=\"xsd:string\">NOK</Photo><NumberPhoto xsi:type=\"xsd:string\">0</NumberPhoto><IdType xsi:type=\"xsd:string\">1</IdType><Values xsi:type=\"tns:Values\"><Value xsi:type=\"tns:Value\"><NameValue xsi:type=\"xsd:string\">SI</NameValue><IdValue xsi:type=\"xsd:string\">3</IdValue></Value><Value xsi:type=\"tns:Value\"><NameValue xsi:type=\"xsd:string\">NO</NameValue><IdValue xsi:type=\"xsd:string\">4</IdValue></Value></Values></Question><Question xsi:type=\"tns:Question\"><IdQuestion xsi:type=\"xsd:string\">347</IdQuestion><NameQuestion xsi:type=\"xsd:string\">Mimetizado del Site</NameQuestion><NameType xsi:type=\"xsd:string\">RADIO</NameType><Photo xsi:type=\"xsd:string\">NOK</Photo><NumberPhoto xsi:type=\"xsd:string\">0</NumberPhoto><IdType xsi:type=\"xsd:string\">1</IdType><Values xsi:type=\"tns:Values\"><Value xsi:type=\"tns:Value\"><NameValue xsi:type=\"xsd:string\">SI</NameValue><IdValue xsi:type=\"xsd:string\">3</IdValue></Value><Value xsi:type=\"tns:Value\"><NameValue xsi:type=\"xsd:string\">NO</NameValue><IdValue xsi:type=\"xsd:string\">4</IdValue></Value></Values></Question><Question xsi:type=\"tns:Question\"><IdQuestion xsi:type=\"xsd:string\">348</IdQuestion><NameQuestion xsi:type=\"xsd:string\">Prueba de alarmas de entorno (puerta abierta, la temperatura, etc)</NameQuestion><NameType xsi:type=\"xsd:string\">RADIO</NameType><Photo xsi:type=\"xsd:string\">NOK</Photo><NumberPhoto xsi:type=\"xsd:string\">0</NumberPhoto><IdType xsi:type=\"xsd:string\">1</IdType><Values xsi:type=\"tns:Values\"><Value xsi:type=\"tns:Value\"><NameValue xsi:type=\"xsd:string\">SI</NameValue><IdValue xsi:type=\"xsd:string\">3</IdValue></Value><Value xsi:type=\"tns:Value\"><NameValue xsi:type=\"xsd:string\">NO</NameValue><IdValue xsi:type=\"xsd:string\">4</IdValue></Value></Values></Question><Question xsi:type=\"tns:Question\"><IdQuestion xsi:type=\"xsd:string\">349</IdQuestion><NameQuestion xsi:type=\"xsd:string\">Extintor</NameQuestion><NameType xsi:type=\"xsd:string\">RADIO</NameType><Photo xsi:type=\"xsd:string\">NOK</Photo><NumberPhoto xsi:type=\"xsd:string\">0</NumberPhoto><IdType xsi:type=\"xsd:string\">1</IdType><Values xsi:type=\"tns:Values\"><Value xsi:type=\"tns:Value\"><NameValue xsi:type=\"xsd:string\">SI</NameValue><IdValue xsi:type=\"xsd:string\">3</IdValue></Value><Value xsi:type=\"tns:Value\"><NameValue xsi:type=\"xsd:string\">NO</NameValue><IdValue xsi:type=\"xsd:string\">4</IdValue><IdValueAlteraVisible xsi:type=\"xsd:string\">350</IdValueAlteraVisible></Value></Values></Question><Question xsi:type=\"tns:Question\"><IdQuestion xsi:type=\"xsd:string\">350</IdQuestion><NameQuestion xsi:type=\"xsd:string\">Fecha de vencimiento</NameQuestion><NameType xsi:type=\"xsd:string\">DATE</NameType><Photo xsi:type=\"xsd:string\">NOK</Photo><NumberPhoto xsi:type=\"xsd:string\">0</NumberPhoto><IdType xsi:type=\"xsd:string\">10</IdType><Visible xsi:type=\"xsd:string\">false</Visible></Question><Question xsi:type=\"tns:Question\"><IdQuestion xsi:type=\"xsd:string\">351</IdQuestion><NameQuestion xsi:type=\"xsd:string\">Linea de vida</NameQuestion><NameType xsi:type=\"xsd:string\">RADIO</NameType><Photo xsi:type=\"xsd:string\">NOK</Photo><NumberPhoto xsi:type=\"xsd:string\">0</NumberPhoto><IdType xsi:type=\"xsd:string\">1</IdType><Values xsi:type=\"tns:Values\"><Value xsi:type=\"tns:Value\"><NameValue xsi:type=\"xsd:string\">SI</NameValue><IdValue xsi:type=\"xsd:string\">3</IdValue></Value><Value xsi:type=\"tns:Value\"><NameValue xsi:type=\"xsd:string\">NO</NameValue><IdValue xsi:type=\"xsd:string\">4</IdValue></Value></Values></Question><Question xsi:type=\"tns:Question\"><IdQuestion xsi:type=\"xsd:string\">352</IdQuestion><NameQuestion xsi:type=\"xsd:string\">Otros</NameQuestion><NameType xsi:type=\"xsd:string\">RADIO</NameType><Photo xsi:type=\"xsd:string\">NOK</Photo><NumberPhoto xsi:type=\"xsd:string\">0</NumberPhoto><IdType xsi:type=\"xsd:string\">1</IdType><Values xsi:type=\"tns:Values\"><Value xsi:type=\"tns:Value\"><NameValue xsi:type=\"xsd:string\">SI</NameValue><IdValue xsi:type=\"xsd:string\">3</IdValue></Value><Value xsi:type=\"tns:Value\"><NameValue xsi:type=\"xsd:string\">NO</NameValue><IdValue xsi:type=\"xsd:string\">4</IdValue></Value></Values></Question><Question xsi:type=\"tns:Question\"><IdQuestion xsi:type=\"xsd:string\">353</IdQuestion><NameQuestion xsi:type=\"xsd:string\">Observaciones</NameQuestion><NameType xsi:type=\"xsd:string\">TEXT</NameType><Photo xsi:type=\"xsd:string\">NOK</Photo><NumberPhoto xsi:type=\"xsd:string\">0</NumberPhoto><IdType xsi:type=\"xsd:string\">3</IdType></Question><Question xsi:type=\"tns:Question\"><IdQuestion xsi:type=\"xsd:string\">354</IdQuestion><NameQuestion xsi:type=\"xsd:string\">Fotografias</NameQuestion><NameType xsi:type=\"xsd:string\">PHOTO</NameType><Photo xsi:type=\"xsd:string\">OK</Photo><NumberPhoto xsi:type=\"xsd:string\">10</NumberPhoto><IdType xsi:type=\"xsd:string\">5</IdType></Question></Questions></Item></Items></Area></Areas></System></Systems></Check></Response></ns1:checkTransportResponse></SOAP-ENV:Body></SOAP-ENV:Envelope>";
+
                 ArrayList<String> returnCode = XMLParser.getReturnCode2(query);
                 if (returnCode.get(0).equals("0"))
                     flag = true;
-
                 return returnCode.get(1);
             } catch (SAXException | ParserConfigurationException | XPathExpressionException e) {
                 e.printStackTrace();
@@ -327,8 +373,6 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                     code = 0;
                 }else if(type.equals("3G")) {
                     code = 1;
-                }else if(type.equals("AC")) {
-                    code = 2;
                 }else if(type.equals("DC")) {
                     code = 3;
                 }else if(type.equals("SYSTEM GROUND")) {
@@ -339,6 +383,8 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                     code = 6;
                 }else if(type.equals("TRANSPORTE")) {
                     code = 7;
+                }else if(type.equals("AC")) {
+                    code = 9;
                 }else if(type.equals("GRUPO ELECTROGEN")) {
                     code = 8;
                 }else
@@ -426,6 +472,10 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             if (requestCode == 7) {
                 TRANSPORTE.setEnabled(false);
                 REG.addValue("TRANSPORTE" + idMain, true);
+            }
+            if (requestCode == 9) {
+                AC.setEnabled(false);
+                REG.addValue("AC" + idMain, true);
             }
             if (requestCode == 8) {
                 GE.setEnabled(false);

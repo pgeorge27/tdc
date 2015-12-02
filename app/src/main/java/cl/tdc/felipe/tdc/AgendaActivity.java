@@ -421,12 +421,12 @@ public class AgendaActivity extends Activity {
                             bComplete.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
-                                    /*if(pref.getChecklistState()) {
-                                        CompletarActividad c = new CompletarActividad(tContext, Integer.parseInt(m.getIdMaintenance()));
-                                        c.execute();
-                                    }else{
-                                        Toast.makeText(actividad.getApplicationContext(), "Debe completar el Checklist de Mantenimiento antes de continuar.",Toast.LENGTH_LONG).show();
-                                    }*/
+//                                    if(pref.getChecklistState()) {
+//                                        CompletarActividad c = new CompletarActividad(tContext, Integer.parseInt(m.getIdMaintenance()));
+//                                        c.execute();
+//                                    }else{
+//                                        Toast.makeText(actividad.getApplicationContext(), "Debe completar el Checklist de Mantenimiento antes de continuar.",Toast.LENGTH_LONG).show();
+//                                    }
                                     Intent c = new Intent(actividad, ActividadCierreActivity.class);
                                     c.putExtra("MAINTENANCE", m.getIdMaintenance());
 

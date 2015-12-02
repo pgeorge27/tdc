@@ -208,6 +208,19 @@
                 android:layout_marginRight="8dp"
                 android:visibility="gone"/>
 
+            <ToggleButton
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/RAN"
+                android:background="@drawable/custom_button_rounded_green"
+                android:textColor="@android:color/white"
+                android:layout_marginTop="6dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="8dp"
+                android:textOff="MOSTRAR RAN"
+                android:textOn="OCULTAR RAN"
+                android:visibility="gone"/>
+
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -219,7 +232,7 @@
                 android:layout_marginTop="6dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="8dp"
-                android:visibility="visible" />
+                android:visibility="gone" />
 
             <Button
                 android:layout_width="match_parent"
@@ -233,7 +246,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="8dp"
                 android:visibility="gone"
-                 />
+                />
 
             <Button
                 android:layout_width="match_parent"
@@ -261,7 +274,7 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="8dp"
                 android:visibility="gone"
-                 />
+                />
 
             <Button
                 android:layout_width="match_parent"
@@ -300,7 +313,7 @@
                 android:layout_marginTop="6dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="8dp"
-                android:visibility="visible"/>
+                android:visibility="gone"/>
 
         </LinearLayout>
     </ScrollView>

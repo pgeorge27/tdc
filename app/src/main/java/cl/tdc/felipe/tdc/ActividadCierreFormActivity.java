@@ -147,7 +147,7 @@ public class ActividadCierreFormActivity extends Activity {
         QUERY = getIntent().getStringExtra("XML");
         IDMAIN = getIntent().getStringExtra("ID");
 
-        REG = new FormCierreReg(mContext, TITLE);
+        REG = new FormCierreReg(mContext, TITLE+IDMAIN);
 
         PAGETITLE = (TextView) this.findViewById(R.id.header_actual);
         PAGETITLE.setText(TITLE);
@@ -402,25 +402,24 @@ public class ActividadCierreFormActivity extends Activity {
                                             ((RadioButton) ((RadioGroup) Q.getView()).getChildAt(pos)).setChecked(true);
                                         }
 
-//                                        RadioGroup  group= (RadioGroup) Q.getView().findViewById(R.id.radioGroup);
-//                                        group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-//                                            @Override
-//                                            public void onCheckedChanged(RadioGroup radioGroup, int i) {
-//                                                View radioButton = radioGroup.findViewById(i);
-//                                                int index = radioGroup.indexOfChild(radioButton);
-//                                            }
-//                                        });
-//
-//                                        if ("TRANSPORTE".equalsIgnoreCase(TITLE) && Q.getIdQuestion().equalsIgnoreCase("349")){
-//
-//                                            Log.i("TITTLE", "EL Titulo es " + TITLE);
-//                                            Log.i("TITTLE", "EL Titulo es " + TITLE);
-//                                            Log.i("TITTLE", "EL Titulo es " + TITLE);
-//                                            Log.i("TITTLE", "EL Titulo es " + TITLE);
-//                                            Log.i("TITTLE", "EL Titulo es " + TITLE);
-//                                            Log.i("TITTLE", "EL Titulo es " + TITLE);
-//                                            Log.i("TITTLE", "EL Titulo es " + TITLE);
-//                                        }
+                                        if ("TRANSPORTE".equalsIgnoreCase(TITLE) && Q.getIdQuestion().equalsIgnoreCase("349")){
+                                            RadioGroup group = (RadioGroup) Q.getView();
+                                            group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                                                @Override
+                                                public void onCheckedChanged(RadioGroup rg, int id) {
+                                                    RadioButton btn = (RadioButton) rg.findViewById(id);
+                                                    int position = rg.indexOfChild(btn) + 1;
+
+                                                    if (position == 2)
+                                                        Log.i("POSITION2", "AQUIIIII: " + position);
+
+                                                    Log.i("POSITION", "onCheckedChanged: " + position);
+
+                                                }
+                                            });
+                                        }
+
+
                                     }
                                     if (Q.getIdType().equals(Constantes.NUM)) {
                                         String text = REG.getString("NUM" + tag);
