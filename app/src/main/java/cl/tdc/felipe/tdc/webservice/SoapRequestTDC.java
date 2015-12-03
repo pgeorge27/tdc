@@ -805,14 +805,7 @@ public class SoapRequestTDC {
                                         "<SetPhotos xsi:type=\"urn:SetPhotos\">" +
                                         xmlphotos +
                                         "</SetPhotos>";
-                                // Anexando bloque entero
-//                                if  (Q.getIdQuestion().equalsIgnoreCase("350")) {
-//                                    questionResponse += "<AnswerAdic xsi:type=\"urn:AnswerAdic\">" +
-//                                            "<IdQuestion xsi:type=\"xsd:string\">" + Q.getIdQuestion() + "</IdQuestion>" +
-//                                            "<IdAnswer xsi:type=\"xsd:string\">" + Q.getAswer3G() + "</IdAnswer>" +
-//                                            "<IdType xsi:type=\"xsd:string\">" + Q.getIdType() + "</IdType>" +
-//                                            "</AnswerAdic>";
-//                                }
+
                                 questionResponse += "</AnswerQuestionTrans>";
                             }
 

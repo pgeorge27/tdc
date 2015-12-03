@@ -418,9 +418,12 @@ public class ActividadCierreFormActivity extends Activity {
                                                 if (Q.getValues().get(i).getQuestions() != null){
 
                                                     for (int j = 0; j < Q.getValues().get(i).getQuestions().size(); j++) {
-                                                        LinearLayout layquest2 = create_questionLayout();
+                                                        final LinearLayout layquest2 = create_questionLayout();
+
                                                         layquest2.addView(Q.getValues().get(i).getQuestions().get(j).getTitle(mContext));
-                                                        View question2 = Q.getValues().get(i).getQuestions().get(j).generateView(mContext);
+                                                        layquest2.setVisibility(View.GONE);
+                                                        final View question2 = Q.getValues().get(i).getQuestions().get(j).generateView(mContext);
+                                                        question2.setVisibility(View.GONE);
 
                                                         if (question2 != null) {
                                                             String tag2 = S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem() + "-" + Q.getValues().get(i).getQuestions().get(j).getIdQuestion() + "-" + Q.getValues().get(i).getQuestions().get(j).getNameQuestion();
@@ -439,11 +442,16 @@ public class ActividadCierreFormActivity extends Activity {
                                                                         int position = rg.indexOfChild(btn) + 1;
 
                                                                         if (position == 2) {
+                                                                            layquest2.setVisibility(View.VISIBLE);
                                                                             t2.setVisibility(View.VISIBLE);
                                                                             t2.setText("");
+                                                                            question2.setVisibility(View.VISIBLE);
                                                                         }else{
+                                                                            layquest2.setVisibility(View.GONE);
                                                                             t2.setVisibility(View.GONE);
+                                                                            question2.setVisibility(View.GONE);
                                                                         }
+
                                                                     }
                                                                 });
 
@@ -459,41 +467,7 @@ public class ActividadCierreFormActivity extends Activity {
                                                 }
                                             }
                                         }
-
-
-
-
                                     }
-
-//                                        if ("TRANSPORTE".equalsIgnoreCase(TITLE)){
-//                                            if (Q.getValues().size() > 0 ){
-//                                                for (int i = 0; i < Q.getValues().size(); i++){
-//                                                    if (Q.getValues().get(i).getQuestions() != null){
-//                                                        for (int j = 0; j < Q.getValues().get(i).getQuestions().size(); j++){
-//
-//
-//                                                            if (Q.getValues().get(i).getQuestions().get(j).getIdType().equals(Constantes.DATE)) {
-//                                                                Log.i("AQUI", "init: " + Q.getValues().get(i).getQuestions().get(j).getEditTexts().get(0));
-//                                                                Log.i("AQUI", "init: " + Q.getValues().get(i).getQuestions().get(j).getEditTexts().get(0));
-//                                                                Log.i("AQUI", "init: " + Q.getValues().get(i).getQuestions().get(j).getEditTexts().get(0));
-//
-//                                                                EditText t = Q.getValues().get(i).getQuestions().get(j).getEditTexts().get(1);
-//
-//                                                                EditText t = Q.getEditTexts().get(1);
-//                                                                String text = REG.getString("DATE" + tag);
-//                                                                t.setText(text);
-//                                                            }
-//
-//                                                            Log.i("AQUI", "init: " + Q.getValues().get(i).getQuestions().get(j).getIdQuestion());
-//                                                            Log.i("AQUI", "init: " + Q.getValues().get(i).getQuestions().get(j).getNameQuestion());
-//                                                        }
-//                                                    }
-//                                                }
-//                                            }
-//                                        }
-
-
-
 
                                     if (Q.getIdType().equals(Constantes.NUM)) {
                                         String text = REG.getString("NUM" + tag);
