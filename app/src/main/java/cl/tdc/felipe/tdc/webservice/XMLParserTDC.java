@@ -1,5 +1,7 @@
 package cl.tdc.felipe.tdc.webservice;
 
+import android.util.Log;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -119,6 +121,29 @@ public class XMLParserTDC {
                                                         Element value = (Element) VALUES.item(p);
                                                         V.setIdValue(getNodeValue(value, "IdValue"));
                                                         V.setNameValue(getNodeValue(value, "NameValue"));
+                                                                                                                                    //Editado por George & Sarah 2-12-2015
+                                                        NodeList QUESTIONSVALUE = value.getElementsByTagName("Questions");          //Resumen: Form Transporte tiene una pregunta con radio de respuestas
+                                                        if (QUESTIONSVALUE.getLength()>0){                                          //uno de los radio tiene preguntas internas (Si responde No) se debe
+                                                            NodeList QUESTIONVALUE = value.getElementsByTagName("Question");        //mostrar la pregunta interna.
+                                                            ArrayList<QUESTION> qvArrayList = new ArrayList<>();                    //Por eso: Evaluamos si la respuesta contiene una etiqueta de pregunta
+                                                            if (QUESTIONVALUE.getLength()>0) {                                      //en caso de tener pregunta interna, iteramos sobre las preguntas,
+                                                                for (int qv = 0; qv < QUESTIONVALUE.getLength(); qv++) {            //al final agregamos las preguntas a un arreglo de preguntas
+                                                                    QUESTION QV = new QUESTION();
+                                                                    Element questionv = (Element) QUESTIONVALUE.item(qv);
+
+                                                                    QV.setIdQuestion(getNodeValue(questionv, "IdQuestion"));
+                                                                    QV.setNameQuestion(getNodeValue(questionv, "NameQuestion"));
+                                                                    QV.setIdType(getNodeValue(questionv, "IdType"));
+                                                                    QV.setNameType(getNodeValue(questionv, "NameType"));
+                                                                    QV.setPhoto(getNodeValue(questionv, "Photo"));
+                                                                    QV.setNumberPhoto(getNodeValue(questionv, "NumberPhoto"));
+
+                                                                    qvArrayList.add(QV);
+
+                                                                }
+                                                                V.setQuestions(qvArrayList);                                        //fin Sarah & George
+                                                            }
+                                                        }
                                                         valueArrayList.add(V);                                                      //Agregamos V a la lista de values
                                                     }
                                                     Q.setValues(valueArrayList);                                                    //Agregamos los values a la question

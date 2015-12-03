@@ -36,6 +36,10 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
+
 import org.xml.sax.SAXException;
 
 import java.io.BufferedInputStream;
@@ -94,6 +98,11 @@ public class ActividadCierreFormActivity extends Activity {
     ArrayList<SYSTEM> SYSTEMS;
 
     ProgressDialog dialog;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
     @Override
     protected void onResume() {
@@ -147,7 +156,7 @@ public class ActividadCierreFormActivity extends Activity {
         QUERY = getIntent().getStringExtra("XML");
         IDMAIN = getIntent().getStringExtra("ID");
 
-        REG = new FormCierreReg(mContext, TITLE+IDMAIN);
+        REG = new FormCierreReg(mContext, TITLE + IDMAIN);
 
         PAGETITLE = (TextView) this.findViewById(R.id.header_actual);
         PAGETITLE.setText(TITLE);
@@ -161,6 +170,9 @@ public class ActividadCierreFormActivity extends Activity {
                 Log.d(TITLE, "No se pudo crear el directorio " + name);
 
         init();
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     public void onClick_apagar(View v) {
@@ -402,22 +414,44 @@ public class ActividadCierreFormActivity extends Activity {
                                             ((RadioButton) ((RadioGroup) Q.getView()).getChildAt(pos)).setChecked(true);
                                         }
 
-                                        if ("TRANSPORTE".equalsIgnoreCase(TITLE) && Q.getIdQuestion().equalsIgnoreCase("349")){
-                                            RadioGroup group = (RadioGroup) Q.getView();
-                                            group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                                                @Override
-                                                public void onCheckedChanged(RadioGroup rg, int id) {
-                                                    RadioButton btn = (RadioButton) rg.findViewById(id);
-                                                    int position = rg.indexOfChild(btn) + 1;
+//                                        if (Q.getValues().size() > 0 ){
+//                                            for (int i = 0; i < Q.getValues().size(); i++){
+//                                                if (Q.getValues().get(i).getQuestions() != null){
+//                                                    for (int j = 0; j < Q.getValues().get(i).getQuestions().size(); j++){
+//
+//
+//                                                        if (Q.getValues().get(i).getQuestions().get(j).getIdType().equals(Constantes.DATE)) {
+//                                                            EditText t = Q.getValues().get(i).getQuestions().get(j).getEditTexts().get(0);
+//                                                            EditText t = Q.getEditTexts().get(0);
+//                                                            String text = REG.getString("DATE" + tag);
+//                                                            t.setText(text);
+//                                                        }
+//
+//                                                        Log.i("AQUI", "init: " + Q.getValues().get(i).getQuestions().get(j).getIdQuestion());
+//                                                        Log.i("AQUI", "init: " + Q.getValues().get(i).getQuestions().get(j).getNameQuestion());
+//                                                    }
+//                                                }
+//                                            }
+//                                        }
 
-                                                    if (position == 2)
-                                                        Log.i("POSITION2", "AQUIIIII: " + position);
 
-                                                    Log.i("POSITION", "onCheckedChanged: " + position);
 
-                                                }
-                                            });
-                                        }
+//                                        if ("TRANSPORTE".equalsIgnoreCase(TITLE) && Q.getIdQuestion().equalsIgnoreCase("349")){
+//                                            RadioGroup group = (RadioGroup) Q.getView();
+//                                            group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+//                                                @Override
+//                                                public void onCheckedChanged(RadioGroup rg, int id) {
+//                                                    RadioButton btn = (RadioButton) rg.findViewById(id);
+//                                                    int position = rg.indexOfChild(btn) + 1;
+//
+//                                                    if (position == 2)
+//                                                        Log.i("POSITION2", "AQUIIIII: " + position);
+//
+//                                                    Log.i("POSITION", "onCheckedChanged: " + position);
+//
+//                                                }
+//                                            });
+//                                        }
 
 
                                     }
@@ -962,11 +996,11 @@ public class ActividadCierreFormActivity extends Activity {
                                 buttons.get(1).setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View view) {
-                                        if(I.getPhoto()!= null){
+                                        if (I.getPhoto() != null) {
                                             PHOTO p = I.getPhoto();
 
                                             File file = new File(p.getNamePhoto());
-                                            if(file.exists()){
+                                            if (file.exists()) {
                                                 ImageView joto = new ImageView(mContext);
                                                 final PHOTO f = I.getPhoto();
                                                 joto.setImageBitmap(BitmapFactory.decodeFile(f.getNamePhoto()));
@@ -1586,7 +1620,7 @@ public class ActividadCierreFormActivity extends Activity {
         int code = TAKE_PICTURE;
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         photoTMP.setDateTime(timeStamp);
-        imgName = name + "item_"+itemTMP.getIdItem() + "_" + timeStamp + ".jpg";
+        imgName = name + "item_" + itemTMP.getIdItem() + "_" + timeStamp + ".jpg";
         Uri output = Uri.fromFile(new File(imgName));
         intent.putExtra(MediaStore.EXTRA_OUTPUT, output);
         startActivityForResult(intent, code);
@@ -1672,6 +1706,46 @@ public class ActividadCierreFormActivity extends Activity {
         }
 
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "ActividadCierreForm Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://cl.tdc.felipe.tdc/http/host/path")
+        );
+        AppIndex.AppIndexApi.start(client, viewAction);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "ActividadCierreForm Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://cl.tdc.felipe.tdc/http/host/path")
+        );
+        AppIndex.AppIndexApi.end(client, viewAction);
+        client.disconnect();
     }
 
     private class EnviarIden extends AsyncTask<String, String, String> {
@@ -1864,6 +1938,7 @@ public class ActividadCierreFormActivity extends Activity {
 
         }
     }
+
     //Editado por S G
     private class EnviarTransport extends AsyncTask<String, String, String> {
 
@@ -2179,6 +2254,7 @@ public class ActividadCierreFormActivity extends Activity {
 
         }
     }
+
     //End S G
     public void subir_fotos(String mensaje) {
         AlertDialog.Builder b = new AlertDialog.Builder(actividad);
@@ -2188,8 +2264,8 @@ public class ActividadCierreFormActivity extends Activity {
         for (SYSTEM S : SYSTEMS) {
             for (AREA A : S.getAreas()) {
                 for (ITEM I : A.getItems()) {
-                    if(I.getIdType().equals(Constantes.PHOTO)){
-                        if(I.getPhoto() != null){
+                    if (I.getIdType().equals(Constantes.PHOTO)) {
+                        if (I.getPhoto() != null) {
                             p.add(I.getPhoto());
                         }
                     }

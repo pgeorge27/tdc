@@ -736,9 +736,9 @@ public class SoapRequestTDC {
                 "<soapenv:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:urn=\"urn:Configurationwsdl\">" +
                         "<soapenv:Header/>" +
                         "<soapenv:Body>" +
-                        "<urn:answerTransport2 soapenv:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" +
-                        "<RequestAnswerTransport2 xsi:type=\"urn:RequestAnswerTransport\">" +
-                        "<RequestTrans2 xsi:type=\"urn:RequestTrans\">" +
+                        "<urn:answerTransport soapenv:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" +
+                        "<RequestAnswerTransport xsi:type=\"urn:RequestAnswerTransport\">" +
+                        "<RequestTrans xsi:type=\"urn:RequestTrans\">" +
                         "<Header xsi:type=\"urn:Header\">" +
                         "<Date xsi:type=\"xsd:string\">" + formatter.format(fecha) + "</Date>" +
                         "<Platafform xsi:type=\"xsd:string\">MOBILE</Platafform>" +
@@ -747,10 +747,10 @@ public class SoapRequestTDC {
                         "</Header>" +
                         "<!--Optional:-->";
         for (SYSTEM S : SYSTEMS) {
-            xml += "<SystemsRptaTrans3 xsi:type=\"urn:SystemsRptaTrans\">" +
+            xml += "<SystemsRptaTrans xsi:type=\"urn:SystemsRptaTrans\">" +
                     "<IdSystems xsi:type=\"xsd:string\">" + S.getIdSystem() + "</IdSystems>";
             if (S.getAreas() != null) {
-                xml += "<SetRptaItemTrans2 xsi:type=\"urn:SetRptaItemTrans\">";
+                xml += "<SetRptaItemTrans xsi:type=\"urn:SetRptaItemTrans\">";
                 for (AREA A : S.getAreas()) {
 
                     for (ITEM I : A.getItems()) {
@@ -961,7 +961,7 @@ public class SoapRequestTDC {
                         "<soapenv:Body>" +
                         "<urn:answerSystem soapenv:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" +
                         "<RequestAnswerTransport xsi:type=\"urn:RequestAnswerTransport\">" +
-                        "<RequestTrans2 xsi:type=\"urn:RequestTrans\">" +
+                        "<RequestTrans xsi:type=\"urn:RequestTrans\">" +
                         "<Header xsi:type=\"urn:Header\">" +
                         "<Date xsi:type=\"xsd:string\">" + formatter.format(fecha) + "</Date>" +
                         "<Platafform xsi:type=\"xsd:string\">MOBILE</Platafform>" +
