@@ -399,7 +399,6 @@ public class ActividadCierreFormActivity extends Activity {
                                 }
                                 layquest.addView(Q.getTitle(mContext));
 
-
                                 View question = Q.generateView(mContext);
                                 if (question != null) {
                                     String tag = S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem() + "-" + Q.getIdQuestion() + "-" + Q.getNameQuestion();
@@ -414,21 +413,80 @@ public class ActividadCierreFormActivity extends Activity {
                                             ((RadioButton) ((RadioGroup) Q.getView()).getChildAt(pos)).setChecked(true);
                                         }
 
-//                                        if (Q.getValues().size() > 0 ){
-//                                            for (int i = 0; i < Q.getValues().size(); i++){
-//                                                if (Q.getValues().get(i).getQuestions() != null){
-//                                                    for (int j = 0; j < Q.getValues().get(i).getQuestions().size(); j++){
+                                        if (Q.getValues().size()>0) {
+                                            for (int i = 0; i < Q.getValues().size(); i++) {
+                                                if (Q.getValues().get(i).getQuestions() != null){
+
+                                                    for (int j = 0; j < Q.getValues().get(i).getQuestions().size(); j++) {
+                                                        LinearLayout layquest2 = create_questionLayout();
+                                                        layquest2.addView(Q.getValues().get(i).getQuestions().get(j).getTitle(mContext));
+                                                        View question2 = Q.getValues().get(i).getQuestions().get(j).generateView(mContext);
+
+                                                        if (question2 != null) {
+                                                            String tag2 = S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem() + "-" + Q.getValues().get(i).getQuestions().get(j).getIdQuestion() + "-" + Q.getValues().get(i).getQuestions().get(j).getNameQuestion();
+
+                                                            if (Q.getValues().get(i).getQuestions().get(j).getIdType().equals(Constantes.DATE)) {
+                                                                final EditText t2 = Q.getValues().get(i).getQuestions().get(j).getEditTexts().get(0);
+                                                                String text = REG.getString("DATE" + tag2);
+                                                                t2.setText(text);
+                                                                t2.setVisibility(View.GONE);
+
+                                                                RadioGroup group = (RadioGroup) Q.getView();
+                                                                group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                                                                    @Override
+                                                                    public void onCheckedChanged(RadioGroup rg, int id) {
+                                                                        RadioButton btn = (RadioButton) rg.findViewById(id);
+                                                                        int position = rg.indexOfChild(btn) + 1;
+
+                                                                        if (position == 2) {
+                                                                            t2.setVisibility(View.VISIBLE);
+                                                                            t2.setText("");
+                                                                        }else{
+                                                                            t2.setVisibility(View.GONE);
+                                                                        }
+                                                                    }
+                                                                });
+
+                                                            }
+
+                                                            itemLayout.addView(layquest2);
+
+                                                            if (!Q.getValues().get(i).getQuestions().get(j).getIdType().equals(Constantes.PHOTO))
+                                                                itemLayout.addView(question2);
+
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+
+
+
+
+                                    }
+
+//                                        if ("TRANSPORTE".equalsIgnoreCase(TITLE)){
+//                                            if (Q.getValues().size() > 0 ){
+//                                                for (int i = 0; i < Q.getValues().size(); i++){
+//                                                    if (Q.getValues().get(i).getQuestions() != null){
+//                                                        for (int j = 0; j < Q.getValues().get(i).getQuestions().size(); j++){
 //
 //
-//                                                        if (Q.getValues().get(i).getQuestions().get(j).getIdType().equals(Constantes.DATE)) {
-//                                                            EditText t = Q.getValues().get(i).getQuestions().get(j).getEditTexts().get(0);
-//                                                            EditText t = Q.getEditTexts().get(0);
-//                                                            String text = REG.getString("DATE" + tag);
-//                                                            t.setText(text);
+//                                                            if (Q.getValues().get(i).getQuestions().get(j).getIdType().equals(Constantes.DATE)) {
+//                                                                Log.i("AQUI", "init: " + Q.getValues().get(i).getQuestions().get(j).getEditTexts().get(0));
+//                                                                Log.i("AQUI", "init: " + Q.getValues().get(i).getQuestions().get(j).getEditTexts().get(0));
+//                                                                Log.i("AQUI", "init: " + Q.getValues().get(i).getQuestions().get(j).getEditTexts().get(0));
+//
+//                                                                EditText t = Q.getValues().get(i).getQuestions().get(j).getEditTexts().get(1);
+//
+//                                                                EditText t = Q.getEditTexts().get(1);
+//                                                                String text = REG.getString("DATE" + tag);
+//                                                                t.setText(text);
+//                                                            }
+//
+//                                                            Log.i("AQUI", "init: " + Q.getValues().get(i).getQuestions().get(j).getIdQuestion());
+//                                                            Log.i("AQUI", "init: " + Q.getValues().get(i).getQuestions().get(j).getNameQuestion());
 //                                                        }
-//
-//                                                        Log.i("AQUI", "init: " + Q.getValues().get(i).getQuestions().get(j).getIdQuestion());
-//                                                        Log.i("AQUI", "init: " + Q.getValues().get(i).getQuestions().get(j).getNameQuestion());
 //                                                    }
 //                                                }
 //                                            }
@@ -436,25 +494,7 @@ public class ActividadCierreFormActivity extends Activity {
 
 
 
-//                                        if ("TRANSPORTE".equalsIgnoreCase(TITLE) && Q.getIdQuestion().equalsIgnoreCase("349")){
-//                                            RadioGroup group = (RadioGroup) Q.getView();
-//                                            group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-//                                                @Override
-//                                                public void onCheckedChanged(RadioGroup rg, int id) {
-//                                                    RadioButton btn = (RadioButton) rg.findViewById(id);
-//                                                    int position = rg.indexOfChild(btn) + 1;
-//
-//                                                    if (position == 2)
-//                                                        Log.i("POSITION2", "AQUIIIII: " + position);
-//
-//                                                    Log.i("POSITION", "onCheckedChanged: " + position);
-//
-//                                                }
-//                                            });
-//                                        }
 
-
-                                    }
                                     if (Q.getIdType().equals(Constantes.NUM)) {
                                         String text = REG.getString("NUM" + tag);
                                         ((TextView) Q.getView()).setText(text);
