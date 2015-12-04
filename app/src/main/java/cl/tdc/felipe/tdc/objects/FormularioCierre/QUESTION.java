@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.support.v4.view.GravityCompat;
 import android.text.InputType;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -22,8 +23,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextClock;
 import android.widget.TextView;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -113,6 +116,12 @@ public class QUESTION {
         }
         if(idType.equals(Constantes.TEXT) || idType.equals(Constantes.NUM)){
             Answer = ((EditText)view).getText().toString();
+        }
+
+        if(idType.equals(Constantes.DATE)){
+            Answer = "";
+//            Answer = ((EditText)view).getText().toString();
+
         }
 
         return Answer;
@@ -332,6 +341,7 @@ public class QUESTION {
 
         return view;
     }
+
     public TextView getTitle(Context ctx) {
         title = new TextView(ctx);
         LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);

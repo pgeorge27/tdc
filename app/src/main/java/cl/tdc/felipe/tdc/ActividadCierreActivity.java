@@ -32,7 +32,15 @@ import cl.tdc.felipe.tdc.webservice.SoapRequest;
 import cl.tdc.felipe.tdc.webservice.SoapRequestTDC;
 import cl.tdc.felipe.tdc.webservice.XMLParser;
 
+import android.app.Activity;
+import android.content.Context;
+import android.os.Bundle;
+import android.os.PowerManager;
+
 public class ActividadCierreActivity extends Activity implements View.OnClickListener {
+
+    protected PowerManager.WakeLock wakelock;
+
     private static String TITLE = "Cierre de Actividad";
     private static String IMEI;
     String idMain;
@@ -53,6 +61,10 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         actividad = this;
         mContext = this;
 
+        final PowerManager pm=(PowerManager)getSystemService(Context.POWER_SERVICE);
+        this.wakelock=pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "etiqueta");
+        wakelock.acquire();
+
         idMain = getIntent().getStringExtra("MAINTENANCE");
 
         REG = new FormCierreReg(this, "LISTADO");
@@ -65,8 +77,6 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         AIRREG = new FormCierreReg(this, "AIR");
         GEREG = new FormCierreReg(this, "GE");
         MAINREG = new MaintenanceReg(this);
-
-
 
         TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         IMEI = telephonyManager.getDeviceId();
@@ -580,6 +590,22 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             }
             b.show();
         }
+    }
+
+    protected void onDestroy(){
+        super.onDestroy();
+
+        this.wakelock.release();
+    }
+
+    protected void onResume(){
+        super.onResume();
+        wakelock.acquire();
+    }
+
+    public void onSaveInstanceState(Bundle icicle) {
+        super.onSaveInstanceState(icicle);
+        this.wakelock.release();
     }
 
 

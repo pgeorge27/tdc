@@ -75,7 +75,14 @@ import cl.tdc.felipe.tdc.webservice.XMLParser;
 import cl.tdc.felipe.tdc.webservice.XMLParserTDC;
 import cl.tdc.felipe.tdc.webservice.dummy;
 
+import android.app.Activity;
+import android.content.Context;
+import android.os.Bundle;
+import android.os.PowerManager;
+
 public class ActividadCierreFormActivity extends Activity {
+    protected PowerManager.WakeLock wakelock;
+
     private static int TAKE_PICTURE = 1;
     private static int TAKE_PICTURES = 2;
     boolean formSended = false;
@@ -98,6 +105,10 @@ public class ActividadCierreFormActivity extends Activity {
     ArrayList<SYSTEM> SYSTEMS;
 
     ProgressDialog dialog;
+    public LinearLayout layquest2;
+    public View question2;
+    public boolean agregar = false;
+
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -110,6 +121,7 @@ public class ActividadCierreFormActivity extends Activity {
         Log.d("AVERIA", "onResume");
         Intent intent = new Intent(this, PositionTrackerTDC.class);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+        wakelock.acquire();
     }
 
     @Override
@@ -141,6 +153,11 @@ public class ActividadCierreFormActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        final PowerManager pm=(PowerManager)getSystemService(Context.POWER_SERVICE);
+        this.wakelock=pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, "etiqueta");
+        wakelock.acquire();
+
         setContentView(R.layout.activity_cierre_actividad_form);
         actividad = this;
         mContext = this;
@@ -413,20 +430,23 @@ public class ActividadCierreFormActivity extends Activity {
                                             ((RadioButton) ((RadioGroup) Q.getView()).getChildAt(pos)).setChecked(true);
                                         }
 
-                                        if (Q.getValues().size()>0) {
-                                            for (int i = 0; i < Q.getValues().size(); i++) {
-                                                if (Q.getValues().get(i).getQuestions() != null){
+                                        if (Q.getValues().size()>0) {                                                                   //Este bloque es para sacar la pregunta interna que existe en Transporte 349 y 350
+                                            for (int i = 0; i < Q.getValues().size(); i++) {                                            //Iteramos sobre las respuesta, como es radio y sabemos que al pulsar en NO muestra la otro pregunta
+                                                if (Q.getValues().get(i).getQuestions() != null){                                       //evaluamos la posicion del boton y mostramos y ocultamos
 
                                                     for (int j = 0; j < Q.getValues().get(i).getQuestions().size(); j++) {
-                                                        final LinearLayout layquest2 = create_questionLayout();
+                                                        layquest2 = create_questionLayout();
 
                                                         layquest2.addView(Q.getValues().get(i).getQuestions().get(j).getTitle(mContext));
                                                         layquest2.setVisibility(View.GONE);
-                                                        final View question2 = Q.getValues().get(i).getQuestions().get(j).generateView(mContext);
+                                                        question2 = Q.getValues().get(i).getQuestions().get(j).generateView(mContext);
                                                         question2.setVisibility(View.GONE);
 
                                                         if (question2 != null) {
-                                                            String tag2 = S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem() + "-" + Q.getValues().get(i).getQuestions().get(j).getIdQuestion() + "-" + Q.getValues().get(i).getQuestions().get(j).getNameQuestion();
+
+                                                            String tag2 = S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem() + "-" +
+                                                                    Q.getValues().get(i).getQuestions().get(j).getIdQuestion() + "-" +
+                                                                    Q.getValues().get(i).getQuestions().get(j).getNameQuestion();
 
                                                             if (Q.getValues().get(i).getQuestions().get(j).getIdType().equals(Constantes.DATE)) {
                                                                 final EditText t2 = Q.getValues().get(i).getQuestions().get(j).getEditTexts().get(0);
@@ -457,11 +477,7 @@ public class ActividadCierreFormActivity extends Activity {
 
                                                             }
 
-                                                            itemLayout.addView(layquest2);
-
-                                                            if (!Q.getValues().get(i).getQuestions().get(j).getIdType().equals(Constantes.PHOTO))
-                                                                itemLayout.addView(question2);
-
+                                                            agregar = true;
                                                         }
                                                     }
                                                 }
@@ -503,12 +519,18 @@ public class ActividadCierreFormActivity extends Activity {
                                         EditText t = Q.getEditTexts().get(0);
                                         String text = REG.getString("DATE" + tag);
                                         t.setText(text);
-//                                        t.setVisibility(View.GONE);
                                     }
 
                                     itemLayout.addView(layquest);
                                     if (!Q.getIdType().equals(Constantes.PHOTO))
                                         itemLayout.addView(question);
+
+                                    if (agregar)
+                                    {
+                                        itemLayout.addView(layquest2);
+                                        itemLayout.addView(question2);
+                                        agregar=false;
+                                    }
 
                                 }
 
@@ -2519,6 +2541,13 @@ public class ActividadCierreFormActivity extends Activity {
             saveData();
         }
         super.onDestroy();
+        this.wakelock.release();
 
+    }
+
+
+    public void onSaveInstanceState(Bundle icicle) {
+        super.onSaveInstanceState(icicle);
+        this.wakelock.release();
     }
 }

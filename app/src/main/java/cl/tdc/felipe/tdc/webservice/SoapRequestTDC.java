@@ -736,9 +736,9 @@ public class SoapRequestTDC {
                 "<soapenv:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:urn=\"urn:Configurationwsdl\">" +
                         "<soapenv:Header/>" +
                         "<soapenv:Body>" +
-                        "<urn:answerTransport soapenv:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" +
-                        "<RequestAnswerTransport xsi:type=\"urn:RequestAnswerTransport\">" +
-                        "<RequestTrans xsi:type=\"urn:RequestTrans\">" +
+                        "<urn:answerTransport2 soapenv:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" +
+                        "<RequestAnswerTransport2 xsi:type=\"urn:RequestAnswerTransport\">" +
+                        "<RequestTrans2 xsi:type=\"urn:RequestTrans\">" +
                         "<Header xsi:type=\"urn:Header\">" +
                         "<Date xsi:type=\"xsd:string\">" + formatter.format(fecha) + "</Date>" +
                         "<Platafform xsi:type=\"xsd:string\">MOBILE</Platafform>" +
@@ -805,6 +805,22 @@ public class SoapRequestTDC {
                                         "<SetPhotos xsi:type=\"urn:SetPhotos\">" +
                                         xmlphotos +
                                         "</SetPhotos>";
+
+//                                if (Q.getValues().size() > 0 && Q.getValues() != null ) {                                                                   //Este bloque es para sacar la pregunta interna que existe en Transporte 349 y 350
+//                                    for (int i = 0; i < Q.getValues().size(); i++) {                                            //Iteramos sobre las respuesta, como es radio y sabemos que al pulsar en NO muestra la otro pregunta
+//                                        if (Q.getValues().get(i).getQuestions() != null && Q.getValues().get(i).getQuestions().size() > 0) {                                       //evaluamos la posicion del boton y mostramos y ocultamos
+//                                            for (int j = 0; j < Q.getValues().get(i).getQuestions().size(); j++) {
+                                if (Q.getIdQuestion().equalsIgnoreCase("349")) {
+                                    questionResponse += "<AnswerAdic xsi:type=\"urn:AnswerAdic\">" +
+                                            "<IdQuestion xsi:type=\"xsd:string\">" + Q.getValues().get(1).getQuestions().get(0).getIdQuestion() + "</IdQuestion>" +
+                                            "<IdAnswer xsi:type=\"xsd:string\">" + Q.getValues().get(1).getQuestions().get(0).getAswer3G() + "</IdAnswer>" +
+                                            "<IdType xsi:type=\"xsd:string\">" + Q.getValues().get(1).getQuestions().get(0).getIdType() + "</IdType>" +
+                                            "</AnswerAdic>";
+                                }
+//                                            }
+//                                        }
+//                                    }
+//                                }
 
                                 questionResponse += "</AnswerQuestionTrans>";
                             }
@@ -887,7 +903,6 @@ public class SoapRequestTDC {
                                                                 "</SetPhotos>";
 
                                                         answerXML += "</AnswerQuestionTrans>";
-
                                                     }
 
                                                 }
