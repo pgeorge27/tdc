@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -40,7 +41,13 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 
 import org.xml.sax.SAXException;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +59,7 @@ import cl.tdc.felipe.tdc.adapters.Actividad;
 import cl.tdc.felipe.tdc.adapters.Actividades;
 import cl.tdc.felipe.tdc.adapters.Maintenance;
 import cl.tdc.felipe.tdc.extras.Funciones;
+import cl.tdc.felipe.tdc.extras.LocalText;
 import cl.tdc.felipe.tdc.objects.FormularioCheck;
 import cl.tdc.felipe.tdc.objects.Maintenance.Agenda;
 import cl.tdc.felipe.tdc.objects.Maintenance.MainSystem;
@@ -84,7 +92,8 @@ public class AgendaActivity extends Activity {
 
     public static ArrayList<String> idsActivities = new ArrayList<>();
     public static ArrayList<String> idsActivities2 = new ArrayList<>();
-
+    private String name;
+    private String query;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -96,6 +105,7 @@ public class AgendaActivity extends Activity {
         IMEI = telephonyManager.getDeviceId();
         mPager = (ViewPager) findViewById(R.id.agenda_contentPager);
         mPager.setPageTransformer(true, new ZoomOutPageTransformer());
+
         init();
         init_ImageLoader();
     }
@@ -126,7 +136,6 @@ public class AgendaActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-
     }
 
     private void init_ImageLoader() {
@@ -196,7 +205,6 @@ public class AgendaActivity extends Activity {
         b.show();
     }
 
-
     private class CompletarActividad extends AsyncTask<String, String, FormularioCheck> {
         private String CTAG = "COMPLETARACTIVIDAD";
         Context mContext;
@@ -260,7 +268,6 @@ public class AgendaActivity extends Activity {
         }
     }
 
-
     private class CheckListTask extends AsyncTask<String, String, String> {
         Context tContext;
         ProgressDialog dialog;
@@ -314,7 +321,6 @@ public class AgendaActivity extends Activity {
         }
     }
 
-
     private class AgendaTask extends AsyncTask<String, String, Agenda> {
         ProgressDialog progressDialog;
         Context tContext;
@@ -345,10 +351,19 @@ public class AgendaActivity extends Activity {
         protected Agenda doInBackground(String... strings) {
             try {
                 publishProgress("Cargando Actividades...");
-                String query = SoapRequestTDC.getPlanningMaintenance(IMEI);
+                query = SoapRequestTDC.getPlanningMaintenance(IMEI);
                 Log.d("FRAGMENT", query);
 
-                Agenda agenda = XMLParser.getMaintenance(query);
+                LocalText localT = new LocalText();
+
+                if(localT.isDisponibleSD() && localT.isAccesoEscrituraSD())
+                    localT.escribirFicheroMemoriaExterna(query);
+
+                String mantenimientoLocal = localT.leerFicheroMemoriaExterna();
+
+
+//                Agenda agenda = XMLParser.getMaintenance(query);
+                Agenda agenda = XMLParser.getMaintenance(mantenimientoLocal);
 
                 return agenda;
             } catch (IOException e) {
@@ -363,6 +378,35 @@ public class AgendaActivity extends Activity {
             }
                return null;
         }
+
+        private void guardarXml(){
+            try
+            {
+                //Creamos un fichero en la memoria interna
+                OutputStreamWriter fout =
+                        new OutputStreamWriter(
+                                openFileOutput("prueba.xml",
+                                        Context.MODE_PRIVATE));
+
+                StringBuilder sb = new StringBuilder();
+
+//Construimos el XML
+                sb.append("");
+                sb.append("" + "Usuario1" + "");
+                sb.append("" + "ApellidosUsuario1" + "");
+                sb.append("");
+
+//Escribimos el resultado a un fichero
+                fout.write(sb.toString());
+                fout.close();
+            }
+            catch (Exception ex)
+            {
+                Log.e("Ficheros", "Error al escribir fichero a memoria interna");
+            }
+        }
+
+
 
         @Override
         protected void onPostExecute(final Agenda s) {
@@ -566,7 +610,6 @@ public class AgendaActivity extends Activity {
 
 
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

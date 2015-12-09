@@ -513,12 +513,174 @@ public class ActividadCierreFormActivity extends Activity {
                                         left.setText(textL);
                                         right.setText(textR);
 
-
                                     }
                                     if (Q.getIdType().equals(Constantes.DATE)) {
                                         EditText t = Q.getEditTexts().get(0);
                                         String text = REG.getString("DATE" + tag);
                                         t.setText(text);
+                                    }
+
+                                    if (Q.getQuestions() != null){
+
+                                        final ArrayList<View> repeatContentList = new ArrayList<>();
+                                        final ArrayList<Button> repeatButtontList = new ArrayList<>();
+
+                                        final LinearLayout repeatLayout = create_normalVerticalLayout();
+
+
+                                        if (Q.getIdType().equals(Constantes.RADIO)) {
+                                            for (int x = 0; x < Q.getValues().size(); x++) {
+                                                VALUE value = Q.getValues().get(x);
+
+                                                Button boton = crear_botonRepeat();
+                                                boton.setText(value.getNameValue());
+
+                                                final LinearLayout contentSetLayout = create_normalVerticalLayout();
+
+                                                LinearLayout setLayout = create_setLayout();
+
+                                                if (Q.getQuestions() != null) {
+                                                    ArrayList<QUESTION> listadoQ = new ArrayList<>();
+
+                                                        for (final QUESTION QR : Q.getQuestions()) {
+                                                            QUESTION qAux = copiar_question(QR);
+                                                            LinearLayout questTitle = create_questionLayout();
+
+                                                            if (qAux.getPhoto().equals("OK")) {
+                                                                final ImageButton photo = create_photoButton(qAux);
+                                                                questTitle.addView(photo);
+                                                            }
+
+                                                            questTitle.addView(qAux.getTitle(mContext));
+                                                            questTitle.setGravity(Gravity.CENTER_VERTICAL);
+
+                                                            View questionR = qAux.generateView(mContext);
+                                                            if (questionR != null) {
+                                                                String tagR = S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem() + "-" + value.getIdValue() + value.getNameValue() + "-" + QR.getIdQuestion() + "-" + QR.getNameQuestion();
+
+                                                                if (qAux.getPhoto().equals("OK")) {
+                                                                    cargar_fotos(qAux, tag);
+                                                                }
+
+                                                                if (qAux.getIdType().equals(Constantes.RADIO)) {
+                                                                    int pos = REG.getInt("RADIO" + tagR);
+                                                                    if (pos != -100) {
+                                                                        ((RadioButton) ((RadioGroup) qAux.getView()).getChildAt(pos)).setChecked(true);
+                                                                    }
+                                                                }
+                                                                if (qAux.getIdType().equals(Constantes.NUM)) {
+                                                                    String text = REG.getString("NUM" + tagR);
+                                                                    ((TextView) qAux.getView()).setText(text);
+                                                                }
+                                                                if (qAux.getIdType().equals(Constantes.TEXT)) {
+                                                                    String text = REG.getString("TEXT" + tagR);
+                                                                    ((TextView) qAux.getView()).setText(text);
+
+                                                                }
+                                                                if (qAux.getIdType().equals(Constantes.CHECK)) {
+                                                                    ArrayList<CheckBox> ch = qAux.getCheckBoxes();
+                                                                    for (int j = 0; j < ch.size(); j++) {
+                                                                        Boolean check = REG.getBoolean("CHECK" + tagR + j);
+                                                                        ch.get(j).setChecked(check);
+                                                                    }
+
+                                                                }
+                                                                if (qAux.getIdType().equals(Constantes.DIV)) {
+                                                                    String textL = REG.getString("DIVL" + tagR);
+                                                                    String textR = REG.getString("DIVR" + tagR);
+
+                                                                    EditText left = qAux.getEditTexts().get(0);
+                                                                    EditText right = qAux.getEditTexts().get(1);
+
+                                                                    left.setText(textL);
+                                                                    right.setText(textR);
+                                                                }
+
+                                                                if (qAux.getIdType().equals(Constantes.DATE)) {
+                                                                    EditText t = qAux.getEditTexts().get(0);
+                                                                    String text = REG.getString("DATE" + tagR);
+                                                                    t.setText(text);
+                                                                }
+
+                                                                setLayout.addView(questTitle);
+
+                                                                if (!qAux.getIdType().equals(Constantes.PHOTO))
+                                                                    setLayout.addView(questionR);
+                                                            }
+
+                                                            listadoQ.add(qAux);
+
+                                                        }
+                                                    Q.setQuestions(listadoQ);
+                                                }
+
+                                                contentSetLayout.addView(setLayout);
+
+                                                boton.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View view) {
+                                                        if (contentSetLayout.getVisibility() == View.GONE) {
+                                                            contentSetLayout.setVisibility(View.VISIBLE);
+                                                            for (View layu : repeatContentList) {
+                                                                if (!layu.equals(contentSetLayout)) {
+                                                                    layu.setVisibility(View.GONE);
+                                                                }
+                                                            }
+                                                        } else {
+                                                            contentSetLayout.setVisibility(View.GONE);
+                                                        }
+                                                    }
+                                                });
+
+                                                contentSetLayout.setVisibility(View.GONE);
+                                                repeatContentList.add(contentSetLayout);//para que al mostrar uno se oculten los demas
+                                                repeatButtontList.add(boton);
+                                                repeatLayout.addView(boton);
+                                                repeatLayout.addView(contentSetLayout);
+
+                                            }
+
+                                            RadioGroup group = (RadioGroup) Q.getView();
+
+                                            group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                                                @Override
+                                                public void onCheckedChanged(RadioGroup rg, int id) {
+                                                    for (View l : repeatContentList) {
+                                                        l.setVisibility(View.GONE);
+                                                    }
+                                                    RadioButton btn = (RadioButton) rg.findViewById(id);
+                                                    int position = rg.indexOfChild(btn) + 1;
+                                                    for (Button b : repeatButtontList) {
+                                                        b.setVisibility(View.GONE);
+                                                    }
+                                                    for (int i = 0; i < position; i++) {
+                                                        repeatButtontList.get(i).setVisibility(View.VISIBLE);
+                                                    }
+
+                                                }
+                                            });
+
+                                            int pos = REG.getInt("RADIO" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem());
+                                            Log.d("POSITION", "RADIO" + I.getIdItem() + " -pos: " + pos);
+                                            if (pos != -100) {
+                                                ((RadioButton) ((RadioGroup) I.getView()).getChildAt(pos)).setChecked(true);
+                                            }
+
+
+                                            itemLayout.addView(repeatLayout);
+                                        }
+
+
+//                                        System.out.println("********************************************");
+//
+//                                        for (int i = 0; i < Q.getQuestions().size(); i++){
+//
+//                                            System.out.println(Q.getQuestions().get(i).getIdQuestion());
+//                                            System.out.println(Q.getQuestions().get(i).getNameQuestion());
+//                                            System.out.println(Q.getQuestions().get(i).getIdType());
+//                                        }
+
+
                                     }
 
                                     itemLayout.addView(layquest);
@@ -576,6 +738,7 @@ public class ActividadCierreFormActivity extends Activity {
                                                 questTitle.addView(qAux.getTitle(mContext));
 
                                                 View question = qAux.generateView(mContext);
+
                                                 if (question != null) {
                                                     String tag = S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem() + "-" + value.getIdValue() + value.getNameValue() + "-" + setAux.getIdSet() + setAux.getNameSet() + "-" + Q.getIdQuestion() + "-" + Q.getNameQuestion();
 

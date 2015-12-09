@@ -272,7 +272,6 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         b.show();
     }
 
-
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.IDEN) {
@@ -330,7 +329,6 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         if (type.equals("GRUPO ELECTROGEN")) return SoapRequestTDC.ACTION_GE;
         else return "";
     }
-
 
     private class buscar_form extends AsyncTask<String, String, String> {
         ProgressDialog dialog;
@@ -594,7 +592,6 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
 
     protected void onDestroy(){
         super.onDestroy();
-
         this.wakelock.release();
     }
 

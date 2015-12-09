@@ -75,8 +75,6 @@ public class XMLParser {
         //	return cpe.elementAt(1).toString(); // Mostrar elemento 1 del Vector
     }
 
-
-
 	/*
      * Parser Return Code
 	 */
@@ -111,7 +109,6 @@ public class XMLParser {
     public static ArrayList<String> getReturnCode1(String xmlRecords) throws ParserConfigurationException,
             SAXException, IOException, XPathExpressionException {
         ArrayList<String> models = new ArrayList<>();
-
 
         DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         InputSource is = new InputSource();

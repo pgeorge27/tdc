@@ -49,6 +49,7 @@ public class QUESTION {
     PHOTO foto;
     ArrayList<VALUE> values;
     ArrayList<PHOTO> fotos;
+    ArrayList<QUESTION> questions;
 
     View view;
     TextView title;
@@ -459,5 +460,13 @@ public class QUESTION {
 
     public void setValues(ArrayList<VALUE> values) {
         this.values = values;
+    }
+
+    public ArrayList<QUESTION> getQuestions() {
+        return questions;
+    }
+
+    public void setQuestions(ArrayList<QUESTION> questions) {
+        this.questions = questions;
     }
 }
