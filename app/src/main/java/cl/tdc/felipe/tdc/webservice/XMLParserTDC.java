@@ -165,7 +165,23 @@ public class XMLParserTDC {
                                                         V.setPhoto(getNodeValue(questionR, "Photo"));
                                                         V.setNumberPhoto(getNodeValue(questionR, "NumberPhoto"));
 
+                                                        NodeList VALUESRR = questionR.getElementsByTagName("Values");                          //Listado de nodos Values
+                                                        ArrayList<VALUE> valueArrayListR = new ArrayList<>();
 
+                                                        if (VALUESRR.getLength() > 0) {
+                                                            VALUESRR = VALUESRR.item(0).getChildNodes();
+                                                            for (int pr = 0; pr < VALUESRR.getLength(); pr++) {
+                                                                VALUE VR = new VALUE();
+                                                                Element valueR = (Element) VALUESRR.item(pr);
+                                                                VR.setIdValue(getNodeValue(valueR, "IdValue"));
+                                                                VR.setNameValue(getNodeValue(valueR, "NameValue"));
+                                                                //Editado por George & Sarah 10-12-2015
+
+                                                                valueArrayListR.add(VR);                                                      //Agregamos V a la lista de values
+                                                            }
+                                                            V.setValues(valueArrayListR);                                                    //Agregamos los values a la question
+                                                        }
+                                                        
                                                         repeatqArrayList.add(V);                                                      //Agregamos V a la lista de values
                                                     }
                                                     Q.setQuestions(repeatqArrayList);                                                    //Agregamos los values a la question

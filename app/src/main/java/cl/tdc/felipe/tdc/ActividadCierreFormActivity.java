@@ -108,12 +108,14 @@ public class ActividadCierreFormActivity extends Activity {
     public LinearLayout layquest2;
     public View question2;
     public boolean agregar = false;
+    public boolean agregar2 = false;
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
     private GoogleApiClient client;
+    public LinearLayout repeatLayout;
 
     @Override
     protected void onResume() {
@@ -520,13 +522,12 @@ public class ActividadCierreFormActivity extends Activity {
                                         t.setText(text);
                                     }
 
-                                    if (Q.getQuestions() != null){
-
-                                        final ArrayList<View> repeatContentList = new ArrayList<>();
+                                    if (Q.getQuestions() != null){                                                  //Creado para agregar las preguntas internas de AC
+                                                                                                                    //Iteramos sobre la etiqqueta RepeatQuestion y sacamos las preguntas
+                                        final ArrayList<View> repeatContentList = new ArrayList<>();                //Segun el tipo de pregunta interna creamos la vista.
                                         final ArrayList<Button> repeatButtontList = new ArrayList<>();
 
-                                        final LinearLayout repeatLayout = create_normalVerticalLayout();
-
+                                        repeatLayout = create_normalVerticalLayout();
 
                                         if (Q.getIdType().equals(Constantes.RADIO)) {
                                             for (int x = 0; x < Q.getValues().size(); x++) {
@@ -606,12 +607,14 @@ public class ActividadCierreFormActivity extends Activity {
 
                                                                 if (!qAux.getIdType().equals(Constantes.PHOTO))
                                                                     setLayout.addView(questionR);
+
                                                             }
 
                                                             listadoQ.add(qAux);
 
                                                         }
                                                     Q.setQuestions(listadoQ);
+                                                    agregar2=true;
                                                 }
 
                                                 contentSetLayout.addView(setLayout);
@@ -667,19 +670,9 @@ public class ActividadCierreFormActivity extends Activity {
                                             }
 
 
-                                            itemLayout.addView(repeatLayout);
+//                                            itemLayout.addView(repeatLayout);
+
                                         }
-
-
-//                                        System.out.println("********************************************");
-//
-//                                        for (int i = 0; i < Q.getQuestions().size(); i++){
-//
-//                                            System.out.println(Q.getQuestions().get(i).getIdQuestion());
-//                                            System.out.println(Q.getQuestions().get(i).getNameQuestion());
-//                                            System.out.println(Q.getQuestions().get(i).getIdType());
-//                                        }
-
 
                                     }
 
@@ -692,6 +685,12 @@ public class ActividadCierreFormActivity extends Activity {
                                         itemLayout.addView(layquest2);
                                         itemLayout.addView(question2);
                                         agregar=false;
+                                    }
+
+                                    if (agregar2)
+                                    {
+                                        itemLayout.addView(repeatLayout);
+                                        agregar2=false;
                                     }
 
                                 }
@@ -1760,6 +1759,11 @@ public class ActividadCierreFormActivity extends Activity {
             e.execute();
         }
 
+        if (TITLE.equals("AC")) {
+            EnviarAC e = new EnviarAC();
+            e.execute();
+        }
+
         if (TITLE.equals("GRUPO ELECTROGEN")) {
             EnviarGE e = new EnviarGE();
             e.execute();
@@ -2351,6 +2355,69 @@ public class ActividadCierreFormActivity extends Activity {
             try {
                 TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
                 String response = SoapRequestTDC.sendAnswerAir(telephonyManager.getDeviceId(), IDMAIN, SYSTEMS);
+                ArrayList<String> parse = XMLParser.getReturnCode2(response);
+                if (parse.get(0).equals("0")) {
+                    ok = true;
+                    return parse.get(1);
+                } else {
+                    return "Error Code:" + parse.get(0) + "\n" + parse.get(1);
+                }
+            } catch (IOException e) {
+                return "Se agotó el tiempo de conexión.";
+            } catch (ParserConfigurationException | SAXException | XPathExpressionException e) {
+                return "Error al leer XML";
+            } catch (Exception e) {
+                return "Error al enviar la respuesta.";
+
+            }
+            //TODO AGREGAR CATCH GENERAL
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            if (dialog.isShowing()) dialog.dismiss();
+
+            formSended = ok;
+            if (ok) {
+                subir_fotos(s);
+            } else {
+                AlertDialog.Builder b = new AlertDialog.Builder(mContext);
+                b.setMessage(s);
+                b.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                b.show();
+            }
+
+        }
+    }
+
+    private class EnviarAC extends AsyncTask<String, String, String> {
+
+        boolean ok = false;
+
+        private EnviarAC() {
+            dialog = new ProgressDialog(actividad);
+            dialog.setMessage("Enviando formulario...");
+            Button bEnviar = (Button) findViewById(R.id.btnEnviar);
+            bEnviar.setEnabled(false);
+            dialog.setCancelable(false);
+            dialog.setCanceledOnTouchOutside(false);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            dialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            try {
+                TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+                String response = SoapRequestTDC.sendAnswerAC(telephonyManager.getDeviceId(), IDMAIN, SYSTEMS);
                 ArrayList<String> parse = XMLParser.getReturnCode2(response);
                 if (parse.get(0).equals("0")) {
                     ok = true;
