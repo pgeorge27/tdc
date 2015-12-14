@@ -13,6 +13,7 @@ import java.io.OutputStreamWriter;
 
 /**
  * Created by georgeperez on 9/12/15.
+ * clase que crea ficheros locales para trabajar offline
  */
 public class LocalText {
 

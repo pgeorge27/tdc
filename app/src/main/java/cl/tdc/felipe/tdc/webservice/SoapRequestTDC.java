@@ -736,9 +736,9 @@ public class SoapRequestTDC {
                 "<soapenv:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:urn=\"urn:Configurationwsdl\">" +
                         "<soapenv:Header/>" +
                         "<soapenv:Body>" +
-                        "<urn:answerTransport2 soapenv:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" +
-                        "<RequestAnswerTransport2 xsi:type=\"urn:RequestAnswerTransport\">" +
-                        "<RequestTrans2 xsi:type=\"urn:RequestTrans\">" +
+                        "<urn:answerTransport soapenv:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" +
+                        "<RequestAnswerTransport xsi:type=\"urn:RequestAnswerTransport\">" +
+                        "<RequestTrans xsi:type=\"urn:RequestTrans\">" +
                         "<Header xsi:type=\"urn:Header\">" +
                         "<Date xsi:type=\"xsd:string\">" + formatter.format(fecha) + "</Date>" +
                         "<Platafform xsi:type=\"xsd:string\">MOBILE</Platafform>" +
@@ -1783,8 +1783,8 @@ public class SoapRequestTDC {
                         "<soapenv:Header/>" +
                         "<soapenv:Body>" +
                         "<urn:answerAC soapenv:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" +
-                        "<RequestAnswerDC xsi:type=\"urn:RequestAnswerIden\">" +
-                        "<RequestDC xsi:type=\"urn:RequestIden\">" +
+                        "<RequestAnswerDC xsi:type=\"urn:RequestAnswerDC\">" +
+                        "<RequestDC xsi:type=\"urn:RequestDC\">" +
                         "<Header xsi:type=\"urn:Header\">" +
                         "<Date xsi:type=\"xsd:string\">" + formatter.format(fecha) + "</Date>" +
                         "<Platafform xsi:type=\"xsd:string\">MOBILE</Platafform>" +
@@ -1801,8 +1801,8 @@ public class SoapRequestTDC {
 
                     for (ITEM I : A.getItems()) {
                         xml += "<RptaItemDC xsi:type=\"urn:RptaItemDC\">" +
-                                "<IdArea xsi:type=\"xsd:string\">" + A.getIdArea() + "</IdArea>" +
                                 "<IdItem xsi:type=\"xsd:string\">" + I.getIdItem() + "</IdItem>";
+
                         if (I.getQuestions() != null) {
                             xml += "<SetAnswerQuestion xsi:type=\"urn:SetAnswerQuestion\">";
                             for (QUESTION Q : I.getQuestions()) {
@@ -1855,79 +1855,7 @@ public class SoapRequestTDC {
                             xml += "</SetAnswerQuestion>";
                         }
 
-                        if (I.getSetArrayList() != null && I.getValues() != null) {
-                            xml += "<SetAnswerSet xsi:type=\"urn:SetAnswerSet\">";
-                            String answerXML = "";
-                            int count = 0;
-                            for (CheckBox checkBox : I.getCheckBoxes()) {
-                                if (checkBox.isChecked()) {
-                                    count += 1;
-                                    int posChecked = I.getCheckBoxes().indexOf(checkBox);
-                                    answerXML += "<SetAnswer xsi:type=\"urn:SetAnswer\">" +
-                                            "<IdValue xsi:type=\"xsd:string\">" + I.getValues().get(posChecked).getNameValue() + "</IdValue>" +
-                                            "<SetAnswerQuestion xsi:type=\"urn:SetAnswerQuestion\">";
 
-                                    ArrayList<SET> repeat = I.getSetlistArrayList().get(posChecked);
-                                    for (SET set : repeat) {
-                                        //answerXML += "<SetAnswerQuestion xsi:type=\"urn:SetAnswerQuestion\">";
-                                        if (set.getQuestions() != null) {
-                                            for (QUESTION Q : set.getQuestions()) {
-                                                int countFoto = 0;
-                                                String xmlphotos = "";
-                                                if (Q.getFoto() != null) {
-                                                    countFoto += 1;
-                                                    PHOTO photo = Q.getFoto();
-                                                    File file = new File(photo.getNamePhoto());
-                                                    if (file.exists()) {
-                                                        xmlphotos += "<Photo xsi:type=\"urn:Photo\">" +
-                                                                "<NamePhoto xsi:type=\"xsd:string\">" + file.getName() + "</NamePhoto>" +
-                                                                "<TitlePhoto xsi:type=\"xsd:string\">" + photo.getTitlePhoto() + "</TitlePhoto>" +
-                                                                "<DateTime xsi:type=\"xsd:string\">" + photo.getDateTime() + "</DateTime>" +
-                                                                "<CoordX xsi:type=\"xsd:string\">" + photo.getCoordX() + "</CoordX>" +
-                                                                "<CoordY xsi:type=\"xsd:string\">" + photo.getCoordY() + "</CoordY>" +
-                                                                "</Photo>";
-                                                    }
-                                                }
-                                                if (Q.getFotos() != null) {
-                                                    for (PHOTO p : Q.getFotos()) {
-                                                        File file = new File(p.getNamePhoto());
-                                                        if (file.exists()) {
-                                                            xmlphotos += "<Photo xsi:type=\"urn:Photo\">" +
-                                                                    "<NamePhoto xsi:type=\"xsd:string\">" + file.getName() + "</NamePhoto>" +
-                                                                    "<TitlePhoto xsi:type=\"xsd:string\">" + p.getTitlePhoto()  + "</TitlePhoto>" +
-                                                                    "<DateTime xsi:type=\"xsd:string\">" + p.getDateTime() + "</DateTime>" +
-                                                                    "<CoordX xsi:type=\"xsd:string\">" + p.getCoordX() + "</CoordX>" +
-                                                                    "<CoordY xsi:type=\"xsd:string\">" + p.getCoordY() + "</CoordY>" +
-                                                                    "</Photo>";
-                                                            countFoto += 1;
-                                                        }
-                                                    }
-                                                }
-                                                answerXML += "<AnswerQuestion xsi:type=\"urn:AnswerQuestion\">" +
-                                                        "<IdSet xsi:type=\"xsd:string\">" + set.getIdSet() + "</IdSet>" +
-                                                        "<IdQuestion xsi:type=\"xsd:string\">" + Q.getIdQuestion() + "</IdQuestion>" +
-                                                        "<IdAnswer xsi:type=\"xsd:string\">" + Q.getAswerIDEN() + "</IdAnswer>" +
-                                                        "<IdType xsi:type=\"xsd:string\">" + Q.getIdType() + "</IdType>" +
-                                                        "<CountPhoto xsi:type=\"xsd:string\">" + countFoto + "</CountPhoto>";
-
-
-                                                answerXML += "<SetPhotos xsi:type=\"urn:SetPhotos\">" +
-                                                        xmlphotos +
-                                                        "</SetPhotos>";
-                                                answerXML += "</AnswerQuestion>";
-                                            }
-
-                                        }
-
-                                    }
-                                    answerXML += "</SetAnswerQuestion>";
-                                    answerXML += "</SetAnswer>";
-                                }
-                            }
-                            xml += "<CountAnswerSet xsi:type=\"xsd:string\">" + count + "</CountAnswerSet>";
-                            xml += answerXML;
-                            xml += "</SetAnswerSet>";
-                        }
                         xml += "</RptaItemDC>";
                     }
 

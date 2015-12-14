@@ -120,9 +120,10 @@ public class QUESTION {
         }
 
         if(idType.equals(Constantes.DATE)){
-            Answer = "";
-//            Answer = ((EditText)view).getText().toString();
 
+//          for (int i = 0; i < editTexts.size(); i++) {
+//          }
+            Answer = editTexts.get(0).getText().toString();
         }
 
         return Answer;

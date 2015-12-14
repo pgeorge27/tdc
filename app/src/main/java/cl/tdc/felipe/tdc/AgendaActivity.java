@@ -379,35 +379,6 @@ public class AgendaActivity extends Activity {
                return null;
         }
 
-        private void guardarXml(){
-            try
-            {
-                //Creamos un fichero en la memoria interna
-                OutputStreamWriter fout =
-                        new OutputStreamWriter(
-                                openFileOutput("prueba.xml",
-                                        Context.MODE_PRIVATE));
-
-                StringBuilder sb = new StringBuilder();
-
-//Construimos el XML
-                sb.append("");
-                sb.append("" + "Usuario1" + "");
-                sb.append("" + "ApellidosUsuario1" + "");
-                sb.append("");
-
-//Escribimos el resultado a un fichero
-                fout.write(sb.toString());
-                fout.close();
-            }
-            catch (Exception ex)
-            {
-                Log.e("Ficheros", "Error al escribir fichero a memoria interna");
-            }
-        }
-
-
-
         @Override
         protected void onPostExecute(final Agenda s) {
 

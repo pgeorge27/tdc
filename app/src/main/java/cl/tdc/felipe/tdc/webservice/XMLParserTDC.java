@@ -168,7 +168,7 @@ public class XMLParserTDC {
                                                         NodeList VALUESRR = questionR.getElementsByTagName("Values");                          //Listado de nodos Values
                                                         ArrayList<VALUE> valueArrayListR = new ArrayList<>();
 
-                                                        if (VALUESRR.getLength() > 0) {
+                                                        if (VALUESRR.getLength() > 0) {                                                         //Extraemos el valor interno
                                                             VALUESRR = VALUESRR.item(0).getChildNodes();
                                                             for (int pr = 0; pr < VALUESRR.getLength(); pr++) {
                                                                 VALUE VR = new VALUE();
