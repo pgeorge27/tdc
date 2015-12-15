@@ -499,7 +499,7 @@ public class AgendaActivity extends Activity {
                                     for (final cl.tdc.felipe.tdc.objects.Maintenance.Activity a : system.getActivitieList()) {
 
                                         idsActivities.add(a.getIdActivity());
-                                        idsActivities2.add(a.getIdActivity()+","+m.getIdMaintenance());//Usado para determinar que botones mostrar en ActividadCierreActivity
+                                        idsActivities2.add(m.getType()+","+a.getIdActivity()+","+m.getIdMaintenance());//Usado para determinar que botones mostrar en ActividadCierreActivity
 
                                         View vista = LayoutInflater.from(tContext).inflate(R.layout.activity_view, null, false);
                                         ((TextView) vista.findViewById(R.id.tName)).setText(a.getNameActivity());

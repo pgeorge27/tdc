@@ -44,14 +44,15 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
     private static String TITLE = "Cierre de Actividad";
     private static String IMEI;
     String idMain;
+
     TextView PAGETITLE;
     public static Activity actividad;
     Context mContext;
 
-    FormCierreReg REG, IDENREG, TRESGREG, FAENAREG, TRANSPREG, SGREG, DCREG, AIRREG, GEREG;
+    FormCierreReg REG, IDENREG, TRESGREG, FAENAREG, TRANSPREG, SGREG, DCREG, AIRREG, GEREG, EMERGREG;
     MaintenanceReg MAINREG;
 
-    Button IDEN, TRESG, AC, DC, SG, AIR, FAENA, TRANSPORTE, GE, RAN;
+    Button IDEN, TRESG, AC, DC, SG, AIR, FAENA, TRANSPORTE, GE, RAN, EMERG;
 
 
     @Override
@@ -76,6 +77,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         DCREG = new FormCierreReg(this, "DC");
         AIRREG = new FormCierreReg(this, "AIR");
         GEREG = new FormCierreReg(this, "GE");
+        EMERGREG = new FormCierreReg(this, "EMERG");
         MAINREG = new MaintenanceReg(this);
 
         TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
@@ -94,6 +96,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         TRANSPORTE = (Button) this.findViewById(R.id.TRANSPORTE);
         GE = (Button) this.findViewById(R.id.GE);
         RAN = (Button) this.findViewById(R.id.RAN);
+        EMERG = (Button) this.findViewById(R.id.EMERG);
         IDEN.setOnClickListener(this);
         TRESG.setOnClickListener(this);
         AC.setOnClickListener(this);
@@ -104,6 +107,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         TRANSPORTE.setOnClickListener(this);
         GE.setOnClickListener(this);
         RAN.setOnClickListener(this);
+        EMERG.setOnClickListener(this);
 
         boolean state = REG.getBoolean("IDEN" + idMain);
         if (state)
@@ -147,6 +151,11 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             GE.setEnabled(false);
         }
 
+        state = REG.getBoolean("EMERG" + idMain);
+        if(state){
+            EMERG.setEnabled(false);
+        }
+
         mostrarBotonesAzules(1);
 
     }
@@ -155,60 +164,69 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
     private void mostrarBotonesAzules(int num) {
         for (String temp : AgendaActivity.idsActivities2) {
 //            System.out.println(temp + " idM " + idMain);
-            if (temp.equalsIgnoreCase("1," + idMain)) {
+            if (temp.equalsIgnoreCase("Preventivo,1," + idMain)) {
                 IDEN.setVisibility(View.VISIBLE);
             }
-            if (temp.equalsIgnoreCase("2," + idMain)) {
+            if (temp.equalsIgnoreCase("Preventivo,2," + idMain)) {
                 TRESG.setVisibility(View.VISIBLE);
             }
-            if (temp.equalsIgnoreCase("3," + idMain)) {
+
+            if (temp.equalsIgnoreCase("Faena de combustible,3," + idMain)) {
                 FAENA.setVisibility(View.VISIBLE);
+            }
+
+            if (temp.equalsIgnoreCase("Emergencia,1," + idMain )) {
+                EMERG.setVisibility(View.VISIBLE);
             }
             //Determinamos si mostramos el boton de RAN o no
 
-            if (temp.equalsIgnoreCase("4," + idMain) || temp.equalsIgnoreCase("5," + idMain)
-                    || temp.equalsIgnoreCase("6," + idMain) || temp.equalsIgnoreCase("7," + idMain)
-                    || temp.equalsIgnoreCase("8," + idMain) || temp.equalsIgnoreCase("9," + idMain))
+            if (temp.equalsIgnoreCase("Preventivo,4," + idMain) || temp.equalsIgnoreCase("Preventivo,5," + idMain)
+                    || temp.equalsIgnoreCase("Preventivo,6," + idMain) || temp.equalsIgnoreCase("Preventivo,7," + idMain)
+                    || temp.equalsIgnoreCase("Preventivo,8," + idMain) || temp.equalsIgnoreCase("Preventivo,9," + idMain))
                 muestraRan();
 
             //Al pulsar sobre RAN
             if (num == 2) {
-                if (temp.equalsIgnoreCase("4," + idMain)) {
+                if (temp.equalsIgnoreCase("Preventivo,4," + idMain)) {
                     if (DC.getVisibility() == View.GONE) {
                         DC.setVisibility(View.VISIBLE);
                     } else {
                         DC.setVisibility(View.GONE);
                     }
                 }
-                if (temp.equalsIgnoreCase("5," + idMain)) {
+                if (temp.equalsIgnoreCase("Preventivo,5," + idMain)) {
                     if (SG.getVisibility() == View.GONE) {
                         SG.setVisibility(View.VISIBLE);
                     } else {
                         SG.setVisibility(View.GONE);
                     }
                 }
-                if (temp.equalsIgnoreCase("6," + idMain)) {
+                if (temp.equalsIgnoreCase("Preventivo,6," + idMain)) {
                     if (AIR.getVisibility() == View.GONE) {
                         AIR.setVisibility(View.VISIBLE);
                     } else {
                         AIR.setVisibility(View.GONE);
                     }
                 }
-                if (temp.equalsIgnoreCase("7," + idMain)) {
+                if (temp.equalsIgnoreCase("Preventivo,7," + idMain)) {
                     if (TRANSPORTE.getVisibility() == View.GONE) {
                         TRANSPORTE.setVisibility(View.VISIBLE);
                     } else {
                         TRANSPORTE.setVisibility(View.GONE);
                     }
                 }
-                if (temp.equalsIgnoreCase("8," + idMain)) {
+                if (temp.equalsIgnoreCase("Preventivo,8," + idMain)) {
                     if (GE.getVisibility() == View.GONE) {
                         GE.setVisibility(View.VISIBLE);
                     } else {
                         GE.setVisibility(View.GONE);
                     }
                 }
+<<<<<<< HEAD
          /*       if (temp.equalsIgnoreCase("9," + idMain)) {
+=======
+                if (temp.equalsIgnoreCase("Preventivo,9," + idMain)) {
+>>>>>>> 07116daae787bf5931a5a201900213dcefd27515
                     if (AC.getVisibility() == View.GONE) {
                         AC.setVisibility(View.VISIBLE);
                     } else {
@@ -312,6 +330,10 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             buscar_form task = new buscar_form("GRUPO ELECTROGEN");
             task.execute();
         }
+        if (view.getId() == R.id.EMERG) {
+            buscar_form task = new buscar_form("EMERGENCIA");
+            task.execute();
+        }
         if (view.getId() == R.id.RAN) {
             mostrarBotonesAzules(2);
         }
@@ -327,6 +349,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         if (type.equals("FAENA")) return SoapRequestTDC.ACTION_FAENA;
         if (type.equals("TRANSPORTE")) return SoapRequestTDC.ACTION_TRANSPORTE;
         if (type.equals("GRUPO ELECTROGEN")) return SoapRequestTDC.ACTION_GE;
+        if (type.equals("EMERGENCIA")) return SoapRequestTDC.ACTION_EMERG;
         else return "";
     }
 
