@@ -53,6 +53,7 @@ public class SoapRequestTDC {
     public static final String ACTION_TRANSPORTE = "checkTransport";
     public static final String ACTION_GE = "checkGE";
     public static final String ACTION_FAENA = "checkFaena";
+    public static final String ACTION_EMERG = "checkEmergency";
     public static final String ACTION_SEND_FAENA = "Faena";
     /*
      * Clase Principal de Conexion SSL a WDSL
