@@ -357,7 +357,7 @@ public class SoapRequestTDC {
                 "</soapenv:Body>" +
                 "</soapenv:Envelope>";
 
-        StringEntity se = new StringEntity(xml, HTTP.UTF_8);
+        /*StringEntity se = new StringEntity(xml, HTTP.UTF_8);
         se.setContentType("text/xml");
         httpPost.addHeader(SOAP_ACTION, dummy.URL_TDC);
 
@@ -366,7 +366,9 @@ public class SoapRequestTDC {
         HttpResponse httpResponse = httpClient.execute(httpPost);
         HttpEntity resEntity = httpResponse.getEntity();
         response = EntityUtils.toString(resEntity);
-        return response;
+        return response;*/
+
+        return xml;
     }
 
     public static String sendAnswer3G(String IMEI, String ID_MAINTENANCE, ArrayList<SYSTEM> SYSTEMS) throws IOException {

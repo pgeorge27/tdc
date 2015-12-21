@@ -94,6 +94,8 @@ public class AgendaActivity extends Activity {
     public static ArrayList<String> idsActivities2 = new ArrayList<>();
     private String name;
     private String query;
+    private String queryT;
+    private String idMain;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -357,12 +359,11 @@ public class AgendaActivity extends Activity {
                 LocalText localT = new LocalText();
 
                 if(localT.isDisponibleSD() && localT.isAccesoEscrituraSD())
-                    localT.escribirFicheroMemoriaExterna(query);
+                    localT.escribirFicheroMemoriaExterna("planing-mantience",query);
 
-                String mantenimientoLocal = localT.leerFicheroMemoriaExterna();
+                String mantenimientoLocal = localT.leerFicheroMemoriaExterna("planing-mantience");
 
-
-//                Agenda agenda = XMLParser.getMaintenance(query);
+                //Agenda agenda = XMLParser.getMaintenance(query);
                 Agenda agenda = XMLParser.getMaintenance(mantenimientoLocal);
 
                 return agenda;
@@ -499,7 +500,12 @@ public class AgendaActivity extends Activity {
                                     for (final cl.tdc.felipe.tdc.objects.Maintenance.Activity a : system.getActivitieList()) {
 
                                         idsActivities.add(a.getIdActivity());
-                                        idsActivities2.add(m.getType()+","+a.getIdActivity()+","+m.getIdMaintenance());//Usado para determinar que botones mostrar en ActividadCierreActivity
+                                        idsActivities2.add(m.getType() + "," + a.getIdActivity() + "," + m.getIdMaintenance());//Usado para determinar que botones mostrar en ActividadCierreActivity
+                                        idMain = m.getIdMaintenance();
+
+                                        crearFicherosLocal task = new crearFicherosLocal(m.getType() + "," + a.getIdActivity(),idMain); //creamos cada  archivo check localmente
+                                        task.execute();
+
 
                                         View vista = LayoutInflater.from(tContext).inflate(R.layout.activity_view, null, false);
                                         ((TextView) vista.findViewById(R.id.tName)).setText(a.getNameActivity());
@@ -630,4 +636,62 @@ public class AgendaActivity extends Activity {
             }
         }
     }
+
+    private String getAction(String type) {
+        if (type.equals("Preventivo,1")) return SoapRequestTDC.ACTION_IDEN;
+        if (type.equals("Preventivo,2")) return SoapRequestTDC.ACTION_3G;
+        if (type.equals("Preventivo,9")) return SoapRequestTDC.ACTION_AC;
+        if (type.equals("Preventivo,4")) return SoapRequestTDC.ACTION_DC;
+        if (type.equals("Preventivo,5")) return SoapRequestTDC.ACTION_SG;
+        if (type.equals("Preventivo,6")) return SoapRequestTDC.ACTION_AIR;
+        if (type.equals("Faena de combustible,3")) return SoapRequestTDC.ACTION_FAENA;
+        if (type.equals("Preventivo,7")) return SoapRequestTDC.ACTION_TRANSPORTE;
+        if (type.equals("Preventivo,8")) return SoapRequestTDC.ACTION_GE;
+        if (type.equals("Emergencia,1")) return SoapRequestTDC.ACTION_EMERG;
+        else return "";
+    }
+
+
+    private class crearFicherosLocal extends AsyncTask<String, String, String> {
+
+        String type;
+        String query;
+        String idMain;
+
+        public crearFicherosLocal(String type, String idMain) {
+            this.type = type;
+            this.idMain = idMain;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            try {
+                query = SoapRequestTDC.getFormularioCierre(IMEI, idMain, getAction(type));
+
+                LocalText localT = new LocalText();
+                if (localT.isDisponibleSD() && localT.isAccesoEscrituraSD())
+                    localT.escribirFicheroMemoriaExterna(idMain + "," + getAction(type), query);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                return "Se agotó el tiempo de conexión. Por favor reintente.";
+            }
+            return "";
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+
+        }
+    }
+
+
+
+
 }

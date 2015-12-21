@@ -62,6 +62,7 @@ import javax.xml.xpath.XPathExpressionException;
 
 import cl.tdc.felipe.tdc.daemon.PositionTrackerTDC;
 import cl.tdc.felipe.tdc.extras.Constantes;
+import cl.tdc.felipe.tdc.extras.LocalText;
 import cl.tdc.felipe.tdc.objects.FormularioCierre.AREA;
 import cl.tdc.felipe.tdc.objects.FormularioCierre.ITEM;
 import cl.tdc.felipe.tdc.objects.FormularioCierre.PHOTO;
@@ -150,7 +151,6 @@ public class ActividadCierreFormActivity extends Activity {
             Log.d("AVERIA", "SERVICE DISCONNECTED");
         }
     };
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -1973,23 +1973,32 @@ public class ActividadCierreFormActivity extends Activity {
             try {
                 TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
                 String response = SoapRequestTDC.sendAnswerIDEN(telephonyManager.getDeviceId(), IDMAIN, SYSTEMS);
-                ArrayList<String> parse = XMLParser.getReturnCode2(response);
+
+                LocalText localT = new LocalText();
+
+                if(localT.isDisponibleSD() && localT.isAccesoEscrituraSD())
+                    localT.escribirFicheroMemoriaExterna(IDMAIN+",answerIden",response);
+
+                return "Datos exitosamente ingresados";
+
+
+                /*ArrayList<String> parse = XMLParser.getReturnCode2(response);
                 if (parse.get(0).equals("0")) {
                     ok = true;
                     return parse.get(1);
                 } else {
                     return "Error Code:" + parse.get(0) + "\n" + parse.get(1);
-                }
+                }*/
             } catch (IOException e) {
                 return "Se agotó el tiempo de conexión.";
-            } catch (ParserConfigurationException | SAXException | XPathExpressionException e) {
+            } /*catch (ParserConfigurationException | SAXException | XPathExpressionException e) {
                 return "Error al leer XML";
-            } catch (Exception e) {
+            } */catch (Exception e) {
                 return "Error al enviar la respuesta";
             }
         }
 
-        @Override
+        /*@Override
         protected void onPostExecute(String s) {
             if (dialog.isShowing()) dialog.dismiss();
 
@@ -2008,6 +2017,26 @@ public class ActividadCierreFormActivity extends Activity {
                 b.show();
             }
 
+        }*/
+
+        @Override
+        protected void onPostExecute(String s) {
+            if (dialog.isShowing()) dialog.dismiss();
+
+            AlertDialog.Builder b = new AlertDialog.Builder(actividad);
+            b.setMessage(s);
+            b.setCancelable(false);
+            b.setPositiveButton("SALIR", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                    REG.clearPreferences();
+                    setResult(RESULT_OK);
+                    actividad.finish();
+
+                }
+            });
+            b.show();
         }
     }
 
@@ -2774,7 +2803,6 @@ public class ActividadCierreFormActivity extends Activity {
         this.wakelock.release();
 
     }
-
 
     public void onSaveInstanceState(Bundle icicle) {
         super.onSaveInstanceState(icicle);

@@ -47,14 +47,14 @@ public class LocalText {
         }
     }
 
-    public void escribirFicheroMemoriaExterna(String query) {
+    public void escribirFicheroMemoriaExterna(String nombreArchi, String query) {
 
         FileOutputStream flujo=null;
         OutputStreamWriter escritor = null;
         try
         {
-            File ruta = Environment.getExternalStorageDirectory();
-            File fichero = new File(ruta.getAbsolutePath(), "planing-mantience.txt");
+           // File ruta = Environment.getExternalStorageDirectory();
+            File fichero = new File(Environment.getExternalStorageDirectory() + "/TDC@", nombreArchi+".txt");
             flujo=new FileOutputStream(fichero);
             escritor=new OutputStreamWriter(flujo);
             escritor.write(query);
@@ -75,20 +75,19 @@ public class LocalText {
         }
     }
 
-    public String leerFicheroMemoriaExterna() {
+    public String leerFicheroMemoriaExterna(String nombreArchi) {
         InputStreamReader flujo=null;
         BufferedReader lector=null;
         try
         {
-            File ruta = Environment.getExternalStorageDirectory();
-            File fichero = new File(ruta.getAbsolutePath(), "planing-mantience.txt");
+            //File ruta = Environment.getExternalStorageDirectory();
+            File fichero = new File(Environment.getExternalStorageDirectory() + "/TDC@", nombreArchi+".txt");
             flujo= new InputStreamReader(new FileInputStream(fichero));
             lector= new BufferedReader(flujo);
             String texto = lector.readLine();
             String texto2 = "";
             while(texto!=null)
             {
-                Log.i("AQUIIIIII", "Mensaje: " + texto);
                 texto2 += texto;
                 texto=lector.readLine();
             }

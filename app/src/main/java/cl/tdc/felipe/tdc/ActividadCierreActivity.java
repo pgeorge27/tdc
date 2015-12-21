@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 
+import cl.tdc.felipe.tdc.extras.LocalText;
 import cl.tdc.felipe.tdc.objects.Maintenance.Agenda;
 import cl.tdc.felipe.tdc.preferences.FormCierreReg;
 import cl.tdc.felipe.tdc.preferences.MaintenanceReg;
@@ -354,7 +355,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         String query;
         boolean flag = false;
 
-        private buscar_form(String type) {
+        public buscar_form(String type) {
             this.type = type;
             dialog = new ProgressDialog(mContext);
             dialog.setMessage("Buscando formulario " + type);
@@ -371,9 +372,12 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         @Override
         protected String doInBackground(String... strings) {
             try {
-                query = SoapRequestTDC.getFormularioCierre(IMEI, idMain, getAction(type));
+
+                //query = SoapRequestTDC.getFormularioCierre(IMEI, idMain, getAction(type));
+                query = new LocalText().leerFicheroMemoriaExterna(idMain+","+getAction(type));
 
                 ArrayList<String> returnCode = XMLParser.getReturnCode2(query);
+
                 if (returnCode.get(0).equals("0"))
                     flag = true;
                 return returnCode.get(1);
@@ -622,6 +626,5 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         super.onSaveInstanceState(icicle);
         this.wakelock.release();
     }
-
 
 }
