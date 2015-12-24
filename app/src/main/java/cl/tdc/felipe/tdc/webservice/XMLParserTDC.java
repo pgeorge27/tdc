@@ -138,6 +138,21 @@ public class XMLParserTDC {
                                                                     QV.setPhoto(getNodeValue(questionv, "Photo"));
                                                                     QV.setNumberPhoto(getNodeValue(questionv, "NumberPhoto"));
 
+                                                                    NodeList QVALUE = questionv.getElementsByTagName("Values");             //Creamos nodo para buscar las respuestas dentro de las preguntas para la estructura
+                                                                    ArrayList<VALUE> valArrayList = new ArrayList<>();                      //Questions -Question -Values -Value -Questions -Question -Values -value Arreglo de las respuestas
+                                                                    if (QVALUE.getLength()>0) {                                             //Si hay respuestas dentro de la pregunta busca lo que esta dentro
+                                                                        QVALUE = QVALUE.item(0).getChildNodes();                            //Toma el valor desde el primer bloque que consigue
+                                                                        for (int m = 0; m < QVALUE.getLength(); m++) {                      //Encontrado el value iteramos para obtener los valores dentro de sus etiquetas
+                                                                            VALUE VQ = new VALUE();
+                                                                            Element valueq = (Element) QVALUE.item(m);                      //
+                                                                            VQ.setIdValue(getNodeValue(valueq, "IdValue"));                 //
+                                                                            VQ.setNameValue(getNodeValue(valueq, "NameValue"));             //
+
+                                                                            valArrayList.add(VQ);
+                                                                        }
+                                                                        QV.setValues(valArrayList);
+                                                                    }
+
                                                                     qvArrayList.add(QV);
 
                                                                 }

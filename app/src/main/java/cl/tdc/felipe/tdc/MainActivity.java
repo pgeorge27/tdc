@@ -57,7 +57,7 @@ public class MainActivity extends ActionBarActivity {
     LocationManager locationManager;
     public ImageButton agendabtn;
 
-    FormCierreReg REGCIERRE, IDENREG, TRESGREG, FAENAREG, TRANSPREG, SGREG, DCREG, AIRREG, ACREG, GEREG;
+    FormCierreReg REGCIERRE, IDENREG, TRESGREG, FAENAREG, TRANSPREG, SGREG, DCREG, AIRREG, ACREG, GEREG, EMERGREG;
     MaintenanceReg MAINREG;
 
     @Override
@@ -79,6 +79,7 @@ public class MainActivity extends ActionBarActivity {
         AIRREG = new FormCierreReg(this, "AIR");
         GEREG = new FormCierreReg(this, "GE");
         ACREG = new FormCierreReg(this, "AC");
+        EMERGREG = new FormCierreReg(this, "EMERGENCY");
         MAINREG = new MaintenanceReg(this);
 
         File carpetaTDC = new File(Environment.getExternalStorageDirectory() + "/TDC@");

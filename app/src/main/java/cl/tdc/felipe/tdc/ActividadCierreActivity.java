@@ -78,7 +78,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         DCREG = new FormCierreReg(this, "DC");
         AIRREG = new FormCierreReg(this, "AIR");
         GEREG = new FormCierreReg(this, "GE");
-        EMERGREG = new FormCierreReg(this, "EMERG");
+        EMERGREG = new FormCierreReg(this, "EMERGENCY");
         MAINREG = new MaintenanceReg(this);
 
         TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
@@ -152,7 +152,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             GE.setEnabled(false);
         }
 
-        state = REG.getBoolean("EMERG" + idMain);
+        state = REG.getBoolean("EMERGENCY" + idMain);
         if(state){
             EMERG.setEnabled(false);
         }
@@ -327,7 +327,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             task.execute();
         }
         if (view.getId() == R.id.EMERG) {
-            buscar_form task = new buscar_form("EMERGENCIA");
+            buscar_form task = new buscar_form("EMERGENCY");
             task.execute();
         }
         if (view.getId() == R.id.RAN) {
@@ -345,7 +345,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         if (type.equals("FAENA")) return SoapRequestTDC.ACTION_FAENA;
         if (type.equals("TRANSPORTE")) return SoapRequestTDC.ACTION_TRANSPORTE;
         if (type.equals("GRUPO ELECTROGEN")) return SoapRequestTDC.ACTION_GE;
-        if (type.equals("EMERGENCIA")) return SoapRequestTDC.ACTION_EMERG;
+        if (type.equals("EMERGENCY")) return SoapRequestTDC.ACTION_EMERG;
         else return "";
     }
 
@@ -417,6 +417,8 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                     code = 9;
                 }else if(type.equals("GRUPO ELECTROGEN")) {
                     code = 8;
+                }else if(type.equals("GRUPO ELECTROGEN")) {
+                code = 10;
                 }else
                     code = -1;
 
@@ -511,6 +513,10 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                 GE.setEnabled(false);
                 REG.addValue("GE" + idMain, true);
             }
+            if (requestCode == 10) {
+                EMERG.setEnabled(false);
+                REG.addValue("EMERGENCY" + idMain, true);
+            }
         }
     }
 
@@ -520,8 +526,47 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         b.setPositiveButton("SI", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Cierre t = new Cierre();
-                t.execute();
+                System.out.println("El valor es " + idMain);
+                LocalText local = new LocalText();
+                local.listarFicheros(idMain);
+                local.crearListaEnvio("answer");
+                if (local.itemAnsw.size()>0) {
+                    String xml;
+                    for (int j = 0; j < local.itemAnsw.size(); j++) {
+                        System.out.println("Enviaremos " + local.itemAnsw.get(j));
+                        if (local.itemAnsw.get(j).contains(",")) {                                      //Verificamos que tenga coma, el archivo tiene por nombre IDMAIN,Nombre.txt
+                            String[] parts = local.itemAnsw.get(j).split(",");                          //separamos el archivo antes y despues de la coma
+                            String nombreArch = parts[1];                                               // nombre del archivo despues de la coma
+                            System.out.println("Parte despues de la coma: " + nombreArch);
+                            if (nombreArch.contains(".")){                                              //Verificamos si contiene punto el nombre
+                                String[] nombre = nombreArch.split("\\.");                              //separamos antes y despues del punto
+                                String accion = nombre[0];                                              //nombre del archivo antes del punto = a la accion
+                                System.out.println("La Accion seria: "+ accion);
+
+                                String[] nomArch = local.itemAnsw.get(j).split("\\.");                  //separamos el nombre del archivo antes y despues del punto
+                                String nomArchSinTxt = nomArch[0];                                      //Extraemos el nombre sin la extension .txt
+
+                                xml = local.leerFicheroMemoriaExterna(nomArchSinTxt);                   //leemos el archivo del tlf
+                                System.out.println("antes: " + xml);
+
+                                try {                                                                  //Enviamos la petioncion al servidor SOAP (ESTO SE REALIZABA POR CADA CHECK ANTERIORMENTE AL PULSAR SOBRE ENVIAR)
+                                    SoapRequestTDC.sendAll(xml,accion);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }else {
+                                throw new IllegalArgumentException("String " + nombreArch + " No contiene limitador . ");
+                            }
+                        } else {
+                            throw new IllegalArgumentException("String " + local.itemAnsw.get(j) + " No contiene limitador , ");
+                        }
+
+                    }
+                    //Cierre t = new Cierre();
+                    //t.execute();
+                }else{
+                    System.out.println("ERROR EN ANSW: NO HAY ARCHIVOS PARA ENVIAR");
+                }
             }
         });
         b.setNegativeButton("NO", new DialogInterface.OnClickListener() {
@@ -592,6 +637,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                         DCREG.clearPreferences();
                         AIRREG.clearPreferences();
                         GEREG.clearPreferences();
+                        EMERGREG.clearPreferences();
                         if(AgendaActivity.actividad != null)
                             AgendaActivity.actividad.finish();
 

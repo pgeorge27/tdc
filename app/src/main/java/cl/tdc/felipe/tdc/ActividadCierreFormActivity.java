@@ -108,8 +108,8 @@ public class ActividadCierreFormActivity extends Activity {
     ProgressDialog dialog;
     public LinearLayout layquest2;
     public View question2;
-    public boolean agregar = false;
-    public boolean agregar2 = false;
+    public boolean agregar = false;     //Creado para determinar en que momento agregar las preguntas internas
+    public boolean agregar2 = false;    //Soluciona el problema que se agregaban las preguntas internas antes que la externa
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -432,27 +432,29 @@ public class ActividadCierreFormActivity extends Activity {
                                             ((RadioButton) ((RadioGroup) Q.getView()).getChildAt(pos)).setChecked(true);
                                         }
 
-                                        if (Q.getValues().size()>0) {                                                                   //Este bloque es para sacar la pregunta interna que existe en Transporte 349 y 350
-                                            for (int i = 0; i < Q.getValues().size(); i++) {                                            //Iteramos sobre las respuesta, como es radio y sabemos que al pulsar en NO muestra la otro pregunta
-                                                if (Q.getValues().get(i).getQuestions() != null){                                       //evaluamos la posicion del boton y mostramos y ocultamos
+                                        /*if (Q.getValues().size()>0) {
 
-                                                    for (int j = 0; j < Q.getValues().get(i).getQuestions().size(); j++) {
+                                            for (VALUE V :  Q.getValues()) {
+
+                                                if (V.getQuestions() != null){
+
+                                                    for (QUESTION QV : V.getQuestions()) {
+
                                                         layquest2 = create_questionLayout();
-
-                                                        layquest2.addView(Q.getValues().get(i).getQuestions().get(j).getTitle(mContext));
+                                                        layquest2.addView(QV.getTitle(mContext));
                                                         layquest2.setVisibility(View.GONE);
-                                                        question2 = Q.getValues().get(i).getQuestions().get(j).generateView(mContext);
+                                                        question2 = QV.generateView(mContext);
                                                         question2.setVisibility(View.GONE);
 
                                                         if (question2 != null) {
 
                                                             String tag2 = S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem() + "-" +
-                                                                    Q.getValues().get(i).getQuestions().get(j).getIdQuestion() + "-" +
-                                                                    Q.getValues().get(i).getQuestions().get(j).getNameQuestion();
+                                                                    QV.getIdQuestion() + "-" +
+                                                                    QV.getNameQuestion();
 
-                                                            if (Q.getValues().get(i).getQuestions().get(j).getIdType().equals(Constantes.DATE)) {
-                                                                final EditText t2 = Q.getValues().get(i).getQuestions().get(j).getEditTexts().get(0);
-                                                                String text = REG.getString("DATE" + tag2);
+                                                            if (QV.getIdType().equals(Constantes.DATE)) {                        //Este bloque es para sacar la pregunta interna que existe en Transporte 349 y 350
+                                                                final EditText t2 = QV.getEditTexts().get(0);                    //Iteramos sobre las respuesta, como es radio y sabemos que al pulsar en NO muestra la otro pregunta
+                                                                String text = REG.getString("DATE" + tag2);                      //evaluamos la posicion del boton y mostramos y ocultamos
                                                                 t2.setText(text);
                                                                 t2.setVisibility(View.GONE);
 
@@ -476,7 +478,49 @@ public class ActividadCierreFormActivity extends Activity {
 
                                                                     }
                                                                 });
+                                                            }
 
+                                                            if (QV.getIdType().equals(Constantes.CHECK)) {
+                                                                ArrayList<CheckBox> ch = QV.getCheckBoxes();
+                                                                for (int j = 0; j < ch.size(); j++) {
+                                                                    Boolean check = REG.getBoolean("CHECK" + tag2 + j);
+                                                                    ch.get(j).setChecked(check);
+                                                                }
+                                                            }
+
+                                                            agregar = true;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }*/
+
+                                        if (Q.getValues().size()>0) {
+
+                                            for (VALUE V :  Q.getValues()) {
+
+                                                layquest2 = create_questionLayout();
+                                                layquest2.addView(Q.getTitle(mContext));
+                                                //layquest2.setVisibility(View.GONE);
+                                                question2 = Q.generateView(mContext);
+                                                //question2.setVisibility(View.GONE);
+
+                                                if (V.getQuestions() != null){
+
+                                                    for (QUESTION QV : V.getQuestions()) {
+
+                                                        if (question2 != null) {
+
+                                                            String tag2 = S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem() + "-" +
+                                                                    QV.getIdQuestion() + "-" +
+                                                                    QV.getNameQuestion();
+
+                                                            if (QV.getIdType().equals(Constantes.CHECK)) {
+                                                                ArrayList<CheckBox> ch = QV.getCheckBoxes();
+                                                                for (int j = 0; j < ch.size(); j++) {
+                                                                    Boolean check = REG.getBoolean("CHECK" + tag2 + j);
+                                                                    ch.get(j).setChecked(check);
+                                                                }
                                                             }
 
                                                             agregar = true;
@@ -485,6 +529,9 @@ public class ActividadCierreFormActivity extends Activity {
                                                 }
                                             }
                                         }
+
+
+
                                     }
 
                                     if (Q.getIdType().equals(Constantes.NUM)) {
@@ -523,7 +570,7 @@ public class ActividadCierreFormActivity extends Activity {
                                     }
 
                                     if (Q.getQuestions() != null){                                                  //Creado para agregar las preguntas internas de AC
-                                                                                                                    //Iteramos sobre la etiqqueta RepeatQuestion y sacamos las preguntas
+                                                                                                                    //Iteramos sobre la etiqueta RepeatQuestion y sacamos las preguntas
                                         final ArrayList<View> repeatContentList = new ArrayList<>();                //Segun el tipo de pregunta interna creamos la vista.
                                         final ArrayList<Button> repeatButtontList = new ArrayList<>();
 
@@ -668,12 +715,7 @@ public class ActividadCierreFormActivity extends Activity {
                                             if (pos != -100) {
                                                 ((RadioButton) ((RadioGroup) I.getView()).getChildAt(pos)).setChecked(true);
                                             }
-
-
-//                                            itemLayout.addView(repeatLayout);
-
                                         }
-
                                     }
 
                                     itemLayout.addView(layquest);
@@ -1139,8 +1181,6 @@ public class ActividadCierreFormActivity extends Activity {
 
                                 itemLayout.addView(repeatLayout);
                             }
-
-
                         } else {
                             if (I.getIdType().equals(Constantes.RADIO)) {
                                 int pos = REG.getInt("RADIO" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem());
@@ -1350,7 +1390,6 @@ public class ActividadCierreFormActivity extends Activity {
                                         REG.addValue("CHECK" + tagid + j, false);
                                     }
                                 }
-
                             }
                         }
                     }
@@ -1956,7 +1995,7 @@ public class ActividadCierreFormActivity extends Activity {
 
         private EnviarIden() {
             dialog = new ProgressDialog(mContext);
-            dialog.setMessage("Enviando formulario...");
+            dialog.setMessage("Guardando formulario...");
             Button bEnviar = (Button) findViewById(R.id.btnEnviar);
             bEnviar.setEnabled(false);
             dialog.setCancelable(false);
@@ -1979,7 +2018,7 @@ public class ActividadCierreFormActivity extends Activity {
                 if(localT.isDisponibleSD() && localT.isAccesoEscrituraSD())
                     localT.escribirFicheroMemoriaExterna(IDMAIN+",answerIden",response);
 
-                return "Datos exitosamente ingresados";
+                return "Datos exitosamente guardados";
 
 
                 /*ArrayList<String> parse = XMLParser.getReturnCode2(response);
@@ -2565,6 +2604,7 @@ public class ActividadCierreFormActivity extends Activity {
                         }
                     }
                     if (I.getQuestions() != null) {
+
                         for (QUESTION Q : I.getQuestions()) {
                             if (Q.getFoto() != null) {
                                 p.add(Q.getFoto());
@@ -2574,6 +2614,20 @@ public class ActividadCierreFormActivity extends Activity {
                                     p.add(P);
                                 }
                             }
+
+                            if (Q.getQuestions() != null){
+                                for (QUESTION QQ : Q.getQuestions()){
+                                    if (QQ.getFoto() != null) {
+                                        p.add(QQ.getFoto());
+                                    }
+                                    if (QQ.getFotos() != null) {
+                                        for (PHOTO P : QQ.getFotos()) {
+                                            p.add(P);
+                                        }
+                                    }
+                                }
+                            }
+
                         }
                     }
                     if (I.getSetlistArrayList() != null && I.getValues() != null) {
