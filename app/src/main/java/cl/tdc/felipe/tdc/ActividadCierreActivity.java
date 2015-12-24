@@ -223,14 +223,19 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                         GE.setVisibility(View.GONE);
                     }
                 }
-
+<<<<<<< HEAD
+         /*       if (temp.equalsIgnoreCase("9," + idMain)) {
+=======
                 if (temp.equalsIgnoreCase("Preventivo,9," + idMain)) {
+>>>>>>> 07116daae787bf5931a5a201900213dcefd27515
                     if (AC.getVisibility() == View.GONE) {
                         AC.setVisibility(View.VISIBLE);
                     } else {
                         AC.setVisibility(View.GONE);
                     }
-                }
+                }*/
+
+
             }
         }
     }
