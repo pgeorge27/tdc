@@ -1923,11 +1923,33 @@ public class SoapRequestTDC {
 
         httpPost.setEntity(se);
         HttpResponse httpResponse = httpClient.execute(httpPost);
-        HttpEntity resEntity = httpResponse.getEntity();
+            HttpEntity resEntity = httpResponse.getEntity();
         response = EntityUtils.toString(resEntity);
         return response;
     }
 
+    public static void sendAll(String xml, String action)throws IOException {
+
+        final String SOAP_ACTION = "urn:Configurationwsdl#" + action;
+
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpPost httpPost = new HttpPost(dummy.URL_TDC);
+
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+        envelope.encodingStyle = SoapSerializationEnvelope.ENC;
+        envelope.dotNet = false;
+        envelope.implicitTypes = true;
+
+        System.out.println("valor de xml: " + xml);
+        StringEntity se = new StringEntity(xml, HTTP.UTF_8);
+        se.setContentType("text/xml");
+        httpPost.addHeader(SOAP_ACTION, dummy.URL_TDC);
+
+        httpPost.setEntity(se);
+        HttpResponse httpResponse = httpClient.execute(httpPost);
+        HttpEntity resEntity = httpResponse.getEntity();
+
+    }
 
     //End S G
     public static String cerrarMantenimiento(String IMEI, String ID) throws Exception {
