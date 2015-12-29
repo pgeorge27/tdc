@@ -288,7 +288,8 @@ public class ActividadCierreFormActivity extends Activity {
         photo.setImageResource(R.drawable.ic_camerawhite);
         photo.setPadding(10, 10, 10, 10);
         photo.setBackgroundResource(R.drawable.button_gray_rounded);
-
+        photo.setFocusable(true);                                       //Con estas 2 lineas corregimos el problema de perder el foco al tomar una foto
+        photo.setFocusableInTouchMode(true);                            //El detalle es que debemos pulsar 2 veces el boton :-(
         photo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -324,6 +325,7 @@ public class ActividadCierreFormActivity extends Activity {
                 b.show();
             }
         });
+
         return photo;
     }
 
