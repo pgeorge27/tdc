@@ -377,8 +377,8 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         protected String doInBackground(String... strings) {
             try {
 
-                query = SoapRequestTDC.getFormularioCierre(IMEI, idMain, getAction(type));
-                //query = new LocalText().leerFicheroMemoriaExterna(idMain+","+getAction(type));
+                //query = SoapRequestTDC.getFormularioCierre(IMEI, idMain, getAction(type));
+                query = new LocalText().leerFicheroMemoriaExterna(idMain+","+getAction(type));
 
                 ArrayList<String> returnCode = XMLParser.getReturnCode2(query);
 
