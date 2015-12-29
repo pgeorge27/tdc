@@ -813,7 +813,7 @@ public class RelevarActivity extends Activity {
         } else if (type.equals("NUM")) {
             EditText e = new EditText(this);
             e.setBackgroundResource(R.drawable.fondo_edittext);
-            e.setInputType(InputType.TYPE_CLASS_NUMBER);
+            e.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
 
             String id = mId + item.getId() + item.getName();
             e.setId(Funciones.str2int(id));

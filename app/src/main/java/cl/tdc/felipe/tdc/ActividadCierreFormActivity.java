@@ -427,31 +427,31 @@ public class ActividadCierreFormActivity extends Activity {
                                     }
 
                                     if (Q.getIdType().equals(Constantes.RADIO)) {
-                                        int pos = REG.getInt("RADIO" + tag);
+                                        final int pos = REG.getInt("RADIO" + tag);
                                         if (pos != -100) {
                                             ((RadioButton) ((RadioGroup) Q.getView()).getChildAt(pos)).setChecked(true);
                                         }
 
-                                        if (Q.getValues().size()>0) {                                                                   //Este bloque es para sacar la pregunta interna que existe en Transporte 349 y 350
-                                            for (int i = 0; i < Q.getValues().size(); i++) {                                            //Iteramos sobre las respuesta, como es radio y sabemos que al pulsar en NO muestra la otro pregunta
-                                                if (Q.getValues().get(i).getQuestions() != null){                                       //evaluamos la posicion del boton y mostramos y ocultamos
+                                        if (Q.getValues().size()>0 && !TITLE.equalsIgnoreCase("emergency")) {         //Este bloque es para sacar la pregunta interna que existe en Transporte 349 y 350
+                                            for (VALUE V : Q.getValues()) {                                            //Iteramos sobre las respuesta, como es radio y sabemos que al pulsar en NO muestra la otro pregunta
+                                                if (V.getQuestions() != null){                                       //evaluamos la posicion del boton y mostramos y ocultamos
 
-                                                    for (int j = 0; j < Q.getValues().get(i).getQuestions().size(); j++) {
+                                                    for (QUESTION QV : V.getQuestions()) {
                                                         layquest2 = create_questionLayout();
 
-                                                        layquest2.addView(Q.getValues().get(i).getQuestions().get(j).getTitle(mContext));
+                                                        layquest2.addView(QV.getTitle(mContext));
                                                         layquest2.setVisibility(View.GONE);
-                                                        question2 = Q.getValues().get(i).getQuestions().get(j).generateView(mContext);
+                                                        question2 = QV.generateView(mContext);
                                                         question2.setVisibility(View.GONE);
 
                                                         if (question2 != null) {
 
                                                             String tag2 = S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem() + "-" +
-                                                                    Q.getValues().get(i).getQuestions().get(j).getIdQuestion() + "-" +
-                                                                    Q.getValues().get(i).getQuestions().get(j).getNameQuestion();
+                                                                    QV.getIdQuestion() + "-" +
+                                                                    QV.getNameQuestion();
 
-                                                            if (Q.getValues().get(i).getQuestions().get(j).getIdType().equals(Constantes.DATE)) {
-                                                                final EditText t2 = Q.getValues().get(i).getQuestions().get(j).getEditTexts().get(0);
+                                                            if (QV.getIdType().equals(Constantes.DATE)) {
+                                                                final EditText t2 = QV.getEditTexts().get(0);
                                                                 String text = REG.getString("DATE" + tag2);
                                                                 t2.setText(text);
                                                                 t2.setVisibility(View.GONE);
@@ -485,6 +485,110 @@ public class ActividadCierreFormActivity extends Activity {
                                                 }
                                             }
                                         }
+
+                                        if (Q.getValues().size()>0 && TITLE.equalsIgnoreCase("emergency")) {    //Iteramos sobre los RadioB de Emergency
+
+                                            final ArrayList<View> repeatContentList = new ArrayList<>();
+                                            final ArrayList<Button> repeatButtontList = new ArrayList<>();
+
+                                            repeatLayout = create_normalVerticalLayout();
+                                            ArrayList<VALUE> listadoValues = new ArrayList<>();
+                                            for (VALUE V :  Q.getValues()) {
+
+                                                Button boton = crear_botonRepeat();
+                                                boton.setText(V.getNameValue());
+
+                                                final LinearLayout contentSetLayout = create_normalVerticalLayout();
+
+
+                                                LinearLayout setLayout = create_setLayout();
+
+                                                if (V.getQuestions() != null){
+                                                    ArrayList<QUESTION> listadoQ = new ArrayList<>();
+                                                    for (QUESTION QV : V.getQuestions()) {
+                                                        QUESTION qAux = copiar_question(QV);
+                                                        LinearLayout questTitle = create_questionLayout();
+
+                                                        questTitle.addView(qAux.getTitle(mContext));
+                                                        questTitle.setGravity(Gravity.CENTER_VERTICAL);
+
+                                                        View question2 = qAux.generateView(mContext);
+
+                                                        if (question2 != null) {
+                                                            String tag2 = S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem() + "-"
+                                                                    + V.getIdValue() + V.getNameValue() + "-" +
+                                                                    QV.getIdQuestion() + "-" + QV.getNameQuestion();
+
+                                                            if (qAux.getIdType().equals(Constantes.CHECK)) {
+                                                                ArrayList<CheckBox> ch = qAux.getCheckBoxes();
+                                                                for (int j = 0; j < ch.size(); j++) {
+                                                                    Boolean check = REG.getBoolean("CHECK" + tag2 + j);
+                                                                    ch.get(j).setChecked(check);
+                                                                }
+                                                            }
+                                                        }
+                                                        listadoQ.add(qAux);
+                                                    }
+                                                    V.setQuestions(listadoQ);
+                                                }
+
+
+                                                contentSetLayout.addView(setLayout);
+
+                                                boton.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View view) {
+                                                        if (contentSetLayout.getVisibility() == View.GONE) {
+                                                            contentSetLayout.setVisibility(View.VISIBLE);
+                                                            for (View layu : repeatContentList) {
+                                                                if (!layu.equals(contentSetLayout)) {
+                                                                    layu.setVisibility(View.GONE);
+                                                                }
+                                                            }
+                                                        } else {
+                                                            contentSetLayout.setVisibility(View.GONE);
+                                                        }
+                                                    }
+                                                });
+
+                                                contentSetLayout.setVisibility(View.GONE);
+                                                repeatContentList.add(contentSetLayout);            //para que al mostrar uno se oculten los demas
+                                                repeatButtontList.add(boton);
+                                                repeatLayout.addView(boton);
+                                                repeatLayout.addView(contentSetLayout);
+
+                                                agregar2 = true;
+
+                                                listadoValues.add(V);
+                                            }
+
+                                            Q.setValues(listadoValues);
+
+                                            RadioGroup group = (RadioGroup) Q.getView();
+
+                                            group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                                                @Override
+                                                public void onCheckedChanged(RadioGroup rg, int id) {
+                                                    for (View l : repeatContentList) {
+                                                        l.setVisibility(View.GONE);
+                                                    }
+                                                    RadioButton btn = (RadioButton) rg.findViewById(id);
+                                                    int position = rg.indexOfChild(btn);
+                                                    for (Button b : repeatButtontList) {
+                                                        b.setVisibility(View.GONE);
+                                                    }
+
+                                                    repeatButtontList.get(position).setVisibility(View.VISIBLE);
+                                                }
+                                            });
+
+                                            int pos2 = REG.getInt("RADIO" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem());
+                                            Log.d("POSITION", "RADIO" + I.getIdItem() + " -pos2: " + pos2);
+                                            if (pos2 != -100) {
+                                                ((RadioButton) ((RadioGroup) I.getView()).getChildAt(pos2)).setChecked(true);
+                                            }
+                                        }
+
                                     }
 
                                     if (Q.getIdType().equals(Constantes.NUM)) {
@@ -523,18 +627,17 @@ public class ActividadCierreFormActivity extends Activity {
                                     }
 
                                     if (Q.getQuestions() != null){                                                  //Creado para agregar las preguntas internas de AC
-                                                                                                                    //Iteramos sobre la etiqqueta RepeatQuestion y sacamos las preguntas
+                                                                                                                    //Iteramos sobre la etiqueta RepeatQuestion y sacamos las preguntas
                                         final ArrayList<View> repeatContentList = new ArrayList<>();                //Segun el tipo de pregunta interna creamos la vista.
                                         final ArrayList<Button> repeatButtontList = new ArrayList<>();
 
                                         repeatLayout = create_normalVerticalLayout();
 
                                         if (Q.getIdType().equals(Constantes.RADIO)) {
-                                            for (int x = 0; x < Q.getValues().size(); x++) {
-                                                VALUE value = Q.getValues().get(x);
+                                            for (VALUE V : I.getValues()) {
 
                                                 Button boton = crear_botonRepeat();
-                                                boton.setText(value.getNameValue());
+                                                boton.setText(V.getNameValue());
 
                                                 final LinearLayout contentSetLayout = create_normalVerticalLayout();
 
@@ -543,8 +646,8 @@ public class ActividadCierreFormActivity extends Activity {
                                                 if (Q.getQuestions() != null) {
                                                     ArrayList<QUESTION> listadoQ = new ArrayList<>();
 
-                                                        for (final QUESTION QR : Q.getQuestions()) {
-                                                            QUESTION qAux = copiar_question(QR);
+                                                        for (final QUESTION QQ : Q.getQuestions()) {
+                                                            QUESTION qAux = copiar_question(QQ);
                                                             LinearLayout questTitle = create_questionLayout();
 
                                                             if (qAux.getPhoto().equals("OK")) {
@@ -553,18 +656,24 @@ public class ActividadCierreFormActivity extends Activity {
                                                             }
 
                                                             questTitle.addView(qAux.getTitle(mContext));
-                                                            questTitle.setGravity(Gravity.CENTER_VERTICAL);
+                                                            //questTitle.setGravity(Gravity.CENTER_VERTICAL);
 
                                                             View questionR = qAux.generateView(mContext);
                                                             if (questionR != null) {
-                                                                String tagR = S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem() + "-" + value.getIdValue() + value.getNameValue() + "-" + QR.getIdQuestion() + "-" + QR.getNameQuestion();
+
+                                                                String tagR = "QQ" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem() + "-" +
+                                                                        Q.getIdQuestion() + Q.getNameQuestion() + "-" +
+                                                                        V.getIdValue() + "-" +
+                                                                        qAux.getIdQuestion() + "-" +
+                                                                        qAux.getNameQuestion();
 
                                                                 if (qAux.getPhoto().equals("OK")) {
-                                                                    cargar_fotos(qAux, tag);
+                                                                    cargar_fotos(qAux, tagR);
                                                                 }
 
                                                                 if (qAux.getIdType().equals(Constantes.RADIO)) {
-                                                                    int pos = REG.getInt("RADIO" + tagR);
+                                                                    //int pos = REG.getInt("RADIO" + tagR);
+                                                                    int pos = REG.getInt("RADIO" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem());
                                                                     if (pos != -100) {
                                                                         ((RadioButton) ((RadioGroup) qAux.getView()).getChildAt(pos)).setChecked(true);
                                                                     }
@@ -576,42 +685,14 @@ public class ActividadCierreFormActivity extends Activity {
                                                                 if (qAux.getIdType().equals(Constantes.TEXT)) {
                                                                     String text = REG.getString("TEXT" + tagR);
                                                                     ((TextView) qAux.getView()).setText(text);
-
-                                                                }
-                                                                if (qAux.getIdType().equals(Constantes.CHECK)) {
-                                                                    ArrayList<CheckBox> ch = qAux.getCheckBoxes();
-                                                                    for (int j = 0; j < ch.size(); j++) {
-                                                                        Boolean check = REG.getBoolean("CHECK" + tagR + j);
-                                                                        ch.get(j).setChecked(check);
-                                                                    }
-
-                                                                }
-                                                                if (qAux.getIdType().equals(Constantes.DIV)) {
-                                                                    String textL = REG.getString("DIVL" + tagR);
-                                                                    String textR = REG.getString("DIVR" + tagR);
-
-                                                                    EditText left = qAux.getEditTexts().get(0);
-                                                                    EditText right = qAux.getEditTexts().get(1);
-
-                                                                    left.setText(textL);
-                                                                    right.setText(textR);
-                                                                }
-
-                                                                if (qAux.getIdType().equals(Constantes.DATE)) {
-                                                                    EditText t = qAux.getEditTexts().get(0);
-                                                                    String text = REG.getString("DATE" + tagR);
-                                                                    t.setText(text);
                                                                 }
 
                                                                 setLayout.addView(questTitle);
 
                                                                 if (!qAux.getIdType().equals(Constantes.PHOTO))
                                                                     setLayout.addView(questionR);
-
                                                             }
-
                                                             listadoQ.add(qAux);
-
                                                         }
                                                     Q.setQuestions(listadoQ);
                                                     agregar2=true;
@@ -668,13 +749,10 @@ public class ActividadCierreFormActivity extends Activity {
                                             if (pos != -100) {
                                                 ((RadioButton) ((RadioGroup) I.getView()).getChildAt(pos)).setChecked(true);
                                             }
-
-
-//                                            itemLayout.addView(repeatLayout);
-
                                         }
-
                                     }
+
+
 
                                     itemLayout.addView(layquest);
                                     if (!Q.getIdType().equals(Constantes.PHOTO))
@@ -1283,7 +1361,7 @@ public class ActividadCierreFormActivity extends Activity {
 
                     if (I.getQuestions() != null) {
                         for (QUESTION Q : I.getQuestions()) {
-                            String tagid = preId + "-" + Q.getIdQuestion() + "-" + Q.getNameQuestion();
+                            String tagid = preId  + "-" + Q.getIdQuestion() + "-" + Q.getNameQuestion();
                             if (Q.getPhoto().equals("OK")) {
                                 ArrayList<PHOTO> fotos = Q.getFotos();
                                 if (fotos != null) {
@@ -1298,7 +1376,73 @@ public class ActividadCierreFormActivity extends Activity {
                                 }
                             }
 
-                            if (Q.getIdType().equals(Constantes.RADIO)) {
+
+                            if (Q.getIdType().equals(Constantes.RADIO) && Q.getQuestions()!=null) {
+                                ArrayList<VALUE> values = Q.getValues();
+                                RadioGroup radioGroup = (RadioGroup) Q.getView();
+                                if (radioGroup.getCheckedRadioButtonId() != -1) {
+
+                                    RadioButton btn = (RadioButton) radioGroup.findViewById(radioGroup.getCheckedRadioButtonId());
+
+                                    int position = radioGroup.indexOfChild(btn);
+                                    int n = position + 1;
+
+                                    REG.addValue("QQ" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem(), position);
+
+                                    for (int i = 0; i < n; i++) {
+
+                                        VALUE valor = values.get(i);
+
+                                        for (QUESTION QQ : Q.getQuestions()) {
+
+                                            String tagid2 = "QQ" + preId + "-" + Q.getIdQuestion() + Q.getNameQuestion() + "-" +
+                                                    valor.getIdValue() + "-" +
+                                                    QQ.getIdQuestion() + "-" + QQ.getNameQuestion();
+
+
+                                            if (QQ.getPhoto().equals("OK")) {
+                                                ArrayList<PHOTO> fotos = QQ.getFotos();
+                                                if (fotos != null) {
+                                                    for (int as = 0; as < fotos.size(); as++) {
+                                                        PHOTO f = fotos.get(as);
+                                                        REG.addValue("PHOTONAME" + tagid2 + as, f.getNamePhoto());
+                                                        REG.addValue("PHOTOTITLE" + tagid2 + as, f.getTitlePhoto());
+                                                        REG.addValue("PHOTODATE" + tagid2 + as, f.getDateTime());
+                                                        REG.addValue("PHOTOCOORDX" + tagid2 + as, f.getCoordX());
+                                                        REG.addValue("PHOTOCOORDY" + tagid2 + as, f.getCoordY());
+                                                    }
+                                                }
+                                            }
+
+                                            if (QQ.getIdType().equals(Constantes.NUM)) {
+                                                String text = ((TextView) QQ.getView()).getText().toString();
+                                                if (text.length() > 0) {
+                                                    REG.addValue("NUM" + tagid2, text);
+                                                }
+                                            }
+                                            if (QQ.getIdType().equals(Constantes.TEXT)) {
+                                                String text = ((TextView) QQ.getView()).getText().toString();
+                                                Log.d("GUARDANDO", text);
+                                                if (text.length() > 0) {
+                                                    REG.addValue("TEXT" + tagid2, text);
+                                                }
+                                            }
+                                            if (QQ.getIdType().equals(Constantes.RADIO)) {
+                                                int id = ((RadioGroup) QQ.getView()).getCheckedRadioButtonId();
+                                                if (id != -1) {
+                                                    RadioButton b = (RadioButton) QQ.getView().findViewById(id);
+                                                    int pos = ((RadioGroup) QQ.getView()).indexOfChild(b);
+                                                    REG.addValue("QQ"+"RADIO" + tagid2, pos);
+                                                    Log.d("GUARDANDO", "Seleccionado-> " + pos);
+                                                } else {
+                                                    Log.d("GUARDANDO", "nada seleccionado");
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            else if (Q.getIdType().equals(Constantes.RADIO)) {
                                 int id = ((RadioGroup) Q.getView()).getCheckedRadioButtonId();
                                 if (id != -1) {
                                     RadioButton b = (RadioButton) Q.getView().findViewById(id);
@@ -1306,6 +1450,7 @@ public class ActividadCierreFormActivity extends Activity {
                                     REG.addValue("RADIO" + tagid, pos);
                                 }
                             }
+
                             if (Q.getIdType().equals(Constantes.NUM)) {
                                 String text = ((TextView) Q.getView()).getText().toString();
                                 if (text.length() > 0) {
@@ -1350,7 +1495,6 @@ public class ActividadCierreFormActivity extends Activity {
                                         REG.addValue("CHECK" + tagid + j, false);
                                     }
                                 }
-
                             }
                         }
                     }
@@ -1401,6 +1545,7 @@ public class ActividadCierreFormActivity extends Activity {
                             VALUE valor = I.getValues().get(i);
                             for (SET SeT : list_i) {
                                 for (QUESTION Q : SeT.getQuestions()) {
+
                                     String tagid = preId + "-" + valor.getIdValue() + valor.getNameValue() + "-" + SeT.getIdSet() + SeT.getNameSet() + "-" + Q.getIdQuestion() + "-" + Q.getNameQuestion();
 
                                     if (Q.getPhoto().equals("OK")) {
@@ -1979,26 +2124,26 @@ public class ActividadCierreFormActivity extends Activity {
                 if(localT.isDisponibleSD() && localT.isAccesoEscrituraSD())
                     localT.escribirFicheroMemoriaExterna(IDMAIN+",answerIden",response);
 
-                return "Datos exitosamente ingresados";
+                //return "Datos exitosamente ingresados";
 
 
-                /*ArrayList<String> parse = XMLParser.getReturnCode2(response);
+                ArrayList<String> parse = XMLParser.getReturnCode2(response);
                 if (parse.get(0).equals("0")) {
                     ok = true;
                     return parse.get(1);
                 } else {
                     return "Error Code:" + parse.get(0) + "\n" + parse.get(1);
-                }*/
+                }
             } catch (IOException e) {
                 return "Se agotó el tiempo de conexión.";
-            } /*catch (ParserConfigurationException | SAXException | XPathExpressionException e) {
+            } catch (ParserConfigurationException | SAXException | XPathExpressionException e) {
                 return "Error al leer XML";
-            } */catch (Exception e) {
+            } catch (Exception e) {
                 return "Error al enviar la respuesta";
             }
         }
 
-        /*@Override
+        @Override
         protected void onPostExecute(String s) {
             if (dialog.isShowing()) dialog.dismiss();
 
@@ -2017,9 +2162,9 @@ public class ActividadCierreFormActivity extends Activity {
                 b.show();
             }
 
-        }*/
+        }
 
-        @Override
+        /*@Override
         protected void onPostExecute(String s) {
             if (dialog.isShowing()) dialog.dismiss();
 
@@ -2037,7 +2182,7 @@ public class ActividadCierreFormActivity extends Activity {
                 }
             });
             b.show();
-        }
+        }*/
     }
 
     private class Enviar3G extends AsyncTask<String, String, String> {
@@ -2572,6 +2717,19 @@ public class ActividadCierreFormActivity extends Activity {
                             if (Q.getFotos() != null) {
                                 for (PHOTO P : Q.getFotos()) {
                                     p.add(P);
+                                }
+                            }
+
+                            if (Q.getQuestions() != null){
+                                for (QUESTION QQ : Q.getQuestions()){
+                                    if (QQ.getFoto() != null) {
+                                        p.add(QQ.getFoto());
+                                    }
+                                    if (QQ.getFotos() != null) {
+                                        for (PHOTO P : QQ.getFotos()) {
+                                            p.add(P);
+                                        }
+                                    }
                                 }
                             }
                         }

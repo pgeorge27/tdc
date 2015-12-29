@@ -120,9 +120,6 @@ public class QUESTION {
         }
 
         if(idType.equals(Constantes.DATE)){
-
-//          for (int i = 0; i < editTexts.size(); i++) {
-//          }
             Answer = editTexts.get(0).getText().toString();
         }
 
@@ -177,6 +174,7 @@ public class QUESTION {
             fecha.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
             fecha.setEnabled(false);
             fecha.setGravity(Gravity.CENTER_VERTICAL);
+
 
 
             ImageButton pick = new ImageButton(ctx);
@@ -303,9 +301,10 @@ public class QUESTION {
             view = new EditText(ctx);
             ((TextView)view).setTextSize(TypedValue.COMPLEX_UNIT_SP,15);
             view.setBackgroundResource(R.drawable.fondo_edittext);
-            view.setPadding(10,5,10,5);
+            view.setPadding(10, 5, 10, 5);
+
             if(idType.equals(Constantes.NUM)){
-                ((TextView)view).setInputType(InputType.TYPE_CLASS_NUMBER);
+                ((TextView)view).setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
             }
             if(idType.equals(Constantes.TEXT)){
                 ((TextView)view).setLines(4);

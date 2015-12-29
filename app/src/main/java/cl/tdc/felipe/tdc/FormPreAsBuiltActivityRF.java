@@ -438,7 +438,7 @@ public class FormPreAsBuiltActivityRF extends Activity {
         } else if (type.equals("NUM")) {
             EditText e = new EditText(this);
             e.setBackgroundResource(R.drawable.fondo_edittext);
-            e.setInputType(InputType.TYPE_CLASS_NUMBER);
+            e.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
 
             e.setId(Funciones.str2int(id));
             e.setText(reg.getString("TEXT" + e.getId()));
@@ -885,7 +885,7 @@ public class FormPreAsBuiltActivityRF extends Activity {
                 b.setTitle(complex.getName());
                 final EditText cantidad = new EditText(mContext);
                 cantidad.setBackgroundResource(R.drawable.fondo_edittext);
-                cantidad.setInputType(InputType.TYPE_CLASS_NUMBER);
+                cantidad.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
                 b.setView(cantidad);
                 b.setPositiveButton("Continuar", null);
 

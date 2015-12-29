@@ -50,7 +50,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
     public static Activity actividad;
     Context mContext;
 
-    FormCierreReg REG, IDENREG, TRESGREG, FAENAREG, TRANSPREG, SGREG, DCREG, AIRREG, GEREG, EMERGREG;
+    FormCierreReg REG, IDENREG, TRESGREG, FAENAREG, TRANSPREG, ACREG, SGREG, DCREG, AIRREG, GEREG, EMERGREG;
     MaintenanceReg MAINREG;
 
     Button IDEN, TRESG, AC, DC, SG, AIR, FAENA, TRANSPORTE, GE, RAN, EMERG;
@@ -78,7 +78,8 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         DCREG = new FormCierreReg(this, "DC");
         AIRREG = new FormCierreReg(this, "AIR");
         GEREG = new FormCierreReg(this, "GE");
-        EMERGREG = new FormCierreReg(this, "EMERG");
+        ACREG = new FormCierreReg(this, "AC");
+        EMERGREG = new FormCierreReg(this, "EMERGENCY");
         MAINREG = new MaintenanceReg(this);
 
         TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
@@ -152,7 +153,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             GE.setEnabled(false);
         }
 
-        state = REG.getBoolean("EMERG" + idMain);
+        state = REG.getBoolean("EMERGENCY" + idMain);
         if(state){
             EMERG.setEnabled(false);
         }
@@ -223,17 +224,16 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                         GE.setVisibility(View.GONE);
                     }
                 }
-<<<<<<< HEAD
-         /*       if (temp.equalsIgnoreCase("9," + idMain)) {
-=======
+
+
                 if (temp.equalsIgnoreCase("Preventivo,9," + idMain)) {
->>>>>>> 07116daae787bf5931a5a201900213dcefd27515
+
                     if (AC.getVisibility() == View.GONE) {
                         AC.setVisibility(View.VISIBLE);
                     } else {
                         AC.setVisibility(View.GONE);
                     }
-                }*/
+                }
 
 
             }
@@ -310,7 +310,6 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             buscar_form task = new buscar_form("DC");
             task.execute();
         }
-
         if (view.getId() == R.id.SG) {
             buscar_form task = new buscar_form("SYSTEM GROUND");
             task.execute();
@@ -332,7 +331,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             task.execute();
         }
         if (view.getId() == R.id.EMERG) {
-            buscar_form task = new buscar_form("EMERGENCIA");
+            buscar_form task = new buscar_form("EMERGENCY");
             task.execute();
         }
         if (view.getId() == R.id.RAN) {
@@ -350,7 +349,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         if (type.equals("FAENA")) return SoapRequestTDC.ACTION_FAENA;
         if (type.equals("TRANSPORTE")) return SoapRequestTDC.ACTION_TRANSPORTE;
         if (type.equals("GRUPO ELECTROGEN")) return SoapRequestTDC.ACTION_GE;
-        if (type.equals("EMERGENCIA")) return SoapRequestTDC.ACTION_EMERG;
+        if (type.equals("EMERGENCY")) return SoapRequestTDC.ACTION_EMERG;
         else return "";
     }
 
@@ -378,8 +377,8 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         protected String doInBackground(String... strings) {
             try {
 
-                //query = SoapRequestTDC.getFormularioCierre(IMEI, idMain, getAction(type));
-                query = new LocalText().leerFicheroMemoriaExterna(idMain+","+getAction(type));
+                query = SoapRequestTDC.getFormularioCierre(IMEI, idMain, getAction(type));
+                //query = new LocalText().leerFicheroMemoriaExterna(idMain+","+getAction(type));
 
                 ArrayList<String> returnCode = XMLParser.getReturnCode2(query);
 
@@ -422,6 +421,8 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                     code = 9;
                 }else if(type.equals("GRUPO ELECTROGEN")) {
                     code = 8;
+                }else if(type.equals("EMERGENCY")) {
+                    code = 10;
                 }else
                     code = -1;
 
@@ -516,6 +517,10 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                 GE.setEnabled(false);
                 REG.addValue("GE" + idMain, true);
             }
+            if (requestCode == 10) {
+                EMERG.setEnabled(false);
+                REG.addValue("EMERGENCY" + idMain, true);
+            }
         }
     }
 
@@ -597,6 +602,8 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                         DCREG.clearPreferences();
                         AIRREG.clearPreferences();
                         GEREG.clearPreferences();
+                        ACREG.clearPreferences();
+                        EMERGREG.clearPreferences();
                         if(AgendaActivity.actividad != null)
                             AgendaActivity.actividad.finish();
 

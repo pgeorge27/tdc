@@ -406,7 +406,7 @@ public class MWAerials extends Activity {
         } else if (type.equals("NUM")) {
             EditText e = new EditText(this);
             e.setBackgroundResource(R.drawable.fondo_edittext);
-            e.setInputType(InputType.TYPE_CLASS_NUMBER);
+            e.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
 
             e.setId(Funciones.str2int(id));
             e.setText(reg.getString("TEXT" + e.getId()));
