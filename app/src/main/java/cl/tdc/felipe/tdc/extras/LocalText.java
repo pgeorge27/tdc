@@ -10,6 +10,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by georgeperez on 9/12/15.
@@ -19,6 +21,9 @@ public class LocalText {
 
     private boolean DisponibleSD = false;
     private boolean AccesoEscrituraSD = false;
+    private List<String> item = new ArrayList<String>();
+    private List<String> itemFiltrado = new ArrayList<String>();
+    public List<String> itemAnsw = new ArrayList<String>();
 
     public LocalText() {
         comprobarSD();
@@ -53,7 +58,7 @@ public class LocalText {
         OutputStreamWriter escritor = null;
         try
         {
-           // File ruta = Environment.getExternalStorageDirectory();
+            // File ruta = Environment.getExternalStorageDirectory();
             File fichero = new File(Environment.getExternalStorageDirectory() + "/TDC@", nombreArchi+".txt");
             flujo=new FileOutputStream(fichero);
             escritor=new OutputStreamWriter(flujo);
@@ -110,6 +115,52 @@ public class LocalText {
         }
         return null;
     }
+
+    public void listarFicheros(String filtroMant){
+        // Array TEXTO donde guardaremos los nombres de los ficheros
+        //Defino la ruta donde busco los ficheros
+        File f = new File(Environment.getExternalStorageDirectory() + "/TDC@");
+        //Creo el array de tipo File con el contenido de la carpeta
+        File[] files = f.listFiles();
+
+        //Hacemos un Loop por cada fichero para extraer el nombre de cada uno
+        for (int i = 0; i < files.length; i++) {
+            //Sacamos del array files un fichero
+            File file = files[i];
+            //Si es fichero...
+            if (file.isFile()) {
+                item.add(file.getName());
+                System.out.println("Agregado: " + file.getName());
+            }
+        }
+
+        for (int j = 0; j < item.size(); j++) {//iteramos sobre todos los elementos en item
+            if (item.get(j).toString().startsWith(filtroMant)){//evaluamos si la lista item continiene elemento que comience con la palabra recibida con filtroMant
+                itemFiltrado.add(item.get(j));//Agregamos a la lista itemFiltrado solo los mantenimientos recibidos con filtroMant
+            }
+        }
+    }
+
+    public void crearListaEnvio(String filtro){//Iteramos sobre los archivos locales y sacamos los que se van a enviar
+        for (int j = 0; j < itemFiltrado.size(); j++) {//Normalmente el filtro deberia ser por la palabra "answer".
+            if (itemFiltrado.get(j).toString().indexOf(filtro) > 0){
+                System.out.println("Agregado " + itemFiltrado.get(j).toString() + " a itemAnsw");
+                itemAnsw.add(itemFiltrado.get(j));
+            }
+        }
+    }
+
+    public void elimnarFicherosEnviados(String filtro){//Iteramos sobre los archivos locales y sacamos los que se van a enviar
+        for (int j = 0; j < itemFiltrado.size(); j++) {
+            System.out.println("Valor de Item: " + itemFiltrado.get(j).toString());
+            if (itemFiltrado.get(j).toString().indexOf(filtro) > 0){
+                System.out.println("Agregado: " + itemFiltrado.get(j).toString() + " a itemAnsw List");
+                itemAnsw.add(itemFiltrado.get(j));
+            }
+        }
+    }
+
+
 
     public boolean isDisponibleSD() {
         return DisponibleSD;

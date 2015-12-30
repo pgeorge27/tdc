@@ -378,7 +378,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             try {
 
                 //query = SoapRequestTDC.getFormularioCierre(IMEI, idMain, getAction(type));
-                query = new LocalText().leerFicheroMemoriaExterna(idMain+","+getAction(type));
+                query = new LocalText().leerFicheroMemoriaExterna(idMain + "," + getAction(type));
 
                 ArrayList<String> returnCode = XMLParser.getReturnCode2(query);
 
@@ -530,8 +530,10 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         b.setPositiveButton("SI", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Cierre t = new Cierre();
-                t.execute();
+                Prueba p = new Prueba();
+                p.execute();
+                //Cierre t = new Cierre();
+                //t.execute();
             }
         });
         b.setNegativeButton("NO", new DialogInterface.OnClickListener() {
@@ -623,6 +625,74 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             b.show();
         }
     }
+
+
+    private class Prueba extends AsyncTask<String, String, String> {
+
+
+        private Prueba() {
+
+        }
+
+        @Override
+        protected void onPreExecute() {
+
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+                                                               //Leeremos todos los archivos para enviar y cerrar el mantenimiento
+                System.out.println("El valor es " + idMain);
+                LocalText local = new LocalText();
+                local.listarFicheros(idMain);
+                local.crearListaEnvio("answer");
+                if (local.itemAnsw.size()>0) {
+                    String xml;
+                    for (int j = 0; j < local.itemAnsw.size(); j++) {
+                        System.out.println("Enviaremos " + local.itemAnsw.get(j));
+                        if (local.itemAnsw.get(j).contains(",")) {                                      //Verificamos que tenga coma, el archivo tiene por nombre IDMAIN,Nombre.txt
+                            String[] parts = local.itemAnsw.get(j).split(",");                          //separamos el archivo antes y despues de la coma
+                            String nombreArch = parts[1];                                               // nombre del archivo despues de la coma
+                            System.out.println("Parte despues de la coma: " + nombreArch);
+                            if (nombreArch.contains(".")){                                              //Verificamos si contiene punto el nombre
+                                String[] nombre = nombreArch.split("\\.");                              //separamos antes y despues del punto
+                                String accion = nombre[0];                                              //nombre del archivo antes del punto = a la accion
+                                System.out.println("La Accion seria: "+ accion);
+
+                                String[] nomArch = local.itemAnsw.get(j).split("\\.");                  //separamos el nombre del archivo antes y despues del punto
+                                String nomArchSinTxt = nomArch[0];                                      //Extraemos el nombre sin la extension .txt
+
+                                xml = local.leerFicheroMemoriaExterna(nomArchSinTxt);                   //leemos el archivo del tlf
+                                System.out.println("antes: " + xml);
+
+                                try {                                                                  //Enviamos la petioncion al servidor SOAP (ESTO SE REALIZABA POR CADA CHECK ANTERIORMENTE AL PULSAR SOBRE ENVIAR)
+                                    SoapRequestTDC.sendAll(xml,accion);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
+                            }else {
+                                throw new IllegalArgumentException("String " + nombreArch + " No contiene limitador . ");
+                            }
+                        } else {
+                            throw new IllegalArgumentException("String " + local.itemAnsw.get(j) + " No contiene limitador , ");
+                        }
+
+                    }
+                    //Cierre t = new Cierre();
+                    //t.execute();
+                }else{
+                    System.out.println("ERROR EN ANSW: NO HAY ARCHIVOS PARA ENVIAR");
+                }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+
+        }
+    }
+
 
     protected void onDestroy(){
         super.onDestroy();

@@ -106,50 +106,50 @@ public class ActividadCierreFormActivity extends Activity {
     ArrayList<SYSTEM> SYSTEMS;
 
     ProgressDialog dialog;
-    public LinearLayout layquest2;
-    public View question2;
-    public boolean agregar = false;
-    public boolean agregar2 = false;
+        public LinearLayout layquest2;
+        public View question2;
+        public boolean agregar = false;
+        public boolean agregar2 = false;
 
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
-    private GoogleApiClient client;
-    public LinearLayout repeatLayout;
+        /**
+         * ATTENTION: This was auto-generated to implement the App Indexing API.
+         * See https://g.co/AppIndexing/AndroidStudio for more information.
+         */
+        private GoogleApiClient client;
+        public LinearLayout repeatLayout;
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.d("AVERIA", "onResume");
-        Intent intent = new Intent(this, PositionTrackerTDC.class);
-        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-        wakelock.acquire();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        Log.d("AVERIA", "onPause");
-        super.onPause();
-        if (dialog != null)
-            dialog.dismiss();
-        unbindService(mConnection);
-    }
-
-    private ServiceConnection mConnection = new ServiceConnection() {
         @Override
-        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            PositionTrackerTDC.MyBinder b = (PositionTrackerTDC.MyBinder) iBinder;
-            trackerTDC = b.getService();
-            Log.d("AVERIA", "SERVICE CONNECTED");
+        protected void onResume() {
+            super.onResume();
+            Log.d("AVERIA", "onResume");
+            Intent intent = new Intent(this, PositionTrackerTDC.class);
+            bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+            wakelock.acquire();
         }
 
         @Override
-        public void onServiceDisconnected(ComponentName componentName) {
-            trackerTDC = null;
-            Log.d("AVERIA", "SERVICE DISCONNECTED");
+        protected void onPause() {
+            super.onPause();
+            Log.d("AVERIA", "onPause");
+            super.onPause();
+            if (dialog != null)
+                dialog.dismiss();
+            unbindService(mConnection);
         }
+
+        private ServiceConnection mConnection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+                PositionTrackerTDC.MyBinder b = (PositionTrackerTDC.MyBinder) iBinder;
+                trackerTDC = b.getService();
+                Log.d("AVERIA", "SERVICE CONNECTED");
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName componentName) {
+                trackerTDC = null;
+                Log.d("AVERIA", "SERVICE DISCONNECTED");
+            }
     };
 
     @Override
@@ -424,7 +424,7 @@ public class ActividadCierreFormActivity extends Activity {
                                 if (question != null) {
                                     String tag = S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem() + "-" + Q.getIdQuestion() + "-" + Q.getNameQuestion();
 
-                                    if (Q.getPhoto().equals("OK")) { //Si requiere foto, buscamos si hay fotos gardadas
+                                    if (Q.getPhoto().equals("OK")) { //Si requiere foto|, buscamos si hay fotos gardadas
                                         cargar_fotos(Q, tag);
                                     }
 
@@ -434,9 +434,9 @@ public class ActividadCierreFormActivity extends Activity {
                                             ((RadioButton) ((RadioGroup) Q.getView()).getChildAt(pos)).setChecked(true);
                                         }
 
-                                        if (Q.getValues().size()>0 && !TITLE.equalsIgnoreCase("emergency")) {         //Este bloque es para sacar la pregunta interna que existe en Transporte 349 y 350
-                                            for (VALUE V : Q.getValues()) {                                            //Iteramos sobre las respuesta, como es radio y sabemos que al pulsar en NO muestra la otro pregunta
-                                                if (V.getQuestions() != null){                                       //evaluamos la posicion del boton y mostramos y ocultamos
+                                        if (Q.getValues().size()>0 && TITLE.equalsIgnoreCase("transporte")) {         //Este bloque es para sacar la pregunta interna que existe en Transporte 349 y 350
+                                            for (VALUE V : Q.getValues()) {                                           //Iteramos sobre las respuesta, como es radio y sabemos que al pulsar en NO muestra la otro pregunta
+                                                if (V.getQuestions() != null){                                        //evaluamos la posicion del boton y mostramos y ocultamos
 
                                                     for (QUESTION QV : V.getQuestions()) {
                                                         layquest2 = create_questionLayout();
@@ -488,7 +488,7 @@ public class ActividadCierreFormActivity extends Activity {
                                             }
                                         }
 
-                                        if (Q.getValues().size()>0 && TITLE.equalsIgnoreCase("emergency")) {    //Iteramos sobre los RadioB de Emergency
+                                        /*if (Q.getValues().size()>0 && TITLE.equalsIgnoreCase("emergency")) {    //Iteramos sobre los RadioB de Emergency
 
                                             final ArrayList<View> repeatContentList = new ArrayList<>();
                                             final ArrayList<Button> repeatButtontList = new ArrayList<>();
@@ -589,7 +589,7 @@ public class ActividadCierreFormActivity extends Activity {
                                             if (pos2 != -100) {
                                                 ((RadioButton) ((RadioGroup) I.getView()).getChildAt(pos2)).setChecked(true);
                                             }
-                                        }
+                                        }*/
 
                                     }
 
@@ -600,7 +600,6 @@ public class ActividadCierreFormActivity extends Activity {
                                     if (Q.getIdType().equals(Constantes.TEXT)) {
                                         String text = REG.getString("TEXT" + tag);
                                         ((TextView) Q.getView()).setText(text);
-
                                     }
                                     if (Q.getIdType().equals(Constantes.CHECK)) {
                                         ArrayList<CheckBox> ch = Q.getCheckBoxes();
@@ -628,6 +627,8 @@ public class ActividadCierreFormActivity extends Activity {
                                         t.setText(text);
                                     }
 
+                                    /*ArrayList<QUESTION> listQuest = new ArrayList<>();
+
                                     if (Q.getQuestions() != null){                                                  //Creado para agregar las preguntas internas de AC
                                                                                                                     //Iteramos sobre la etiqueta RepeatQuestion y sacamos las preguntas
                                         final ArrayList<View> repeatContentList = new ArrayList<>();                //Segun el tipo de pregunta interna creamos la vista.
@@ -635,7 +636,10 @@ public class ActividadCierreFormActivity extends Activity {
 
                                         repeatLayout = create_normalVerticalLayout();
 
+
+
                                         if (Q.getIdType().equals(Constantes.RADIO)) {
+                                            ArrayList<VALUE> listValue = new ArrayList<>();
                                             for (VALUE V : I.getValues()) {
 
                                                 Button boton = crear_botonRepeat();
@@ -658,10 +662,10 @@ public class ActividadCierreFormActivity extends Activity {
                                                             }
 
                                                             questTitle.addView(qAux.getTitle(mContext));
-                                                            //questTitle.setGravity(Gravity.CENTER_VERTICAL);
+                                                            questTitle.setGravity(Gravity.CENTER_VERTICAL);
 
-                                                            View questionR = qAux.generateView(mContext);
-                                                            if (questionR != null) {
+                                                            View question2 = qAux.generateView(mContext);
+                                                            if (question2 != null) {
 
                                                                 String tagR = "QQ" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem() + "-" +
                                                                         Q.getIdQuestion() + Q.getNameQuestion() + "-" +
@@ -670,7 +674,7 @@ public class ActividadCierreFormActivity extends Activity {
                                                                         qAux.getNameQuestion();
 
                                                                 if (qAux.getPhoto().equals("OK")) {
-                                                                    cargar_fotos(qAux, tagR);
+                                                                    cargar_fotos(QQ, tagR);
                                                                 }
 
                                                                 if (qAux.getIdType().equals(Constantes.RADIO)) {
@@ -692,13 +696,16 @@ public class ActividadCierreFormActivity extends Activity {
                                                                 setLayout.addView(questTitle);
 
                                                                 if (!qAux.getIdType().equals(Constantes.PHOTO))
-                                                                    setLayout.addView(questionR);
+                                                                    setLayout.addView(question2);
                                                             }
                                                             listadoQ.add(qAux);
                                                         }
-                                                    Q.setQuestions(listadoQ);
+                                                    V.setQuestions(listadoQ);
+                                                    //Q.setQuestions(listadoQ);
                                                     agregar2=true;
                                                 }
+
+                                                listValue.add(V);
 
                                                 contentSetLayout.addView(setLayout);
 
@@ -719,12 +726,15 @@ public class ActividadCierreFormActivity extends Activity {
                                                 });
 
                                                 contentSetLayout.setVisibility(View.GONE);
-                                                repeatContentList.add(contentSetLayout);//para que al mostrar uno se oculten los demas
+                                                repeatContentList.add(contentSetLayout);            //para que al mostrar uno se oculten los demas
                                                 repeatButtontList.add(boton);
                                                 repeatLayout.addView(boton);
                                                 repeatLayout.addView(contentSetLayout);
 
+
                                             }
+
+                                            Q.setValues(listValue);
 
                                             RadioGroup group = (RadioGroup) Q.getView();
 
@@ -752,11 +762,14 @@ public class ActividadCierreFormActivity extends Activity {
                                                 ((RadioButton) ((RadioGroup) I.getView()).getChildAt(pos)).setChecked(true);
                                             }
                                         }
-                                    }
+                                        listQuest.add(Q);
 
+                                    }
+                                    I.setQuestions(listQuest);*/
 
 
                                     itemLayout.addView(layquest);
+
                                     if (!Q.getIdType().equals(Constantes.PHOTO))
                                         itemLayout.addView(question);
 
@@ -770,6 +783,8 @@ public class ActividadCierreFormActivity extends Activity {
                                     if (agregar2)
                                     {
                                         itemLayout.addView(repeatLayout);
+                                        if (question2!=null)
+                                            itemLayout.addView(question2);
                                         agregar2=false;
                                     }
 
@@ -2126,26 +2141,26 @@ public class ActividadCierreFormActivity extends Activity {
                 if(localT.isDisponibleSD() && localT.isAccesoEscrituraSD())
                     localT.escribirFicheroMemoriaExterna(IDMAIN+",answerIden",response);
 
-                //return "Datos exitosamente ingresados";
+                return "Datos exitosamente guardados";
 
 
-                ArrayList<String> parse = XMLParser.getReturnCode2(response);
+                /*ArrayList<String> parse = XMLParser.getReturnCode2(response);
                 if (parse.get(0).equals("0")) {
                     ok = true;
                     return parse.get(1);
                 } else {
                     return "Error Code:" + parse.get(0) + "\n" + parse.get(1);
-                }
+                }*/
             } catch (IOException e) {
                 return "Se agotó el tiempo de conexión.";
-            } catch (ParserConfigurationException | SAXException | XPathExpressionException e) {
+            } /*catch (ParserConfigurationException | SAXException | XPathExpressionException e) {
                 return "Error al leer XML";
-            } catch (Exception e) {
+            }*/ catch (Exception e) {
                 return "Error al enviar la respuesta";
             }
         }
 
-        @Override
+        /*@Override
         protected void onPostExecute(String s) {
             if (dialog.isShowing()) dialog.dismiss();
 
@@ -2164,9 +2179,9 @@ public class ActividadCierreFormActivity extends Activity {
                 b.show();
             }
 
-        }
+        }*/
 
-        /*@Override
+        @Override
         protected void onPostExecute(String s) {
             if (dialog.isShowing()) dialog.dismiss();
 
@@ -2184,7 +2199,7 @@ public class ActividadCierreFormActivity extends Activity {
                 }
             });
             b.show();
-        }*/
+        }
     }
 
     private class Enviar3G extends AsyncTask<String, String, String> {
