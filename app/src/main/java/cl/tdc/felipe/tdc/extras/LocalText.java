@@ -102,7 +102,7 @@ public class LocalText {
         }
         catch (Exception ex)
         {
-            Log.e("ivan", "Error al leer fichero desde tarjeta SD");
+            Log.e("Error", "Error al leer fichero desde tarjeta SD");
         }
         finally
         {

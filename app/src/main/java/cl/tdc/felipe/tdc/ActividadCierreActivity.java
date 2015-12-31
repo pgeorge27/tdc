@@ -13,25 +13,48 @@ import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import org.xml.sax.SAXException;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 
+import cl.tdc.felipe.tdc.extras.Constantes;
 import cl.tdc.felipe.tdc.extras.LocalText;
+import cl.tdc.felipe.tdc.objects.FormularioCierre.AREA;
+import cl.tdc.felipe.tdc.objects.FormularioCierre.ITEM;
+import cl.tdc.felipe.tdc.objects.FormularioCierre.PHOTO;
+import cl.tdc.felipe.tdc.objects.FormularioCierre.QUESTION;
+import cl.tdc.felipe.tdc.objects.FormularioCierre.SET;
+import cl.tdc.felipe.tdc.objects.FormularioCierre.SYSTEM;
 import cl.tdc.felipe.tdc.objects.Maintenance.Agenda;
 import cl.tdc.felipe.tdc.preferences.FormCierreReg;
 import cl.tdc.felipe.tdc.preferences.MaintenanceReg;
 import cl.tdc.felipe.tdc.webservice.SoapRequest;
 import cl.tdc.felipe.tdc.webservice.SoapRequestTDC;
 import cl.tdc.felipe.tdc.webservice.XMLParser;
+import cl.tdc.felipe.tdc.webservice.XMLParserTDC;
+import cl.tdc.felipe.tdc.webservice.dummy;
 
 import android.app.Activity;
 import android.content.Context;
@@ -45,10 +68,12 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
     private static String TITLE = "Cierre de Actividad";
     private static String IMEI;
     String idMain;
+    ArrayList<SYSTEM> SYSTEMS;
 
     TextView PAGETITLE;
     public static Activity actividad;
     Context mContext;
+    ProgressDialog dialog;
 
     FormCierreReg REG, IDENREG, TRESGREG, FAENAREG, TRANSPREG, ACREG, SGREG, DCREG, AIRREG, GEREG, EMERGREG;
     MaintenanceReg MAINREG;
@@ -626,9 +651,11 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         }
     }
 
-
     private class Prueba extends AsyncTask<String, String, String> {
 
+        boolean ok = false;
+        String xml;
+        String preg;
 
         private Prueba() {
 
@@ -641,50 +668,73 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
 
         @Override
         protected String doInBackground(String... strings) {
-                                                               //Leeremos todos los archivos para enviar y cerrar el mantenimiento
-                System.out.println("El valor es " + idMain);
-                LocalText local = new LocalText();
-                local.listarFicheros(idMain);
-                local.crearListaEnvio("answer");
-                if (local.itemAnsw.size()>0) {
-                    String xml;
-                    for (int j = 0; j < local.itemAnsw.size(); j++) {
-                        System.out.println("Enviaremos " + local.itemAnsw.get(j));
-                        if (local.itemAnsw.get(j).contains(",")) {                                      //Verificamos que tenga coma, el archivo tiene por nombre IDMAIN,Nombre.txt
-                            String[] parts = local.itemAnsw.get(j).split(",");                          //separamos el archivo antes y despues de la coma
-                            String nombreArch = parts[1];                                               // nombre del archivo despues de la coma
-                            System.out.println("Parte despues de la coma: " + nombreArch);
-                            if (nombreArch.contains(".")){                                              //Verificamos si contiene punto el nombre
-                                String[] nombre = nombreArch.split("\\.");                              //separamos antes y despues del punto
-                                String accion = nombre[0];                                              //nombre del archivo antes del punto = a la accion
-                                System.out.println("La Accion seria: "+ accion);
+            String resp = "";                                                                            //Leeremos todos los archivos para enviar y cerrar el mantenimiento
+            System.out.println("El valor es " + idMain);
+            LocalText local = new LocalText();
+            local.listarFicheros(idMain);
+            local.crearListaEnvio("answer");
+            if (local.itemAnsw.size()>0) {
 
-                                String[] nomArch = local.itemAnsw.get(j).split("\\.");                  //separamos el nombre del archivo antes y despues del punto
-                                String nomArchSinTxt = nomArch[0];                                      //Extraemos el nombre sin la extension .txt
+                for (int j = 0; j < local.itemAnsw.size(); j++) {
+                    System.out.println("Enviaremos " + local.itemAnsw.get(j));
+                    if (local.itemAnsw.get(j).contains(",")) {                                  //Verificamos que tenga coma, el archivo tiene por nombre IDMAIN,Nombre.txt
+                        String[] parts = local.itemAnsw.get(j).split(",");                      //separamos el archivo antes y despues de la coma
+                        String nombreArch = parts[1];                                           // nombre del archivo despues de la coma
+                        System.out.println("Parte despues de la coma: " + nombreArch);
+                        if (nombreArch.contains(".")){                                          //Verificamos si contiene punto el nombre
+                            String[] nombre = nombreArch.split("\\.");                          //separamos antes y despues del punto
+                            String accion = nombre[0];                                          //nombre del archivo antes del punto = a la accion
+                            System.out.println("La Accion seria: "+ accion);
 
-                                xml = local.leerFicheroMemoriaExterna(nomArchSinTxt);                   //leemos el archivo del tlf
-                                System.out.println("antes: " + xml);
+                            String[] nomArch = local.itemAnsw.get(j).split("\\.");              //separamos el nombre del archivo antes y despues del punto
+                            String nomArchSinTxt = nomArch[0];                                  //Extraemos el nombre sin la extension .txt
 
-                                try {                                                                  //Enviamos la petioncion al servidor SOAP (ESTO SE REALIZABA POR CADA CHECK ANTERIORMENTE AL PULSAR SOBRE ENVIAR)
-                                    SoapRequestTDC.sendAll(xml,accion);
-                                } catch (IOException e) {
-                                    e.printStackTrace();
+                            xml = local.leerFicheroMemoriaExterna(nomArchSinTxt);               //leemos el archivo del tlf
+                            System.out.println("antes: " + xml);
+
+                            String subS = accion.substring(6);
+                            String check = idMain+",check"+subS;
+
+                            preg = local.leerFicheroMemoriaExterna(check);                      //leemos el archivo del tlf
+
+                            try {                                                               //Enviamos la petioncion al servidor SOAP (ESTO SE REALIZABA POR CADA CHECK ANTERIORMENTE AL PULSAR SOBRE ENVIAR)
+                                String response =  SoapRequestTDC.sendAll(xml,accion);
+                                ArrayList<String> parse = XMLParser.getReturnCode2(response);
+                                if (parse.get(0).equals("0")) {
+                                    resp = parse.get(1);
+                                    subir_fotos(resp,preg);
+                                } else {
+                                    resp = "Error Code:" + parse.get(0) + "\n" + parse.get(1);
+                                    AlertDialog.Builder b = new AlertDialog.Builder(mContext);
+                                    b.setMessage(resp);
+                                    b.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            dialogInterface.dismiss();
+                                        }
+                                    });
+                                    b.show();
                                 }
-                            }else {
-                                throw new IllegalArgumentException("String " + nombreArch + " No contiene limitador . ");
+
+                            } catch (IOException e) {
+                                return "Se agotó el tiempo de conexión.";
+                            } catch (ParserConfigurationException | SAXException | XPathExpressionException e) {
+                                return "Error al leer XML";
+                            } catch (Exception e) {
+                                return "Error al enviar la respuesta.";
                             }
-                        } else {
-                            throw new IllegalArgumentException("String " + local.itemAnsw.get(j) + " No contiene limitador , ");
+                        }else {
+                            resp = "String " + nombreArch + " No contiene limitador . ";
                         }
-
+                    } else {
+                        resp = "String " + local.itemAnsw.get(j) + " No contiene limitador , ";
                     }
-                    //Cierre t = new Cierre();
-                    //t.execute();
-                }else{
-                    System.out.println("ERROR EN ANSW: NO HAY ARCHIVOS PARA ENVIAR");
-                }
 
-            return null;
+                }
+                //Cierre t = new Cierre();
+                //t.execute();
+            }
+            return resp;
         }
 
         @Override
@@ -693,6 +743,273 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         }
     }
 
+    public void subir_fotos(String mensaje, String xml) {
+        AlertDialog.Builder b = new AlertDialog.Builder(actividad);
+        b.setMessage(mensaje);
+        b.setCancelable(false);
+        ArrayList<PHOTO> p = new ArrayList<>();
+
+        try {
+            SYSTEMS = XMLParserTDC.parseFormulario(xml);
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (XPathExpressionException e) {
+            e.printStackTrace();
+        }
+
+        for (SYSTEM S : SYSTEMS) {
+            for (AREA A : S.getAreas()) {
+                for (ITEM I : A.getItems()) {
+                    if (I.getIdType().equals(Constantes.PHOTO)) {
+                        if (I.getPhoto() != null) {
+                            p.add(I.getPhoto());
+                        }
+                    }
+                    if (I.getQuestions() != null) {
+                        for (QUESTION Q : I.getQuestions()) {
+                            if (Q.getFoto() != null) {
+                                p.add(Q.getFoto());
+                            }
+                            if (Q.getFotos() != null) {
+                                for (PHOTO P : Q.getFotos()) {
+                                    p.add(P);
+                                }
+                            }
+
+                            if (Q.getQuestions() != null){
+                                for (QUESTION QQ : Q.getQuestions()){
+                                    if (QQ.getFoto() != null) {
+                                        p.add(QQ.getFoto());
+                                    }
+                                    if (QQ.getFotos() != null) {
+                                        for (PHOTO P : QQ.getFotos()) {
+                                            p.add(P);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (I.getSetlistArrayList() != null && I.getValues() != null) {
+                        if (I.getIdType().equals(Constantes.TABLE)) {
+                            for (CheckBox c : I.getCheckBoxes()) {
+                                if (c.isChecked()) {
+                                    for (SET Set : I.getSetlistArrayList().get(I.getCheckBoxes().indexOf(c))) {
+                                        if (Set.getQuestions() != null) {
+                                            for (QUESTION Q : Set.getQuestions()) {
+                                                if (Q.getFoto() != null) {
+                                                    p.add(Q.getFoto());
+                                                }
+                                                if (Q.getFotos() != null) {
+                                                    for (PHOTO P : Q.getFotos()) {
+                                                        p.add(P);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if (I.getIdType().equals(Constantes.RADIO)) {
+                            RadioGroup rg = (RadioGroup) I.getView();
+                            if (rg.getCheckedRadioButtonId() != -1) {
+                                RadioButton rb = (RadioButton) rg.findViewById(rg.getCheckedRadioButtonId());
+                                int n = rg.indexOfChild(rb) + 1;
+                                for (int i = 0; i < n; i++) {
+                                    for (SET Set : I.getSetlistArrayList().get(i)) {
+                                        if (Set.getQuestions() != null) {
+                                            for (QUESTION Q : Set.getQuestions()) {
+                                                if (Q.getFoto() != null) {
+                                                    p.add(Q.getFoto());
+                                                }
+                                                if (Q.getFotos() != null) {
+                                                    for (PHOTO P : Q.getFotos()) {
+                                                        p.add(P);
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if (p.size() > 0) {
+            UploadImage up = new UploadImage(p, mensaje);
+            up.execute(dummy.URL_UPLOAD_IMG_MAINTENANCE);
+        } else {
+            b = new AlertDialog.Builder(actividad);
+            b.setMessage(mensaje);
+            b.setCancelable(false);
+            b.setPositiveButton("SALIR", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                    REG.clearPreferences();
+                    setResult(RESULT_OK);
+                    actividad.finish();
+
+                }
+            });
+            b.show();
+        }
+    }
+
+    //TODO UPLOAD PHOTOS
+    private class UploadImage extends AsyncTask<String, String, String> {
+
+        ArrayList<PHOTO> allPhotos;
+        String mensaje;
+
+        public UploadImage(ArrayList<PHOTO> ps, String msj) {
+            this.allPhotos = ps;
+            this.mensaje = msj;
+        }
+
+        @Override
+        protected String doInBackground(String... params) {
+            String response = "";
+
+            DateFormat timestamp_name = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+
+            for (PHOTO p : allPhotos) {
+                try {
+                    String fileName = p.getNamePhoto();
+
+                    Log.i("ENVIANDO", fileName);
+                    HttpURLConnection conn;
+                    DataOutputStream dos;
+                    String lineEnd = "\r\n";
+                    String twoHyphens = "--";
+                    String boundary = "*****";
+                    int bytesRead, bytesAvailable, bufferSize;
+
+                    File done = new File(fileName);
+                    /*
+
+                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                    img.getBitmap().compress(Bitmap.CompressFormat.PNG, 0, bos);
+                    byte[] bitmapdata = bos.toByteArray();
+
+//write the bytes in file
+                    FileOutputStream fos = new FileOutputStream(done);
+                    fos.write(bitmapdata);
+                    fos.flush();
+                    fos.close();*/
+
+
+                    if (!done.isFile())
+                        Log.e("DownloadManager", "no existe");
+                    else {
+                        FileInputStream fileInputStream = new FileInputStream(done);
+                        URL url = new URL(params[0]);
+
+                        conn = (HttpURLConnection) url.openConnection();
+                        conn.setDoInput(true);
+                        conn.setDoOutput(true);
+                        conn.setUseCaches(false);
+                        conn.setRequestMethod("POST");
+                        conn.setRequestProperty("Connection", "Keep-Alive");
+                        conn.setRequestProperty("ENCTYPE", "multipart/form-data");
+                        conn.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
+                        conn.setRequestProperty("uploaded_file", done.getName());
+
+                        dos = new DataOutputStream(conn.getOutputStream());
+
+                        dos.writeBytes(twoHyphens + boundary + lineEnd);
+                        dos.writeBytes("Content-Disposition: form-data; name=\"uploaded_file\";filename=\"" + done.getName() + "\"" + lineEnd);
+                        dos.writeBytes(lineEnd);
+
+                        bytesAvailable = fileInputStream.available();
+
+                        bufferSize = Math.min(bytesAvailable, 1 * 1024 * 1024);
+                        byte[] buf = new byte[bufferSize];
+
+                        bytesRead = fileInputStream.read(buf, 0, bufferSize);
+
+                        while (bytesRead > 0) {
+
+                            dos.write(buf, 0, bufferSize);
+                            bytesAvailable = fileInputStream.available();
+                            bufferSize = Math.min(bytesAvailable, 1 * 1024 * 1024);
+                            bytesRead = fileInputStream.read(buf, 0, bufferSize);
+
+                        }
+
+                        dos.writeBytes(lineEnd);
+                        dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
+                        int serverResponseCode = conn.getResponseCode();
+                        String serverResponseMessage = conn.getResponseMessage();
+
+
+                        Log.i("UploadManager", "HTTP response is: " + serverResponseMessage + ": " + serverResponseCode);
+
+                        fileInputStream.close();
+                        dos.flush();
+                        dos.close();
+
+                        InputStream responseStream = new BufferedInputStream(conn.getInputStream());
+
+                        BufferedReader responseStreamReader = new BufferedReader(new InputStreamReader(responseStream));
+                        String line = "";
+                        StringBuilder stringBuilder = new StringBuilder();
+                        while ((line = responseStreamReader.readLine()) != null) {
+                            stringBuilder.append(line).append("\n");
+                        }
+                        responseStreamReader.close();
+
+                        response = stringBuilder.toString();
+
+                        Log.d("IMAGENES", p.getNamePhoto() + "   \n" + response);
+                    }
+
+
+                } catch (Exception e) {
+                    Log.d("TAG", "Error: " + e.getMessage());
+                    response = "ERROR";
+                }
+            }
+            return response;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            dialog = new ProgressDialog(mContext);
+            dialog.setMessage("Subiendo imagenes...");
+            dialog.setCancelable(false);
+            dialog.show();
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            if (dialog.isShowing())
+                dialog.dismiss();
+            AlertDialog.Builder b = new AlertDialog.Builder(actividad);
+            b.setMessage(mensaje);
+            b.setCancelable(false);
+            b.setPositiveButton("SALIR", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                    REG.clearPreferences();
+                    setResult(RESULT_OK);
+                    actividad.finish();
+
+                }
+            });
+            b.show();
+            super.onPostExecute(s);
+        }
+
+    }
 
     protected void onDestroy(){
         super.onDestroy();

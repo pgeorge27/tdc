@@ -422,6 +422,7 @@ public class ActividadCierreFormActivity extends Activity {
 
                                 View question = Q.generateView(mContext);
                                 if (question != null) {
+                                    agregar2 = false;
                                     String tag = S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem() + "-" + Q.getIdQuestion() + "-" + Q.getNameQuestion();
 
                                     if (Q.getPhoto().equals("OK")) { //Si requiere foto|, buscamos si hay fotos gardadas
@@ -429,9 +430,132 @@ public class ActividadCierreFormActivity extends Activity {
                                     }
 
                                     if (Q.getIdType().equals(Constantes.RADIO)) {
-                                        final int pos = REG.getInt("RADIO" + tag);
+                                        int pos = REG.getInt("RADIO" + tag);
                                         if (pos != -100) {
                                             ((RadioButton) ((RadioGroup) Q.getView()).getChildAt(pos)).setChecked(true);
+                                        }
+
+
+                                        if (Q.getValues().size() > 0 && TITLE.equalsIgnoreCase("emergency")) {
+
+                                            itemLayout.addView(layquest);
+                                            itemLayout.addView(question);
+                                            agregar2 = true;
+
+
+                                            /** Generar vista de Emergencia **/
+                                            final ArrayList<View> repeatContentList = new ArrayList<>();
+                                            final ArrayList<Button> repeatButtontList = new ArrayList<>();
+
+                                            final LinearLayout repeatLayout = create_normalVerticalLayout();
+
+                                            ArrayList<QUESTION> listaAuxSet = new ArrayList<>();
+
+                                            if (Q.getIdType().equals(Constantes.RADIO)) {
+
+                                                for (int x = 0; x < Q.getValues().size(); x++) {
+                                                    VALUE value = Q.getValues().get(x);
+
+                                                    Button boton = crear_botonRepeat();
+                                                    boton.setText(value.getNameValue());
+
+                                                    final LinearLayout contentSetLayout = create_normalVerticalLayout();
+
+                                                    for (QUESTION set : value.getQuestions()) {
+
+                                                        QUESTION setAux = new QUESTION();
+                                                        setAux.setIdQuestion(set.getIdQuestion());
+                                                        setAux.setNameQuestion(set.getNameQuestion());
+                                                        setAux.setNameType(set.getNameType());
+                                                        setAux.setFoto(set.getFoto());
+                                                        setAux.setNumberPhoto(set.getNumberPhoto());
+                                                        setAux.setValues(set.getValues());
+                                                        setAux.setIdType(set.getIdType());
+
+                                                        LinearLayout setLayout = create_setLayout();
+
+                                                                LinearLayout questTitle = create_questionLayout();
+
+                                                                questTitle.addView(setAux.getTitle(mContext));
+                                                                questTitle.setGravity(Gravity.CENTER_VERTICAL);
+
+                                                                question2 = setAux.generateView(mContext);
+                                                                if (question2 != null) {
+                                                                    tag = S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem() + "-" + Q.getIdQuestion() + "-" + Q.getNameQuestion() + "-" + value.getIdValue() + value.getNameValue() + "-" + setAux.getIdQuestion() + setAux.getNameQuestion();
+
+                                                                    if (setAux.getIdType().equals(Constantes.CHECK)) {
+                                                                        ArrayList<CheckBox> ch = setAux.getCheckBoxes();
+                                                                        for (int j = 0; j < ch.size(); j++) {
+                                                                            Boolean check = REG.getBoolean("CHECK" + tag + j);
+                                                                            ch.get(j).setChecked(check);
+                                                                        }
+                                                                    }
+
+                                                                    setLayout.addView(questTitle);
+                                                                    if (!setAux.getIdType().equals(Constantes.PHOTO))
+                                                                        setLayout.addView(question2);
+                                                                }
+                                                                listaAuxSet.add(setAux);
+
+                                                            contentSetLayout.addView(setAux.getTitle(mContext));
+                                                            contentSetLayout.addView(setLayout);
+                                                    }
+                                                    value.setQuestions(listaAuxSet);
+                                                    I.setQuestions(listaAuxSet);
+
+
+                                                    boton.setOnClickListener(new View.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(View view) {
+                                                            if (contentSetLayout.getVisibility() == View.GONE) {
+                                                                contentSetLayout.setVisibility(View.VISIBLE);
+                                                                for (View layu : repeatContentList) {
+                                                                    if (!layu.equals(contentSetLayout)) {
+                                                                        layu.setVisibility(View.GONE);
+                                                                    }
+                                                                }
+                                                            } else {
+                                                                contentSetLayout.setVisibility(View.GONE);
+                                                            }
+                                                        }
+                                                    });
+
+                                                    contentSetLayout.setVisibility(View.GONE);
+                                                    repeatContentList.add(contentSetLayout);//para que al mostrar uno se oculten los demas
+                                                    repeatButtontList.add(boton);
+                                                    repeatLayout.addView(boton);
+                                                    repeatLayout.addView(contentSetLayout);
+
+                                                }
+
+                                                RadioGroup group = (RadioGroup) Q.getView();
+
+                                                group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                                                    @Override
+                                                    public void onCheckedChanged(RadioGroup rg, int id) {
+                                                        for (View l : repeatContentList) {
+                                                            l.setVisibility(View.GONE);
+                                                        }
+                                                        RadioButton btn = (RadioButton) rg.findViewById(id);
+                                                        int position = rg.indexOfChild(btn);
+                                                        for (Button b : repeatButtontList) {
+                                                            b.setVisibility(View.GONE);
+                                                        }
+                                                        //for (int i = 0; i < position; i++) {
+                                                            repeatButtontList.get(position).setVisibility(View.VISIBLE);
+                                                        //}
+
+                                                    }
+                                                });
+
+                                                pos = REG.getInt("RADIO" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem());
+                                                Log.d("POSITION", "RADIO" + I.getIdItem() + " -pos: " + pos);
+                                                if (pos != -100) {
+                                                    ((RadioButton) ((RadioGroup) I.getView()).getChildAt(pos)).setChecked(true);
+                                                }
+
+                                                itemLayout.addView(repeatLayout);
+                                            }
                                         }
 
                                         if (Q.getValues().size()>0 && TITLE.equalsIgnoreCase("transporte")) {         //Este bloque es para sacar la pregunta interna que existe en Transporte 349 y 350
@@ -485,6 +609,171 @@ public class ActividadCierreFormActivity extends Activity {
                                                         }
                                                     }
                                                 }
+                                            }
+                                        }
+
+                                        if (Q.getQuestions() != null) {
+                                            /** Generar vista del IteamRepeat **/
+                                            final ArrayList<View> repeatContentList = new ArrayList<>();
+                                            final ArrayList<Button> repeatButtontList = new ArrayList<>();
+
+                                            final LinearLayout repeatLayout = create_normalVerticalLayout();
+
+                                            if (Q.getIdType().equals(Constantes.RADIO)) {
+                                                for (int x = 0; x < Q.getValues().size(); x++) {
+                                                    VALUE value = Q.getValues().get(x);
+
+                                                    Button boton = crear_botonRepeat();
+                                                    boton.setText(value.getNameValue());
+
+                                                    final LinearLayout contentSetLayout = create_normalVerticalLayout();
+
+                                                    ArrayList<QUESTION> listaAuxSet = new ArrayList<>();
+                                                   for (QUESTION set : I.getQuestions()) {
+
+                                                        QUESTION setAux = new QUESTION();
+                                                        setAux.setIdQuestion(set.getIdQuestion());
+                                                        setAux.setNameQuestion(set.getNameQuestion());
+                                                        setAux.setValues(set.getValues());
+                                                        setAux.setIdType(set.getIdType());
+
+                                                        LinearLayout setLayout = create_setLayout();
+
+                                                        if (set.getQuestions() != null) {
+                                                            ArrayList<QUESTION> listadoQ = new ArrayList<>();
+
+                                                            for (final QUESTION Q2 : set.getQuestions()) {
+                                                                QUESTION qAux = copiar_question(Q2);
+                                                                LinearLayout questTitle = create_questionLayout();
+
+                                                                if (qAux.getPhoto().equals("OK")) {
+                                                                    final ImageButton photo = create_photoButton(qAux);
+                                                                    questTitle.addView(photo);
+                                                                }
+
+                                                                questTitle.addView(qAux.getTitle(mContext));
+                                                                questTitle.setGravity(Gravity.CENTER_VERTICAL);
+
+                                                                question2 = qAux.generateView(mContext);
+                                                                if (question2 != null) {
+                                                                    tag = S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem() + "-" + value.getIdValue() + value.getNameValue() + "-" + setAux.getIdQuestion() + setAux.getNameQuestion() + "-" + Q2.getIdQuestion() + "-" + Q2.getNameQuestion();
+
+                                                                    if (qAux.getPhoto().equals("OK")) {
+                                                                        cargar_fotos(qAux, tag);
+                                                                    }
+
+                                                                    if (qAux.getIdType().equals(Constantes.RADIO)) {
+                                                                        pos = REG.getInt("RADIO" + tag);
+                                                                        if (pos != -100) {
+                                                                            ((RadioButton) ((RadioGroup) qAux.getView()).getChildAt(pos)).setChecked(true);
+                                                                        }
+                                                                    }
+                                                                    if (qAux.getIdType().equals(Constantes.NUM)) {
+                                                                        String text = REG.getString("NUM" + tag);
+                                                                        ((TextView) qAux.getView()).setText(text);
+                                                                    }
+                                                                    if (qAux.getIdType().equals(Constantes.TEXT)) {
+                                                                        String text = REG.getString("TEXT" + tag);
+                                                                        ((TextView) qAux.getView()).setText(text);
+
+                                                                    }
+                                                                    if (qAux.getIdType().equals(Constantes.CHECK)) {
+                                                                        ArrayList<CheckBox> ch = qAux.getCheckBoxes();
+                                                                        for (int j = 0; j < ch.size(); j++) {
+                                                                            Boolean check = REG.getBoolean("CHECK" + tag + j);
+                                                                            ch.get(j).setChecked(check);
+                                                                        }
+
+                                                                    }
+                                                                    if (qAux.getIdType().equals(Constantes.DIV)) {
+                                                                        String textL = REG.getString("DIVL" + tag);
+                                                                        String textR = REG.getString("DIVR" + tag);
+
+                                                                        EditText left = qAux.getEditTexts().get(0);
+                                                                        EditText right = qAux.getEditTexts().get(1);
+
+                                                                        left.setText(textL);
+                                                                        right.setText(textR);
+
+
+                                                                    }
+                                                                    if (qAux.getIdType().equals(Constantes.DATE)) {
+                                                                        EditText t = qAux.getEditTexts().get(0);
+                                                                        String text = REG.getString("DATE" + tag);
+                                                                        t.setText(text);
+                                                                    }
+
+                                                                    setLayout.addView(questTitle);
+                                                                    if (!qAux.getIdType().equals(Constantes.PHOTO))
+                                                                        setLayout.addView(question2);
+                                                                }
+                                                                listadoQ.add(qAux);
+
+
+                                                            }
+                                                            setAux.setQuestions(listadoQ);
+                                                            contentSetLayout.addView(setAux.getTitle(mContext));
+                                                            contentSetLayout.addView(setLayout);
+                                                        }
+
+
+                                                        listaAuxSet.add(setAux);
+                                                    }
+                                                    I.setQuestions(listaAuxSet);
+
+
+                                                    boton.setOnClickListener(new View.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(View view) {
+                                                            if (contentSetLayout.getVisibility() == View.GONE) {
+                                                                contentSetLayout.setVisibility(View.VISIBLE);
+                                                                for (View layu : repeatContentList) {
+                                                                    if (!layu.equals(contentSetLayout)) {
+                                                                        layu.setVisibility(View.GONE);
+                                                                    }
+                                                                }
+                                                            } else {
+                                                                contentSetLayout.setVisibility(View.GONE);
+                                                            }
+                                                        }
+                                                    });
+
+                                                    contentSetLayout.setVisibility(View.GONE);
+                                                    repeatContentList.add(contentSetLayout);//para que al mostrar uno se oculten los demas
+                                                    repeatButtontList.add(boton);
+                                                    repeatLayout.addView(boton);
+                                                    repeatLayout.addView(contentSetLayout);
+
+                                                }
+
+                                                RadioGroup group = (RadioGroup) Q.getView();
+
+                                                group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                                                    @Override
+                                                    public void onCheckedChanged(RadioGroup rg, int id) {
+                                                        for (View l : repeatContentList) {
+                                                            l.setVisibility(View.GONE);
+                                                        }
+                                                        RadioButton btn = (RadioButton) rg.findViewById(id);
+                                                        int position = rg.indexOfChild(btn) + 1;
+                                                        for (Button b : repeatButtontList) {
+                                                            b.setVisibility(View.GONE);
+                                                        }
+                                                        for (int i = 0; i < position; i++) {
+                                                            repeatButtontList.get(i).setVisibility(View.VISIBLE);
+                                                        }
+
+                                                    }
+                                                });
+
+                                                pos = REG.getInt("RADIO" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem());
+                                                Log.d("POSITION", "RADIO" + I.getIdItem() + " -pos: " + pos);
+                                                if (pos != -100) {
+                                                    ((RadioButton) ((RadioGroup) I.getView()).getChildAt(pos)).setChecked(true);
+                                                }
+
+
+                                                itemLayout.addView(repeatLayout);
                                             }
                                         }
 
@@ -591,6 +880,144 @@ public class ActividadCierreFormActivity extends Activity {
                                             }
                                         }*/
 
+
+                                        /*ArrayList<QUESTION> listQuest = new ArrayList<>();
+
+                                        if (Q.getQuestions() != null){                                                  //Creado para agregar las preguntas internas de AC
+                                                                                                                        //Iteramos sobre la etiqueta RepeatQuestion y sacamos las preguntas
+                                            final ArrayList<View> repeatContentList = new ArrayList<>();                //Segun el tipo de pregunta interna creamos la vista.
+                                            final ArrayList<Button> repeatButtontList = new ArrayList<>();
+
+                                            repeatLayout = create_normalVerticalLayout();
+
+                                            //if (Q.getIdType().equals(Constantes.RADIO)) {
+                                                ArrayList<VALUE> listValue = new ArrayList<>();
+                                                for (VALUE V : I.getValues()) {
+
+                                                    Button boton = crear_botonRepeat();
+                                                    boton.setText(V.getNameValue());
+
+                                                    final LinearLayout contentSetLayout = create_normalVerticalLayout();
+
+                                                    LinearLayout setLayout = create_setLayout();
+
+                                                    if (Q.getQuestions() != null) {
+                                                        ArrayList<QUESTION> listadoQ = new ArrayList<>();
+
+                                                        for (final QUESTION QQ : Q.getQuestions()) {
+                                                            QUESTION qAux = copiar_question(QQ);
+                                                            LinearLayout questTitle = create_questionLayout();
+
+                                                            if (qAux.getPhoto().equals("OK")) {
+                                                                final ImageButton photo = create_photoButton(qAux);
+                                                                questTitle.addView(photo);
+                                                            }
+
+                                                            questTitle.addView(qAux.getTitle(mContext));
+                                                            questTitle.setGravity(Gravity.CENTER_VERTICAL);
+
+                                                            View question2 = qAux.generateView(mContext);
+                                                            if (question2 != null) {
+
+                                                                String tagR = "QQ" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem() + "-" +
+                                                                        Q.getIdQuestion() + Q.getNameQuestion() + "-" +
+                                                                        V.getIdValue() + "-" +
+                                                                        qAux.getIdQuestion() + "-" +
+                                                                        qAux.getNameQuestion();
+
+                                                                if (qAux.getPhoto().equals("OK")) {
+                                                                    cargar_fotos(QQ, tagR);
+                                                                }
+
+                                                                if (qAux.getIdType().equals(Constantes.RADIO)) {
+                                                                    //int pos = REG.getInt("RADIO" + tagR);
+                                                                    pos = REG.getInt("RADIO" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem());
+                                                                    if (pos != -100) {
+                                                                        ((RadioButton) ((RadioGroup) qAux.getView()).getChildAt(pos)).setChecked(true);
+                                                                    }
+                                                                }
+                                                                if (qAux.getIdType().equals(Constantes.NUM)) {
+                                                                    String text = REG.getString("NUM" + tagR);
+                                                                    ((TextView) qAux.getView()).setText(text);
+                                                                }
+                                                                if (qAux.getIdType().equals(Constantes.TEXT)) {
+                                                                    String text = REG.getString("TEXT" + tagR);
+                                                                    ((TextView) qAux.getView()).setText(text);
+                                                                }
+
+                                                                setLayout.addView(questTitle);
+
+                                                                if (!qAux.getIdType().equals(Constantes.PHOTO))
+                                                                    setLayout.addView(question2);
+                                                            }
+                                                            listadoQ.add(qAux);
+                                                        }
+                                                        V.setQuestions(listadoQ);
+                                                        //Q.setQuestions(listadoQ);
+                                                        agregar2=true;
+                                                    }
+
+                                                    listValue.add(V);
+
+                                                    contentSetLayout.addView(setLayout);
+
+                                                    boton.setOnClickListener(new View.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(View view) {
+                                                            if (contentSetLayout.getVisibility() == View.GONE) {
+                                                                contentSetLayout.setVisibility(View.VISIBLE);
+                                                                for (View layu : repeatContentList) {
+                                                                    if (!layu.equals(contentSetLayout)) {
+                                                                        layu.setVisibility(View.GONE);
+                                                                    }
+                                                                }
+                                                            } else {
+                                                                contentSetLayout.setVisibility(View.GONE);
+                                                            }
+                                                        }
+                                                    });
+
+                                                    contentSetLayout.setVisibility(View.GONE);
+                                                    repeatContentList.add(contentSetLayout);            //para que al mostrar uno se oculten los demas
+                                                    repeatButtontList.add(boton);
+                                                    repeatLayout.addView(boton);
+                                                    repeatLayout.addView(contentSetLayout);
+
+
+                                                }
+
+                                                Q.setValues(listValue);
+
+                                                RadioGroup group = (RadioGroup) Q.getView();
+
+                                                group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                                                    @Override
+                                                    public void onCheckedChanged(RadioGroup rg, int id) {
+                                                        for (View l : repeatContentList) {
+                                                            l.setVisibility(View.GONE);
+                                                        }
+                                                        RadioButton btn = (RadioButton) rg.findViewById(id);
+                                                        int position = rg.indexOfChild(btn) + 1;
+                                                        for (Button b : repeatButtontList) {
+                                                            b.setVisibility(View.GONE);
+                                                        }
+                                                        for (int i = 0; i < position; i++) {
+                                                            repeatButtontList.get(i).setVisibility(View.VISIBLE);
+                                                        }
+
+                                                    }
+                                                });
+
+                                                pos = REG.getInt("RADIO" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem());
+                                                Log.d("POSITION", "RADIO" + I.getIdItem() + " -pos: " + pos);
+                                                if (pos != -100) {
+                                                    ((RadioButton) ((RadioGroup) I.getView()).getChildAt(pos)).setChecked(true);
+                                                }
+                                            //}
+                                            listQuest.add(Q);
+
+                                        }
+                                        I.setQuestions(listQuest);*/
                                     }
 
                                     if (Q.getIdType().equals(Constantes.NUM)) {
@@ -627,151 +1054,13 @@ public class ActividadCierreFormActivity extends Activity {
                                         t.setText(text);
                                     }
 
-                                    /*ArrayList<QUESTION> listQuest = new ArrayList<>();
+                                    if (!agregar2) {
 
-                                    if (Q.getQuestions() != null){                                                  //Creado para agregar las preguntas internas de AC
-                                                                                                                    //Iteramos sobre la etiqueta RepeatQuestion y sacamos las preguntas
-                                        final ArrayList<View> repeatContentList = new ArrayList<>();                //Segun el tipo de pregunta interna creamos la vista.
-                                        final ArrayList<Button> repeatButtontList = new ArrayList<>();
+                                        itemLayout.addView(layquest);
 
-                                        repeatLayout = create_normalVerticalLayout();
-
-
-
-                                        if (Q.getIdType().equals(Constantes.RADIO)) {
-                                            ArrayList<VALUE> listValue = new ArrayList<>();
-                                            for (VALUE V : I.getValues()) {
-
-                                                Button boton = crear_botonRepeat();
-                                                boton.setText(V.getNameValue());
-
-                                                final LinearLayout contentSetLayout = create_normalVerticalLayout();
-
-                                                LinearLayout setLayout = create_setLayout();
-
-                                                if (Q.getQuestions() != null) {
-                                                    ArrayList<QUESTION> listadoQ = new ArrayList<>();
-
-                                                        for (final QUESTION QQ : Q.getQuestions()) {
-                                                            QUESTION qAux = copiar_question(QQ);
-                                                            LinearLayout questTitle = create_questionLayout();
-
-                                                            if (qAux.getPhoto().equals("OK")) {
-                                                                final ImageButton photo = create_photoButton(qAux);
-                                                                questTitle.addView(photo);
-                                                            }
-
-                                                            questTitle.addView(qAux.getTitle(mContext));
-                                                            questTitle.setGravity(Gravity.CENTER_VERTICAL);
-
-                                                            View question2 = qAux.generateView(mContext);
-                                                            if (question2 != null) {
-
-                                                                String tagR = "QQ" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem() + "-" +
-                                                                        Q.getIdQuestion() + Q.getNameQuestion() + "-" +
-                                                                        V.getIdValue() + "-" +
-                                                                        qAux.getIdQuestion() + "-" +
-                                                                        qAux.getNameQuestion();
-
-                                                                if (qAux.getPhoto().equals("OK")) {
-                                                                    cargar_fotos(QQ, tagR);
-                                                                }
-
-                                                                if (qAux.getIdType().equals(Constantes.RADIO)) {
-                                                                    //int pos = REG.getInt("RADIO" + tagR);
-                                                                    int pos = REG.getInt("RADIO" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem());
-                                                                    if (pos != -100) {
-                                                                        ((RadioButton) ((RadioGroup) qAux.getView()).getChildAt(pos)).setChecked(true);
-                                                                    }
-                                                                }
-                                                                if (qAux.getIdType().equals(Constantes.NUM)) {
-                                                                    String text = REG.getString("NUM" + tagR);
-                                                                    ((TextView) qAux.getView()).setText(text);
-                                                                }
-                                                                if (qAux.getIdType().equals(Constantes.TEXT)) {
-                                                                    String text = REG.getString("TEXT" + tagR);
-                                                                    ((TextView) qAux.getView()).setText(text);
-                                                                }
-
-                                                                setLayout.addView(questTitle);
-
-                                                                if (!qAux.getIdType().equals(Constantes.PHOTO))
-                                                                    setLayout.addView(question2);
-                                                            }
-                                                            listadoQ.add(qAux);
-                                                        }
-                                                    V.setQuestions(listadoQ);
-                                                    //Q.setQuestions(listadoQ);
-                                                    agregar2=true;
-                                                }
-
-                                                listValue.add(V);
-
-                                                contentSetLayout.addView(setLayout);
-
-                                                boton.setOnClickListener(new View.OnClickListener() {
-                                                    @Override
-                                                    public void onClick(View view) {
-                                                        if (contentSetLayout.getVisibility() == View.GONE) {
-                                                            contentSetLayout.setVisibility(View.VISIBLE);
-                                                            for (View layu : repeatContentList) {
-                                                                if (!layu.equals(contentSetLayout)) {
-                                                                    layu.setVisibility(View.GONE);
-                                                                }
-                                                            }
-                                                        } else {
-                                                            contentSetLayout.setVisibility(View.GONE);
-                                                        }
-                                                    }
-                                                });
-
-                                                contentSetLayout.setVisibility(View.GONE);
-                                                repeatContentList.add(contentSetLayout);            //para que al mostrar uno se oculten los demas
-                                                repeatButtontList.add(boton);
-                                                repeatLayout.addView(boton);
-                                                repeatLayout.addView(contentSetLayout);
-
-
-                                            }
-
-                                            Q.setValues(listValue);
-
-                                            RadioGroup group = (RadioGroup) Q.getView();
-
-                                            group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                                                @Override
-                                                public void onCheckedChanged(RadioGroup rg, int id) {
-                                                    for (View l : repeatContentList) {
-                                                        l.setVisibility(View.GONE);
-                                                    }
-                                                    RadioButton btn = (RadioButton) rg.findViewById(id);
-                                                    int position = rg.indexOfChild(btn) + 1;
-                                                    for (Button b : repeatButtontList) {
-                                                        b.setVisibility(View.GONE);
-                                                    }
-                                                    for (int i = 0; i < position; i++) {
-                                                        repeatButtontList.get(i).setVisibility(View.VISIBLE);
-                                                    }
-
-                                                }
-                                            });
-
-                                            int pos = REG.getInt("RADIO" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem());
-                                            Log.d("POSITION", "RADIO" + I.getIdItem() + " -pos: " + pos);
-                                            if (pos != -100) {
-                                                ((RadioButton) ((RadioGroup) I.getView()).getChildAt(pos)).setChecked(true);
-                                            }
-                                        }
-                                        listQuest.add(Q);
-
+                                        if (!Q.getIdType().equals(Constantes.PHOTO))
+                                            itemLayout.addView(question);
                                     }
-                                    I.setQuestions(listQuest);*/
-
-
-                                    itemLayout.addView(layquest);
-
-                                    if (!Q.getIdType().equals(Constantes.PHOTO))
-                                        itemLayout.addView(question);
 
                                     if (agregar)
                                     {
@@ -780,17 +1069,21 @@ public class ActividadCierreFormActivity extends Activity {
                                         agregar=false;
                                     }
 
-                                    if (agregar2)
+                                    /*if (agregar2)
                                     {
                                         itemLayout.addView(repeatLayout);
-                                        if (question2!=null)
-                                            itemLayout.addView(question2);
+                                        itemLayout.addView(question2);
                                         agregar2=false;
-                                    }
+                                    }*/
 
                                 }
 
                             }
+
+
+
+
+
                         }
 
                         if (I.getSetArrayList() != null) {
@@ -1394,7 +1687,7 @@ public class ActividadCierreFormActivity extends Activity {
                             }
 
 
-                            if (Q.getIdType().equals(Constantes.RADIO) && Q.getQuestions()!=null) {
+                            /*if (Q.getIdType().equals(Constantes.RADIO) && Q.getQuestions()!=null) {
                                 ArrayList<VALUE> values = Q.getValues();
                                 RadioGroup radioGroup = (RadioGroup) Q.getView();
                                 if (radioGroup.getCheckedRadioButtonId() != -1) {
@@ -1459,7 +1752,7 @@ public class ActividadCierreFormActivity extends Activity {
                                     }
                                 }
                             }
-                            else if (Q.getIdType().equals(Constantes.RADIO)) {
+                            else*/ if (Q.getIdType().equals(Constantes.RADIO)) {
                                 int id = ((RadioGroup) Q.getView()).getCheckedRadioButtonId();
                                 if (id != -1) {
                                     RadioButton b = (RadioButton) Q.getView().findViewById(id);
@@ -1887,47 +2180,52 @@ public class ActividadCierreFormActivity extends Activity {
 
     public void enviar(View v) {
 
-        if (TITLE.equals("IDEN")) {
+        if (TITLE.equalsIgnoreCase("IDEN")) {
             EnviarIden e = new EnviarIden();
             e.execute();
         }
-        if (TITLE.equals("3G")) {
+        if (TITLE.equalsIgnoreCase("3G")) {
             Enviar3G e = new Enviar3G();
             e.execute();
 
         }
-        if (TITLE.equals("FAENA")) {
+        if (TITLE.equalsIgnoreCase("FAENA")) {
             Enviar e = new Enviar();
             e.execute();
         }
         //EDITADO POR S Y G
-        if (TITLE.equals("TRANSPORTE")) {
+        if (TITLE.equalsIgnoreCase("TRANSPORTE")) {
             EnviarTransport e = new EnviarTransport();
             e.execute();
         }
 
-        if (TITLE.equals("SYSTEM GROUND")) {
+        if (TITLE.equalsIgnoreCase("SYSTEM GROUND")) {
             EnviarSG e = new EnviarSG();
             e.execute();
         }
 
-        if (TITLE.equals("DC")) {
+        if (TITLE.equalsIgnoreCase("DC")) {
             EnviarDC e = new EnviarDC();
             e.execute();
         }
 
-        if (TITLE.equals("AIR")) {
+        if (TITLE.equalsIgnoreCase("AIR")) {
             EnviarAir e = new EnviarAir();
             e.execute();
         }
 
-        if (TITLE.equals("AC")) {
+        if (TITLE.equalsIgnoreCase("AC")) {
             EnviarAC e = new EnviarAC();
             e.execute();
         }
 
-        if (TITLE.equals("GRUPO ELECTROGEN")) {
+        if (TITLE.equalsIgnoreCase("GRUPO ELECTROGEN")) {
             EnviarGE e = new EnviarGE();
+            e.execute();
+        }
+
+        if (TITLE.equalsIgnoreCase("EMERGENCY")) {
+            EnviarEmergency e = new EnviarEmergency();
             e.execute();
         }
         //END SG
@@ -2711,6 +3009,70 @@ public class ActividadCierreFormActivity extends Activity {
 
         }
     }
+
+    private class EnviarEmergency extends AsyncTask<String, String, String> {
+
+        boolean ok = false;
+
+        private EnviarEmergency() {
+            dialog = new ProgressDialog(actividad);
+            dialog.setMessage("Enviando formulario...");
+            Button bEnviar = (Button) findViewById(R.id.btnEnviar);
+            bEnviar.setEnabled(false);
+            dialog.setCancelable(false);
+            dialog.setCanceledOnTouchOutside(false);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            dialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            try {
+                TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+                String response = SoapRequestTDC.sendAnswerEmergency(telephonyManager.getDeviceId(), IDMAIN, SYSTEMS);
+                ArrayList<String> parse = XMLParser.getReturnCode2(response);
+                if (parse.get(0).equals("0")) {
+                    ok = true;
+                    return parse.get(1);
+                } else {
+                    return "Error Code:" + parse.get(0) + "\n" + parse.get(1);
+                }
+            } catch (IOException e) {
+                return "Se agotó el tiempo de conexión.";
+            } catch (ParserConfigurationException | SAXException | XPathExpressionException e) {
+                return "Error al leer XML";
+            } catch (Exception e) {
+                return "Error al enviar la respuesta.";
+
+            }
+            //TODO AGREGAR CATCH GENERAL
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            if (dialog.isShowing()) dialog.dismiss();
+
+            formSended = ok;
+            if (ok) {
+                subir_fotos(s);
+            } else {
+                AlertDialog.Builder b = new AlertDialog.Builder(mContext);
+                b.setMessage(s);
+                b.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                b.show();
+            }
+
+        }
+    }
+
 
     //End S G
     public void subir_fotos(String mensaje) {
