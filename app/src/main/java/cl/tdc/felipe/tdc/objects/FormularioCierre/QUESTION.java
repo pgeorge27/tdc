@@ -84,6 +84,7 @@ public class QUESTION {
             Answer = ((EditText)view).getText().toString();
         }
 
+
         return Answer;
     }
 

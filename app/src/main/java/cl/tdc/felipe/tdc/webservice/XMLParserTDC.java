@@ -202,6 +202,8 @@ public class XMLParserTDC {
                                                         
                                                         repeatqArrayList.add(V);                                                      //Agregamos V a la lista de values
                                                     }
+
+
                                                     Q.setQuestions(repeatqArrayList);                                                    //Agregamos los values a la question
                                                 }
 

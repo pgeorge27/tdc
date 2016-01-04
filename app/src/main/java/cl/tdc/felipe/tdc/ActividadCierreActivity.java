@@ -555,10 +555,10 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         b.setPositiveButton("SI", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Prueba p = new Prueba();
-                p.execute();
-                //Cierre t = new Cierre();
-                //t.execute();
+                //Prueba p = new Prueba();
+                //p.execute();
+                Cierre t = new Cierre();
+                t.execute();
             }
         });
         b.setNegativeButton("NO", new DialogInterface.OnClickListener() {
@@ -651,7 +651,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         }
     }
 
-    private class Prueba extends AsyncTask<String, String, String> {
+    private class Prueba extends AsyncTask<String, String, String> { //probando para enviar localmente al servidor
 
         boolean ok = false;
         String xml;
