@@ -1736,8 +1736,8 @@ public class SoapRequestTDC {
                 "<soapenv:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:urn=\"urn:Configurationwsdl\">" +
                         "<soapenv:Header/>" +
                         "<soapenv:Body>" +
-                        "<urn:answerAC2 soapenv:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" +
-                        "<RequestAnswerDC2 xsi:type=\"urn:RequestAnswerDC\">" +
+                        "<urn:answerAC soapenv:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" +
+                        "<RequestAnswerDC xsi:type=\"urn:RequestAnswerDC\">" +
                         "<RequestDC xsi:type=\"urn:RequestDC\">" +
                         "<Header xsi:type=\"urn:Header\">" +
                         "<Date xsi:type=\"xsd:string\">" + formatter.format(fecha) + "</Date>" +
@@ -1783,7 +1783,8 @@ public class SoapRequestTDC {
 
                                                 answerXML += "<SetAnswerQuestion xsi:type=\"urn:SetAnswerQuestion\">";
 
-                                                for (QUESTION QQ : Q.getQuestions()) {
+                                                for (QUESTION QQ : Q.getValues().get(i).getQuestions()) {
+
                                                     int countFoto = 0;
                                                     String xmlphotos = "";
                                                     if (QQ.getFoto() != null) {
