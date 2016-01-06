@@ -9,18 +9,18 @@
         <dex dex="/Users/georgeperez/Desktop/tdc/app/build/intermediates/pre-dexed/debug/classes-390834a9d6c4b23cace4dd31e72e58a382cc1879.jar" />
     </item>
     <item
-        jar="/Users/georgeperez/Desktop/tdc/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-maps/8.1.0/classes.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="2a7e47da654546f9457deb6132364f1bf33a1857">
-        <dex dex="/Users/georgeperez/Desktop/tdc/app/build/intermediates/pre-dexed/debug/classes-88c5edeaed434bac29c6e371545fd72377f633f1.jar" />
-    </item>
-    <item
         jar="/Users/georgeperez/Desktop/tdc/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/22.0.0/classes.jar"
         jumboMode="false"
         revision="22.0.1"
         sha1="c6d79137693d494dee16372d3921f919eb724ced">
         <dex dex="/Users/georgeperez/Desktop/tdc/app/build/intermediates/pre-dexed/debug/classes-98e84e1931480df35c3b6b4501caf5d2c9c4208a.jar" />
+    </item>
+    <item
+        jar="/Users/georgeperez/Desktop/tdc/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-maps/8.1.0/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="2a7e47da654546f9457deb6132364f1bf33a1857">
+        <dex dex="/Users/georgeperez/Desktop/tdc/app/build/intermediates/pre-dexed/debug/classes-88c5edeaed434bac29c6e371545fd72377f633f1.jar" />
     </item>
     <item
         jar="/Users/georgeperez/Desktop/tdc/app/libs/ksoap2-android-assembly-3.4.0-jar-with-dependencies.jar"
@@ -121,18 +121,18 @@
         <dex dex="/Users/georgeperez/Desktop/tdc/app/build/intermediates/pre-dexed/debug/classes-9a39b85418cd0b7f2b5cf59544e3a46df3062e0a.jar" />
     </item>
     <item
-        jar="/Users/georgeperez/Desktop/tdc/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics/8.1.0/classes.jar"
-        jumboMode="false"
-        revision="22.0.1"
-        sha1="95758a2905669affbffc5ddd262921d375674fad">
-        <dex dex="/Users/georgeperez/Desktop/tdc/app/build/intermediates/pre-dexed/debug/classes-4dcf60e5d3d60cfbd9dc566c494fbf769e966a0a.jar" />
-    </item>
-    <item
         jar="/Users/georgeperez/Desktop/tdc/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-appinvite/8.1.0/classes.jar"
         jumboMode="false"
         revision="22.0.1"
         sha1="b92002cb2f0e11a226ac5bac6dff1dc2a9d0b774">
         <dex dex="/Users/georgeperez/Desktop/tdc/app/build/intermediates/pre-dexed/debug/classes-d98ab94ed15e28d49e9d495b776d61526b15b149.jar" />
+    </item>
+    <item
+        jar="/Users/georgeperez/Desktop/tdc/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics/8.1.0/classes.jar"
+        jumboMode="false"
+        revision="22.0.1"
+        sha1="95758a2905669affbffc5ddd262921d375674fad">
+        <dex dex="/Users/georgeperez/Desktop/tdc/app/build/intermediates/pre-dexed/debug/classes-4dcf60e5d3d60cfbd9dc566c494fbf769e966a0a.jar" />
     </item>
     <item
         jar="/Users/georgeperez/Desktop/tdc/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.2.0/classes.jar"
