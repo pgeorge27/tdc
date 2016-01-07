@@ -661,7 +661,10 @@ import android.os.PowerManager;
 
                                                             question2 = qAux.generateView(mContext);
                                                             if (question2 != null) {
-                                                                tag = S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem() + "-" + Q.getIdQuestion() +  "-" + Q.getNameQuestion() + "-" + Q2.getIdQuestion() + "-" + Q2.getNameQuestion();
+
+                                                                tag = S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem() + "-" + Q.getIdQuestion() + "-" + Q.getNameQuestion() + "-" + value.getIdValue() + value.getNameValue() + "-" + Q2.getIdQuestion() + Q2.getNameQuestion();
+
+                                                                Log.d("BUSCANDOEN", "saveData: " + tag);
 
                                                                 if (qAux.getPhoto().equals("OK")) {
                                                                     final ImageButton photo = create_photoButton(qAux);
@@ -676,7 +679,7 @@ import android.os.PowerManager;
                                                                 questTitle.setGravity(Gravity.CENTER_VERTICAL);
 
                                                                 if (qAux.getIdType().equals(Constantes.RADIO)) {
-                                                                    pos = REG.getInt("RADIO" + tag);
+                                                                    //pos = REG.getInt("RADIO" + tag);
                                                                     if (pos != -100) {
                                                                         ((RadioButton) ((RadioGroup) qAux.getView()).getChildAt(pos)).setChecked(true);
                                                                     }
@@ -756,11 +759,16 @@ import android.os.PowerManager;
                                                         }
                                                     });
 
-                                                    pos = REG.getInt("RADIO" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem());
-                                                    Log.d("POSITION", "RADIO" + I.getIdItem() + " -pos: " + pos);
+
                                                     if (pos != -100) {
+
                                                         ((RadioButton) ((RadioGroup) Q.getView()).getChildAt(pos)).setChecked(true);
+                                                        for (int i = 0; i < pos+1; i++) {
+                                                            repeatButtontList.get(i).setVisibility(View.VISIBLE);
+                                                        }
                                                     }
+
+
 
                                                     //Q.setQuestions(listaAuxSet);
                                                     //listaAuxSet.add(Q);
@@ -1466,18 +1474,50 @@ import android.os.PowerManager;
                                             }
                                         }
 
+                                        if (Q.getValues() != null && TITLE.equalsIgnoreCase("ac")) { // Cambios para ac Desde Aqui
+
+                                            for (VALUE value : Q.getValues()) {
+                                                if (value.getQuestions() != null) {
+
+                                                    for (QUESTION setAux : value.getQuestions()) {
+                                                        tagid = preId + "-" + Q.getIdQuestion() + "-" + Q.getNameQuestion() + "-" + value.getIdValue() + value.getNameValue() + "-" + setAux.getIdQuestion() + setAux.getNameQuestion();
+                                                        Log.d("GUARDADOEN", "saveData: " + tagid);
+
+                                                        if (setAux.getIdType().equals(Constantes.NUM)) {
+                                                            String text = ((TextView) setAux.getView()).getText().toString();
+                                                            if (text.length() > 0) {
+                                                                REG.addValue("NUM" + tagid, text);
+                                                            }
+                                                        }
+                                                        if (setAux.getIdType().equals(Constantes.TEXT)) {
+                                                            String text = ((TextView) setAux.getView()).getText().toString();
+                                                            Log.d("GUARDANDO", text);
+                                                            if (text.length() > 0) {
+                                                                REG.addValue("TEXT" + tagid, text);
+                                                            }
+                                                        }
+
+                                                        if (setAux.getIdType().equals(Constantes.RADIO)) {
+                                                            id = ((RadioGroup) setAux.getView()).getCheckedRadioButtonId();
+                                                            if (id != -1) {
+                                                                b = (RadioButton) setAux.getView().findViewById(id);
+                                                                pos = ((RadioGroup) setAux.getView()).indexOfChild(b);
+                                                                REG.addValue("RADIO" + tagid, pos);
+                                                                Log.d("GUARDANDO", "Seleccionado-> " + pos);
+                                                            } else {
+                                                                Log.d("GUARDANDO", "nada seleccionado");
+                                                            }
+                                                        }
+
+                                                    }
+                                                }
+
+                                            }
+                                        }
+
 
 
                                     }
-
-
-
-
-
-
-
-
-
 
 
 
@@ -2161,31 +2201,31 @@ import android.os.PowerManager;
                     TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
                     String response = SoapRequestTDC.sendAnswerIDEN(telephonyManager.getDeviceId(), IDMAIN, SYSTEMS);
 
-                /*LocalText localT = new LocalText();      //Desde Aqui guardamos el fichero local para posteriormente ser enviado en Cierre ACtividad
+                LocalText localT = new LocalText();      //Desde Aqui guardamos el fichero local para posteriormente ser enviado en Cierre ACtividad
 
                 if(localT.isDisponibleSD() && localT.isAccesoEscrituraSD())
                     localT.escribirFicheroMemoriaExterna(IDMAIN+",answerIden",response);
 
-                return "Datos exitosamente guardados";*/
+                return "Datos exitosamente guardados";
 
 
-                    ArrayList<String> parse = XMLParser.getReturnCode2(response);
+                    /*ArrayList<String> parse = XMLParser.getReturnCode2(response);
                     if (parse.get(0).equals("0")) {
                         ok = true;
                         return parse.get(1);
                     } else {
                         return "Error Code:" + parse.get(0) + "\n" + parse.get(1);
-                    }
+                    }*/
                 } catch (IOException e) {
                     return "Se agotó el tiempo de conexión.";
-                } catch (ParserConfigurationException | SAXException | XPathExpressionException e) {
-                    return "Error al leer XML";
+               /* } catch (ParserConfigurationException | SAXException | XPathExpressionException e) {
+                    return "Error al leer XML";*/
                 } catch (Exception e) {
                     return "Error al enviar la respuesta";
                 }
             }
 
-            @Override
+            /*@Override
             protected void onPostExecute(String s) {
                 if (dialog.isShowing()) dialog.dismiss();
 
@@ -2204,9 +2244,9 @@ import android.os.PowerManager;
                     b.show();
                 }
 
-            }
+            }*/
 
-        /*@Override
+        @Override
         protected void onPostExecute(String s) {
             if (dialog.isShowing()) dialog.dismiss();
 
@@ -2224,7 +2264,7 @@ import android.os.PowerManager;
                 }
             });
             b.show();
-        }*/
+        }
         }
 
         private class Enviar3G extends AsyncTask<String, String, String> {
@@ -2232,7 +2272,7 @@ import android.os.PowerManager;
             boolean ok = false;
 
             private Enviar3G() {
-                dialog = new ProgressDialog(actividad);
+                dialog = new ProgressDialog(mContext);
                 dialog.setMessage("Enviando formulario...");
                 Button bEnviar = (Button) findViewById(R.id.btnEnviar);
                 bEnviar.setEnabled(false);
@@ -2250,7 +2290,16 @@ import android.os.PowerManager;
                 try {
                     TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
                     String response = SoapRequestTDC.sendAnswer3G(telephonyManager.getDeviceId(), IDMAIN, SYSTEMS);
-                    ArrayList<String> parse = XMLParser.getReturnCode2(response);
+
+                    LocalText localT = new LocalText();      //Desde Aqui guardamos el fichero local 3g para posteriormente ser enviado en Cierre ACtividad
+
+                    if (localT.isDisponibleSD() && localT.isAccesoEscrituraSD())
+                        localT.escribirFicheroMemoriaExterna(IDMAIN + ",answer3G", response);
+
+                    return "Datos exitosamente guardados";
+
+
+                  /*  ArrayList<String> parse = XMLParser.getReturnCode2(response);
                     if (parse.get(0).equals("0")) {
                         ok = true;
                         return parse.get(1);
@@ -2260,7 +2309,7 @@ import android.os.PowerManager;
                 } catch (IOException e) {
                     return "Se agotó el tiempo de conexión.";
                 } catch (ParserConfigurationException | SAXException | XPathExpressionException e) {
-                    return "Error al leer XML";
+                    return "Error al leer XML";*/
                 } catch (Exception e) {
                     return "Error al enviar la respuesta.";
 
@@ -2268,7 +2317,7 @@ import android.os.PowerManager;
                 //TODO AGREGAR CATCH GENERAL
             }
 
-            @Override
+        /*    @Override
             protected void onPostExecute(String s) {
                 if (dialog.isShowing()) dialog.dismiss();
 
@@ -2287,6 +2336,26 @@ import android.os.PowerManager;
                     b.show();
                 }
 
+            }*/
+
+            @Override
+            protected void onPostExecute(String s) {
+                if (dialog.isShowing()) dialog.dismiss();
+
+                AlertDialog.Builder b = new AlertDialog.Builder(actividad);
+                b.setMessage(s);
+                b.setCancelable(false);
+                b.setPositiveButton("SALIR", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                        REG.clearPreferences();
+                        setResult(RESULT_OK);
+                        actividad.finish();
+
+                    }
+                });
+                b.show();
             }
         }
 
@@ -2807,6 +2876,19 @@ import android.os.PowerManager;
             b.setMessage(mensaje);
             b.setCancelable(false);
             ArrayList<PHOTO> p = new ArrayList<>();
+
+           /* try {
+                SYSTEMS = XMLParserTDC.parseFormulario(xml);
+            } catch (ParserConfigurationException e) {
+                e.printStackTrace();
+            } catch (SAXException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (XPathExpressionException e) {
+                e.printStackTrace();
+            }*/
+
             for (SYSTEM S : SYSTEMS) {
                 for (AREA A : S.getAreas()) {
                     for (ITEM I : A.getItems()) {

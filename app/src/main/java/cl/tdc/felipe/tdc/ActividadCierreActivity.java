@@ -555,8 +555,8 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         b.setPositiveButton("SI", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                //Prueba p = new Prueba();
-                //p.execute();
+                EnviarMantOff env = new EnviarMantOff();
+                env.execute();
                 Cierre t = new Cierre();
                 t.execute();
             }
@@ -651,13 +651,13 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         }
     }
 
-    private class Prueba extends AsyncTask<String, String, String> { //probando para enviar localmente al servidor
+    private class EnviarMantOff extends AsyncTask<String, String, String> {                                //probando para enviar localmente al servidor
 
         boolean ok = false;
         String xml;
         String preg;
 
-        private Prueba() {
+        private EnviarMantOff() {
 
         }
 
@@ -668,7 +668,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
 
         @Override
         protected String doInBackground(String... strings) {
-            String resp = "";                                                                            //Leeremos todos los archivos para enviar y cerrar el mantenimiento
+            String resp = "";                                                                       //Leeremos todos los archivos para enviar y cerrar el mantenimiento
             System.out.println("El valor es " + idMain);
             LocalText local = new LocalText();
             local.listarFicheros(idMain);
@@ -677,32 +677,32 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
 
                 for (int j = 0; j < local.itemAnsw.size(); j++) {
                     System.out.println("Enviaremos " + local.itemAnsw.get(j));
-                    if (local.itemAnsw.get(j).contains(",")) {                                  //Verificamos que tenga coma, el archivo tiene por nombre IDMAIN,Nombre.txt
-                        String[] parts = local.itemAnsw.get(j).split(",");                      //separamos el archivo antes y despues de la coma
-                        String nombreArch = parts[1];                                           // nombre del archivo despues de la coma
+                    if (local.itemAnsw.get(j).contains(",")) {                                      //Verificamos que tenga coma, el archivo tiene por nombre IDMAIN,Nombre.txt
+                        String[] parts = local.itemAnsw.get(j).split(",");                          //separamos el archivo antes y despues de la coma
+                        String nombreArch = parts[1];                                               // nombre del archivo despues de la coma
                         System.out.println("Parte despues de la coma: " + nombreArch);
-                        if (nombreArch.contains(".")){                                          //Verificamos si contiene punto el nombre
-                            String[] nombre = nombreArch.split("\\.");                          //separamos antes y despues del punto
-                            String accion = nombre[0];                                          //nombre del archivo antes del punto = a la accion
+                        if (nombreArch.contains(".")){                                              //Verificamos si contiene punto el nombre
+                            String[] nombre = nombreArch.split("\\.");                              //separamos antes y despues del punto
+                            String accion = nombre[0];                                              //nombre del archivo antes del punto = a la accion
                             System.out.println("La Accion seria: "+ accion);
 
-                            String[] nomArch = local.itemAnsw.get(j).split("\\.");              //separamos el nombre del archivo antes y despues del punto
-                            String nomArchSinTxt = nomArch[0];                                  //Extraemos el nombre sin la extension .txt
+                            String[] nomArch = local.itemAnsw.get(j).split("\\.");                  //separamos el nombre del archivo antes y despues del punto
+                            String nomArchSinTxt = nomArch[0];                                      //Extraemos el nombre sin la extension .txt
 
-                            xml = local.leerFicheroMemoriaExterna(nomArchSinTxt);               //leemos el archivo del tlf
+                            xml = local.leerFicheroMemoriaExterna(nomArchSinTxt);                   //leemos el archivo del tlf
                             System.out.println("antes: " + xml);
 
                             String subS = accion.substring(6);
                             String check = idMain+",check"+subS;
 
-                            preg = local.leerFicheroMemoriaExterna(check);                      //leemos el archivo del tlf
+                            preg = local.leerFicheroMemoriaExterna(check);                          //leemos el archivo del tlf
 
-                            try {                                                               //Enviamos la petioncion al servidor SOAP (ESTO SE REALIZABA POR CADA CHECK ANTERIORMENTE AL PULSAR SOBRE ENVIAR)
+                            try {                                                                   //Enviamos la petioncion al servidor SOAP (ESTO SE REALIZABA POR CADA CHECK ANTERIORMENTE AL PULSAR SOBRE ENVIAR)
                                 String response =  SoapRequestTDC.sendAll(xml,accion);
                                 ArrayList<String> parse = XMLParser.getReturnCode2(response);
                                 if (parse.get(0).equals("0")) {
                                     resp = parse.get(1);
-                                    subir_fotos(resp,preg);
+                                    //subir_fotos(resp,preg);
                                 } else {
                                     resp = "Error Code:" + parse.get(0) + "\n" + parse.get(1);
                                     AlertDialog.Builder b = new AlertDialog.Builder(mContext);
@@ -729,10 +729,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                     } else {
                         resp = "String " + local.itemAnsw.get(j) + " No contiene limitador , ";
                     }
-
                 }
-                //Cierre t = new Cierre();
-                //t.execute();
             }
             return resp;
         }
@@ -792,6 +789,8 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                                     }
                                 }
                             }
+
+
                         }
                     }
                     if (I.getSetlistArrayList() != null && I.getValues() != null) {
@@ -856,7 +855,6 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                     REG.clearPreferences();
                     setResult(RESULT_OK);
                     actividad.finish();
-
                 }
             });
             b.show();
