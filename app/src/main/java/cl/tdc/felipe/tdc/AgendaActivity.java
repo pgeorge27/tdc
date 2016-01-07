@@ -353,13 +353,16 @@ public class AgendaActivity extends Activity {
         protected Agenda doInBackground(String... strings) {
             try {
                 publishProgress("Cargando Actividades...");
-                query = SoapRequestTDC.getPlanningMaintenance(IMEI);
-                Log.d("FRAGMENT", query);
 
                 LocalText localT = new LocalText();
 
-                if(localT.isDisponibleSD() && localT.isAccesoEscrituraSD())
-                    localT.escribirFicheroMemoriaExterna("planing-mantience",query);
+                if (!getIntent().getStringExtra("LOCAL").equalsIgnoreCase("local")) {
+                    query = SoapRequestTDC.getPlanningMaintenance(IMEI);
+                    Log.d("FRAGMENT", query);
+
+                    if (localT.isDisponibleSD() && localT.isAccesoEscrituraSD())
+                        localT.escribirFicheroMemoriaExterna("planing-mantience", query);
+                }
 
                 String mantenimientoLocal = localT.leerFicheroMemoriaExterna("planing-mantience");
 

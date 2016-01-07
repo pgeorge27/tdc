@@ -760,8 +760,7 @@ import android.os.PowerManager;
                                                     });
 
 
-                                                    if (pos != -100) {
-
+                                                    if (pos != -100) {                                                                  //Mostramos los botones activos
                                                         ((RadioButton) ((RadioGroup) Q.getView()).getChildAt(pos)).setChecked(true);
                                                         for (int i = 0; i < pos+1; i++) {
                                                             repeatButtontList.get(i).setVisibility(View.VISIBLE);

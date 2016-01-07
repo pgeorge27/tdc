@@ -32,6 +32,7 @@ import javax.xml.xpath.XPathExpressionException;
 import cl.tdc.felipe.tdc.daemon.PositionTrackerTDC;
 import cl.tdc.felipe.tdc.daemon.WifiTrackerTDC;
 import cl.tdc.felipe.tdc.extras.Funciones;
+import cl.tdc.felipe.tdc.extras.LocalText;
 import cl.tdc.felipe.tdc.objects.PreAsBuilt.Informacion;
 import cl.tdc.felipe.tdc.preferences.FormCierreReg;
 import cl.tdc.felipe.tdc.preferences.MaintenanceReg;
@@ -443,8 +444,20 @@ public class MainActivity extends ActionBarActivity {
                 String query = SoapRequest.updateTechnician(IMEI);
                 return XMLParser.getReturnCode(query);
             } catch (IOException e) {
-                Log.e(ATAG, e.getMessage() + ":\n" + e.getCause());
-                mensaje = dummy.ERROR_CONNECTION;
+
+                LocalText localT = new LocalText();
+                String mantenimientoLocal = localT.leerFicheroMemoriaExterna("planing-mantience");
+
+                if (mantenimientoLocal!=null){
+                    ArrayList<String> nombreArrayList = new ArrayList<String>();
+                    nombreArrayList.add("0");
+                    nombreArrayList.add("local");
+                    return nombreArrayList;
+                }else{
+                    Log.e(ATAG, e.getMessage() + ":\n" + e.getCause());
+                    mensaje = dummy.ERROR_CONNECTION;
+                }
+
             } catch (SAXException | XPathExpressionException | ParserConfigurationException e) {
                 e.printStackTrace();
                 mensaje = dummy.ERROR_PARSE;
@@ -466,6 +479,7 @@ public class MainActivity extends ActionBarActivity {
                 if (s.get(0).compareTo("0") == 0) {
                     Intent i = new Intent(tContext, AgendaActivity.class);
                     i.putExtra("RESPONSE", s);
+                    i.putExtra("LOCAL", s.get(1));
                     startActivity(i);
                 } else {
                     Toast.makeText(getApplicationContext(), s.get(1), Toast.LENGTH_LONG).show();
