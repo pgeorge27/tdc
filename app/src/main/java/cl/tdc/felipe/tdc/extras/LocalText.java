@@ -150,15 +150,38 @@ public class LocalText {
         }
     }
 
-    public void elimnarFicherosEnviados(String filtro){//Iteramos sobre los archivos locales y sacamos los que se van a enviar
-        for (int j = 0; j < itemFiltrado.size(); j++) {
-            System.out.println("Valor de Item: " + itemFiltrado.get(j).toString());
-            if (itemFiltrado.get(j).toString().indexOf(filtro) > 0){
-                System.out.println("Agregado: " + itemFiltrado.get(j).toString() + " a itemAnsw List");
-                itemAnsw.add(itemFiltrado.get(j));
-            }
+    public void eliminarFicheroMant() {
+        for (int i = 0; i < itemFiltrado.size() ; i++) {
+            File fichero = new File(Environment.getExternalStorageDirectory() + "/TDC@", itemFiltrado.get(i));
+            fichero.delete();
         }
     }
+
+   /* public boolean deleteWithChildren(String path) {
+        File file = new File(path);
+        if (!file.exists()) {
+            return true;
+        }
+        if (!file.isDirectory()) {
+            return file.delete();
+        }
+        return this.deleteChildren(file) && file.delete();
+    }
+
+    private boolean deleteChildren(File dir) {
+        File[] children = dir.listFiles();
+        boolean childrenDeleted = true;
+        for (int i = 0; children != null && i < children.length; i++) {
+            File child = children[i];
+            if (child.isDirectory()) {
+                childrenDeleted = this.deleteChildren(child) && childrenDeleted;
+            }
+            if (child.exists()) {
+                childrenDeleted = child.delete() && childrenDeleted;
+            }
+        }
+        return childrenDeleted;
+    }*/
 
 
 

@@ -113,8 +113,6 @@ public class AgendaActivity extends Activity {
     }
 
     private void init() {
-
-
         /*checklist = (Button) findViewById(R.id.checklist);
         checklist.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,12 +123,8 @@ public class AgendaActivity extends Activity {
                 }else{
                     Toast.makeText(actividad.getApplicationContext(), "Ya ha finalizado el Checklist de Manteniemiento.\nPuede continuar con el cierre del Mantenimiento.",Toast.LENGTH_LONG).show();
                 }
-
-
             }
         });*/
-
-
         AgendaTask agenda = new AgendaTask(this);
         agenda.execute();
     }
@@ -356,7 +350,7 @@ public class AgendaActivity extends Activity {
 
                 LocalText localT = new LocalText();
 
-                if (!getIntent().getStringExtra("LOCAL").equalsIgnoreCase("local")) {
+                if (!getIntent().getStringExtra("LOCAL").equalsIgnoreCase("local")) {               //En caso de tener conexion a internet creamos el archivo planing-mantience localmente
                     query = SoapRequestTDC.getPlanningMaintenance(IMEI);
                     Log.d("FRAGMENT", query);
 
@@ -584,11 +578,7 @@ public class AgendaActivity extends Activity {
                     AgendaActivity.this.finish();
                 }
             }
-
-
         }
-
-
     }
 
     @Override
@@ -675,12 +665,10 @@ public class AgendaActivity extends Activity {
         @Override
         protected String doInBackground(String... strings) {
             try {
-                query = SoapRequestTDC.getFormularioCierre(IMEI, idMain, getAction(type));
-
+                query = SoapRequestTDC.getFormularioCierre(IMEI, idMain, getAction(type));          //Creamos los check localmente
                 LocalText localT = new LocalText();
                 if (localT.isDisponibleSD() && localT.isAccesoEscrituraSD())
                     localT.escribirFicheroMemoriaExterna(idMain + "," + getAction(type), query);
-
             } catch (IOException e) {
                 e.printStackTrace();
                 return "Se agotó el tiempo de conexión. Por favor reintente.";

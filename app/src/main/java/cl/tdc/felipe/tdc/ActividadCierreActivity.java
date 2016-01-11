@@ -47,6 +47,7 @@ import cl.tdc.felipe.tdc.objects.FormularioCierre.PHOTO;
 import cl.tdc.felipe.tdc.objects.FormularioCierre.QUESTION;
 import cl.tdc.felipe.tdc.objects.FormularioCierre.SET;
 import cl.tdc.felipe.tdc.objects.FormularioCierre.SYSTEM;
+import cl.tdc.felipe.tdc.objects.FormularioCierre.VALUE;
 import cl.tdc.felipe.tdc.objects.Maintenance.Agenda;
 import cl.tdc.felipe.tdc.preferences.FormCierreReg;
 import cl.tdc.felipe.tdc.preferences.MaintenanceReg;
@@ -68,6 +69,8 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
     private static String TITLE = "Cierre de Actividad";
     private static String IMEI;
     String idMain;
+    boolean cerrarMant=true;
+    LocalText local = new LocalText();
     ArrayList<SYSTEM> SYSTEMS;
 
     TextView PAGETITLE;
@@ -550,25 +553,42 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
     }
 
     public void enviar(View v) {
-        AlertDialog.Builder b = new AlertDialog.Builder(actividad);
-        b.setMessage("¿Desea cerrar el mantenimiento?");
-        b.setPositiveButton("SI", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                EnviarMantOff env = new EnviarMantOff();
-                env.execute();
-                Cierre t = new Cierre();
-                t.execute();
-            }
-        });
-        b.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        });
-        b.setCancelable(false);
-        b.show();
+        local.listarFicheros(idMain);
+        local.crearListaEnvio("answer");
+        if (local.itemAnsw.size() > 0) {
+            AlertDialog.Builder b = new AlertDialog.Builder(actividad);
+            b.setMessage("¿Desea cerrar el mantenimiento?");
+            b.setPositiveButton("SI", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    EnviarMantOff env = new EnviarMantOff();
+                    env.execute();
+                    if(cerrarMant){
+                        Cierre t = new Cierre();
+                        t.execute();
+                    }
+                }
+            });
+            b.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                }
+            });
+            b.setCancelable(false);
+            b.show();
+        }else{
+            AlertDialog.Builder b = new AlertDialog.Builder(actividad);
+            b.setMessage("Por favor llene algún check");
+            b.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                }
+            });
+            b.setCancelable(false);
+            b.show();
+        }
     }
 
     private class Cierre extends AsyncTask<String, String, String> {
@@ -647,6 +667,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                     }
                 });
             }
+            local.eliminarFicheroMant();
             b.show();
         }
     }
@@ -670,21 +691,17 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         protected String doInBackground(String... strings) {
             String resp = "";                                                                       //Leeremos todos los archivos para enviar y cerrar el mantenimiento
             System.out.println("El valor es " + idMain);
-            LocalText local = new LocalText();
-            local.listarFicheros(idMain);
-            local.crearListaEnvio("answer");
-            if (local.itemAnsw.size()>0) {
-
+            if (local.itemAnsw.size() > 0) {
                 for (int j = 0; j < local.itemAnsw.size(); j++) {
                     System.out.println("Enviaremos " + local.itemAnsw.get(j));
                     if (local.itemAnsw.get(j).contains(",")) {                                      //Verificamos que tenga coma, el archivo tiene por nombre IDMAIN,Nombre.txt
                         String[] parts = local.itemAnsw.get(j).split(",");                          //separamos el archivo antes y despues de la coma
                         String nombreArch = parts[1];                                               // nombre del archivo despues de la coma
                         System.out.println("Parte despues de la coma: " + nombreArch);
-                        if (nombreArch.contains(".")){                                              //Verificamos si contiene punto el nombre
+                        if (nombreArch.contains(".")) {                                              //Verificamos si contiene punto el nombre
                             String[] nombre = nombreArch.split("\\.");                              //separamos antes y despues del punto
                             String accion = nombre[0];                                              //nombre del archivo antes del punto = a la accion
-                            System.out.println("La Accion seria: "+ accion);
+                            System.out.println("La Accion seria: " + accion);
 
                             String[] nomArch = local.itemAnsw.get(j).split("\\.");                  //separamos el nombre del archivo antes y despues del punto
                             String nomArchSinTxt = nomArch[0];                                      //Extraemos el nombre sin la extension .txt
@@ -693,44 +710,35 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                             System.out.println("antes: " + xml);
 
                             String subS = accion.substring(6);
-                            String check = idMain+",check"+subS;
+                            String check = idMain + ",check" + subS;
 
                             preg = local.leerFicheroMemoriaExterna(check);                          //leemos el archivo del tlf
 
                             try {                                                                   //Enviamos la petioncion al servidor SOAP (ESTO SE REALIZABA POR CADA CHECK ANTERIORMENTE AL PULSAR SOBRE ENVIAR)
-                                String response =  SoapRequestTDC.sendAll(xml,accion);
-                                ArrayList<String> parse = XMLParser.getReturnCode2(response);
-                                if (parse.get(0).equals("0")) {
-                                    resp = parse.get(1);
-                                    //subir_fotos(resp,preg);
-                                } else {
-                                    resp = "Error Code:" + parse.get(0) + "\n" + parse.get(1);
-                                    AlertDialog.Builder b = new AlertDialog.Builder(mContext);
-                                    b.setMessage(resp);
-                                    b.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialogInterface, int i) {
-                                            dialogInterface.dismiss();
-                                        }
-                                    });
-                                    b.show();
-                                }
+                                String response = SoapRequestTDC.sendAll(xml, accion);
+                                //ArrayList<String> parse = XMLParser.getReturnCode2(response);
+                                cerrarMant = true;
+                                resp = "Datos exitosamente ingresados!";
+                                subir_fotos(resp,preg);
 
                             } catch (IOException e) {
                                 return "Se agotó el tiempo de conexión.";
-                            } catch (ParserConfigurationException | SAXException | XPathExpressionException e) {
+                            } /*catch (ParserConfigurationException | SAXException | XPathExpressionException e) {
                                 return "Error al leer XML";
-                            } catch (Exception e) {
+                            }*/ catch (Exception e) {
                                 return "Error al enviar la respuesta.";
                             }
-                        }else {
+                        } else {
                             resp = "String " + nombreArch + " No contiene limitador . ";
                         }
                     } else {
                         resp = "String " + local.itemAnsw.get(j) + " No contiene limitador , ";
                     }
                 }
+            }  else {
+                cerrarMant=false;
             }
+
             return resp;
         }
 
@@ -739,15 +747,204 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
 
         }
     }
+    private QUESTION copiar_question(QUESTION Q) {
+        QUESTION qAux = new QUESTION();
+        qAux.setIdQuestion(Q.getIdQuestion());
+        qAux.setPhoto(Q.getPhoto());
+        qAux.setNumberPhoto(Q.getNumberPhoto());
+        qAux.setNameType(Q.getNameType());
+        qAux.setNameQuestion(Q.getNameQuestion());
+        qAux.setIdType(Q.getIdType());
+        qAux.setValues(Q.getValues());
+        return qAux;
+    }
 
-    public void subir_fotos(String mensaje, String xml) {
-        AlertDialog.Builder b = new AlertDialog.Builder(actividad);
-        b.setMessage(mensaje);
-        b.setCancelable(false);
-        ArrayList<PHOTO> p = new ArrayList<>();
+    private void cargar_fotos(QUESTION Q, String tag) {
+        int as = 0;
+        ArrayList<PHOTO> fotos = new ArrayList<>();
+        String name;
+        while (!(name = REG.getString("PHOTONAME" + tag + as)).equals("")) {
+            File tmp = new File(name);
+            if (tmp.exists()) {
+                PHOTO f = new PHOTO();
+                f.setNamePhoto(REG.getString("PHOTONAME" + tag + as));
+                f.setTitlePhoto(REG.getString("PHOTOTITLE" + tag + as));
+                f.setDateTime(REG.getString("PHOTODATE" + tag + as));
+                f.setCoordX(REG.getString("PHOTOCOORDX" + tag + as));
+                f.setCoordY(REG.getString("PHOTOCOORDY" + tag + as));
 
+                fotos.add(f);
+            }
+            as++;
+        }
+
+        if (fotos.size() > 0) Q.setFotos(fotos);
+    }
+
+    public void init2(String xml) {
         try {
             SYSTEMS = XMLParserTDC.parseFormulario(xml);
+            for (final SYSTEM S : SYSTEMS) {
+                for (final AREA A : S.getAreas()) {
+                    if (A.getItems() == null) {continue;}
+                    for (final ITEM I : A.getItems()) {
+                        if (I.getQuestions() != null) {
+                            for (final QUESTION Q : I.getQuestions()) {
+                                String tag = S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem() + "-" + Q.getIdQuestion() + "-" + Q.getNameQuestion();
+                                if (Q.getPhoto().equals("OK")) {
+                                    cargar_fotos(Q, tag);
+                                }
+                                if (Q.getIdType().equals(Constantes.RADIO)) {
+                                    if (Q.getQuestions() != null && TITLE.equalsIgnoreCase("ac")) {
+                                        ArrayList<QUESTION> listaAuxSet = new ArrayList<>();
+                                        if (Q.getIdType().equals(Constantes.RADIO)) {
+                                            ArrayList<VALUE> listadoV = new ArrayList<>();
+                                            for (int x = 0; x < Q.getValues().size(); x++) {
+                                                VALUE value = Q.getValues().get(x);
+                                                ArrayList<QUESTION> listadoQ = new ArrayList<>();
+                                                for (final QUESTION Q2 : Q.getQuestions()) {
+                                                    QUESTION qAux = copiar_question(Q2);
+                                                    tag = S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem() + "-" + Q.getIdQuestion() + "-" + Q.getNameQuestion() + "-" + value.getIdValue() + value.getNameValue() + "-" + Q2.getIdQuestion() + Q2.getNameQuestion();
+                                                    if (qAux.getPhoto().equals("OK")) {
+                                                        cargar_fotos(qAux, tag);
+                                                    }
+                                                    listadoQ.add(qAux);
+                                                    value.setQuestions(listadoQ);
+                                                }
+                                                listadoV.add(value);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        if (I.getSetArrayList() != null) {
+                            if (I.getIdType().equals(Constantes.TABLE)) {
+                                //Preparamos la tabla o lo que sea
+                                for (int x = 0; x < I.getValues().size(); x++) {
+                                    VALUE value = I.getValues().get(x);
+                                    ArrayList<SET> listaAuxSet = new ArrayList<>();
+                                    for (SET set : I.getSetArrayList()) {
+                                        SET setAux = new SET();
+                                        setAux.setIdSet(set.getIdSet());
+                                        setAux.setNameSet(set.getNameSet());
+                                        setAux.setValueSet(set.getValueSet());
+                                        if (set.getQuestions() != null) {
+                                            ArrayList<QUESTION> listadoQ = new ArrayList<>();
+                                            for (final QUESTION Q : set.getQuestions()) {
+                                                final QUESTION qAux = copiar_question(Q);
+
+                                                String tag = S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem() + "-" + value.getIdValue() + value.getNameValue() + "-" + setAux.getIdSet() + setAux.getNameSet() + "-" + Q.getIdQuestion() + "-" + Q.getNameQuestion();
+
+                                                if (qAux.getPhoto().equals("OK")) {
+                                                    cargar_fotos(qAux, tag);
+                                                }
+                                                listadoQ.add(qAux);
+                                            }
+                                            setAux.setQuestions(listadoQ);
+                                        }
+                                        listaAuxSet.add(setAux);
+                                    }
+                                    I.addListSet(listaAuxSet);
+                                }
+                            }
+
+                            if (I.getIdType().equals(Constantes.RADIO)) {
+                                for (int x = 0; x < I.getValues().size(); x++) {
+                                    VALUE value = I.getValues().get(x);
+                                    ArrayList<SET> listaAuxSet = new ArrayList<>();
+                                    for (SET set : I.getSetArrayList()) {
+                                        SET setAux = new SET();
+                                        setAux.setIdSet(set.getIdSet());
+                                        setAux.setNameSet(set.getNameSet());
+                                        setAux.setValueSet(set.getValueSet());
+                                        if (set.getQuestions() != null) {
+                                            ArrayList<QUESTION> listadoQ = new ArrayList<>();
+                                            for (final QUESTION Q : set.getQuestions()) {
+                                                QUESTION qAux = copiar_question(Q);
+                                                String tag = S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem() + "-" + value.getIdValue() + value.getNameValue() + "-" + setAux.getIdSet() + setAux.getNameSet() + "-" + Q.getIdQuestion() + "-" + Q.getNameQuestion();
+                                                if (qAux.getPhoto().equals("OK")) {
+                                                    cargar_fotos(qAux, tag);
+                                                }
+                                                listadoQ.add(qAux);
+                                            }
+                                            setAux.setQuestions(listadoQ);
+                                        }
+                                        listaAuxSet.add(setAux);
+                                    }
+                                    I.addListSet(listaAuxSet);
+                                }
+                            }
+
+                            if (I.getIdType().equals(Constantes.ADD)) {
+                                for (int x = 0; x < 3; x++) {
+                                    ArrayList<SET> listaAuxSet = new ArrayList<>();
+                                    for (SET set : I.getSetArrayList()) {
+                                        SET setAux = new SET();
+                                        setAux.setIdSet(set.getIdSet());
+                                        setAux.setNameSet(set.getNameSet());
+                                        setAux.setQuestions(set.getQuestions());
+                                        if (setAux.getQuestions() != null) {
+                                            ArrayList<QUESTION> listadoQ = new ArrayList<>();
+
+                                            for (final QUESTION Q : setAux.getQuestions()) {
+                                                QUESTION qAux = copiar_question(Q);
+                                                String tag = S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem() + "-" + "AIR" + x + "-" + setAux.getIdSet() + setAux.getNameSet() + "-" + qAux.getIdQuestion() + "-" + qAux.getNameQuestion();
+                                                if (qAux.getPhoto().equals("OK")) {
+                                                    cargar_fotos(qAux, tag);
+                                                }
+                                                listadoQ.add(qAux);
+                                            }
+                                            setAux.setQuestions(listadoQ);
+                                        }
+                                        listaAuxSet.add(setAux);
+                                    }
+                                    I.addListSet(listaAuxSet);
+                                }
+                            }
+                        } else {
+                            if (I.getIdType().equals(Constantes.CHECK_PHOTO)) {
+                                for (CheckBox c : I.getCheckBoxes()) {
+                                    boolean check = REG.getBoolean("CHECK-PHOTO" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem() + I.getCheckBoxes().indexOf(c));
+                                    c.setChecked(check);
+                                }
+                            }
+                            if (I.getIdType().equals(Constantes.PHOTO)) {
+                                String name = REG.getString("PHOTONAME" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem());
+                                File tmp = new File(name);
+                                if (tmp.exists()) {
+                                    PHOTO f = new PHOTO();
+                                    f.setNamePhoto(REG.getString("PHOTONAME" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem()));
+                                    f.setTitlePhoto(REG.getString("PHOTOTITLE" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem()));
+                                    f.setDateTime(REG.getString("PHOTODATE" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem()));
+                                    f.setCoordX(REG.getString("PHOTOCOORDX" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem()));
+                                    f.setCoordY(REG.getString("PHOTOCOORDY" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem()));
+                                    I.setPhoto(f);
+                                    I.getButtons().get(1).setEnabled(true);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (ParserConfigurationException | SAXException | XPathExpressionException |
+                IOException e
+                )
+        {
+            e.printStackTrace();
+        }
+    }
+
+    public void subir_fotos(String mensaje, String xml) {
+        //AlertDialog.Builder b = new AlertDialog.Builder(actividad);
+        //b.setMessage(mensaje);
+        //b.setCancelable(false);
+        ArrayList<PHOTO> p = new ArrayList<>();
+        /*try {
+            //String valor = REG.getString(idMain+",IDEN");
+            //SYSTEMS = XMLParserTDC.parseFormulario(xml);
+            //SYSTEMS = XMLParserTDC.parseFormulario(xml);
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         } catch (SAXException e) {
@@ -756,9 +953,9 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             e.printStackTrace();
         } catch (XPathExpressionException e) {
             e.printStackTrace();
-        }
+        }*/
 
-        for (SYSTEM S : SYSTEMS) {
+        for (SYSTEM S : ActividadCierreFormActivity.SYSTEMS) {
             for (AREA A : S.getAreas()) {
                 for (ITEM I : A.getItems()) {
                     if (I.getIdType().equals(Constantes.PHOTO)) {
@@ -771,6 +968,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                             if (Q.getFoto() != null) {
                                 p.add(Q.getFoto());
                             }
+
                             if (Q.getFotos() != null) {
                                 for (PHOTO P : Q.getFotos()) {
                                     p.add(P);
@@ -790,7 +988,22 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                                 }
                             }
 
-
+                            if (Q.getValues() != null){
+                                for (VALUE V : Q.getValues()) {
+                                    if (V.getQuestions() != null) {
+                                        for (QUESTION QQ : V.getQuestions()) {
+                                            if (QQ.getFoto() != null) {
+                                                p.add(QQ.getFoto());
+                                            }
+                                            if (QQ.getFotos() != null) {
+                                                for (PHOTO P : QQ.getFotos()) {
+                                                    p.add(P);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                     if (I.getSetlistArrayList() != null && I.getValues() != null) {
@@ -844,20 +1057,6 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         if (p.size() > 0) {
             UploadImage up = new UploadImage(p, mensaje);
             up.execute(dummy.URL_UPLOAD_IMG_MAINTENANCE);
-        } else {
-            b = new AlertDialog.Builder(actividad);
-            b.setMessage(mensaje);
-            b.setCancelable(false);
-            b.setPositiveButton("SALIR", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    dialogInterface.dismiss();
-                    REG.clearPreferences();
-                    setResult(RESULT_OK);
-                    actividad.finish();
-                }
-            });
-            b.show();
         }
     }
 
@@ -870,6 +1069,14 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         public UploadImage(ArrayList<PHOTO> ps, String msj) {
             this.allPhotos = ps;
             this.mensaje = msj;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            /*dialog = new ProgressDialog(mContext);
+            dialog.setMessage("Subiendo imagenes...");
+            dialog.setCancelable(false);
+            dialog.show();*/
         }
 
         @Override
@@ -891,18 +1098,6 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                     int bytesRead, bytesAvailable, bufferSize;
 
                     File done = new File(fileName);
-                    /*
-
-                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                    img.getBitmap().compress(Bitmap.CompressFormat.PNG, 0, bos);
-                    byte[] bitmapdata = bos.toByteArray();
-
-//write the bytes in file
-                    FileOutputStream fos = new FileOutputStream(done);
-                    fos.write(bitmapdata);
-                    fos.flush();
-                    fos.close();*/
-
 
                     if (!done.isFile())
                         Log.e("DownloadManager", "no existe");
@@ -947,7 +1142,6 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                         int serverResponseCode = conn.getResponseCode();
                         String serverResponseMessage = conn.getResponseMessage();
 
-
                         Log.i("UploadManager", "HTTP response is: " + serverResponseMessage + ": " + serverResponseCode);
 
                         fileInputStream.close();
@@ -969,7 +1163,6 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                         Log.d("IMAGENES", p.getNamePhoto() + "   \n" + response);
                     }
 
-
                 } catch (Exception e) {
                     Log.d("TAG", "Error: " + e.getMessage());
                     response = "ERROR";
@@ -978,17 +1171,10 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             return response;
         }
 
-        @Override
-        protected void onPreExecute() {
-            dialog = new ProgressDialog(mContext);
-            dialog.setMessage("Subiendo imagenes...");
-            dialog.setCancelable(false);
-            dialog.show();
-        }
 
         @Override
         protected void onPostExecute(String s) {
-            if (dialog.isShowing())
+            /*if (dialog.isShowing())
                 dialog.dismiss();
             AlertDialog.Builder b = new AlertDialog.Builder(actividad);
             b.setMessage(mensaje);
@@ -1003,7 +1189,11 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
 
                 }
             });
-            b.show();
+            b.show();*/
+
+            REG.clearPreferences();
+            setResult(RESULT_OK);
+
             super.onPostExecute(s);
         }
 

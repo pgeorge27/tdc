@@ -531,7 +531,7 @@ public class SoapRequestTDC {
                 "</soapenv:Body>" +
                 "</soapenv:Envelope>";
 
-        StringEntity se = new StringEntity(xml, HTTP.UTF_8);
+        /*StringEntity se = new StringEntity(xml, HTTP.UTF_8);
         se.setContentType("text/xml");
         httpPost.addHeader(SOAP_ACTION, dummy.URL_TDC);
 
@@ -541,7 +541,8 @@ public class SoapRequestTDC {
         HttpEntity resEntity = httpResponse.getEntity();
         response = EntityUtils.toString(resEntity);
         Log.d("RESPONSE", response);
-        return response;
+        return response;*/
+        return xml;
     }
 
     public static String sendAnswer(String IMEI, String ID_MAINTENANCE, ArrayList<SYSTEM> SYSTEMS, String ACTION) throws IOException {
@@ -889,7 +890,7 @@ public class SoapRequestTDC {
                 "</soapenv:Body>" +
                 "</soapenv:Envelope>";
 
-        StringEntity se = new StringEntity(xml, HTTP.UTF_8);
+     /*   StringEntity se = new StringEntity(xml, HTTP.UTF_8);
         se.setContentType("text/xml");
         httpPost.addHeader(SOAP_ACTION, dummy.URL_TDC);
 
@@ -899,7 +900,8 @@ public class SoapRequestTDC {
         HttpEntity resEntity = httpResponse.getEntity();
         response = EntityUtils.toString(resEntity);
         Log.d("RESPONSE", response);
-        return response;
+        return response;*/
+        return xml;
     }
 
     public static String sendAnswerSG(String IMEI, String ID_MAINTENANCE, ArrayList<SYSTEM> SYSTEMS) throws IOException {
@@ -1121,13 +1123,13 @@ public class SoapRequestTDC {
         se.setContentType("text/xml");
         httpPost.addHeader(SOAP_ACTION, dummy.URL_TDC);
 
-
-        httpPost.setEntity(se);
+/*        httpPost.setEntity(se);
         HttpResponse httpResponse = httpClient.execute(httpPost);
         HttpEntity resEntity = httpResponse.getEntity();
         response = EntityUtils.toString(resEntity);
         Log.d("RESPONSE", response);
-        return response;
+        return response;*/
+        return xml;
     }
 
     public static String sendAnswerDC(String IMEI, String ID_MAINTENANCE, ArrayList<SYSTEM> SYSTEMS) throws IOException {
@@ -1311,7 +1313,7 @@ public class SoapRequestTDC {
                 "</soapenv:Body>" +
                 "</soapenv:Envelope>";
 
-        StringEntity se = new StringEntity(xml, HTTP.UTF_8);
+     /*   StringEntity se = new StringEntity(xml, HTTP.UTF_8);
         se.setContentType("text/xml");
         httpPost.addHeader(SOAP_ACTION, dummy.URL_TDC);
 
@@ -1320,7 +1322,8 @@ public class SoapRequestTDC {
         HttpResponse httpResponse = httpClient.execute(httpPost);
         HttpEntity resEntity = httpResponse.getEntity();
         response = EntityUtils.toString(resEntity);
-        return response;
+        return response;*/
+        return xml;
     }
 
     public static String sendAnswerAir(String IMEI, String ID_MAINTENANCE, ArrayList<SYSTEM> SYSTEMS) throws IOException {
@@ -1503,7 +1506,7 @@ public class SoapRequestTDC {
                 "</soapenv:Body>" +
                 "</soapenv:Envelope>";
 
-        StringEntity se = new StringEntity(xml, HTTP.UTF_8);
+/*        StringEntity se = new StringEntity(xml, HTTP.UTF_8);
         se.setContentType("text/xml");
         httpPost.addHeader(SOAP_ACTION, dummy.URL_TDC);
 
@@ -1512,7 +1515,8 @@ public class SoapRequestTDC {
         HttpResponse httpResponse = httpClient.execute(httpPost);
         HttpEntity resEntity = httpResponse.getEntity();
         response = EntityUtils.toString(resEntity);
-        return response;
+        return response;*/
+        return xml;
     }
 
     public static String sendAnswerGE(String IMEI, String ID_MAINTENANCE, ArrayList<SYSTEM> SYSTEMS) throws IOException {
@@ -1705,7 +1709,7 @@ public class SoapRequestTDC {
                 "</soapenv:Body>" +
                 "</soapenv:Envelope>";
 
-        StringEntity se = new StringEntity(xml, HTTP.UTF_8);
+        /*StringEntity se = new StringEntity(xml, HTTP.UTF_8);
         se.setContentType("text/xml");
         httpPost.addHeader(SOAP_ACTION, dummy.URL_TDC);
 
@@ -1714,7 +1718,8 @@ public class SoapRequestTDC {
         HttpResponse httpResponse = httpClient.execute(httpPost);
         HttpEntity resEntity = httpResponse.getEntity();
         response = EntityUtils.toString(resEntity);
-        return response;
+        return response;*/
+        return xml;
     }
 
     public static String sendAnswerAC(String IMEI, String ID_MAINTENANCE, ArrayList<SYSTEM> SYSTEMS) throws IOException {
@@ -1967,7 +1972,7 @@ public class SoapRequestTDC {
                 "</soapenv:Body>" +
                 "</soapenv:Envelope>";
 
-        StringEntity se = new StringEntity(xml, HTTP.UTF_8);
+        /*StringEntity se = new StringEntity(xml, HTTP.UTF_8);
         se.setContentType("text/xml");
         httpPost.addHeader(SOAP_ACTION, dummy.URL_TDC);
 
@@ -1976,9 +1981,9 @@ public class SoapRequestTDC {
         HttpResponse httpResponse = httpClient.execute(httpPost);
         HttpEntity resEntity = httpResponse.getEntity();
         response = EntityUtils.toString(resEntity);
-        return response;
+        return response;*/
+        return xml;
     }
-
 
     public static String sendAnswer3G(String IMEI, String ID_MAINTENANCE, ArrayList<SYSTEM> SYSTEMS) throws IOException {
         final String SOAP_ACTION = "urn:Configurationwsdl#answer3G";
@@ -2205,7 +2210,6 @@ public class SoapRequestTDC {
     }
 
     public static String sendAll(String xml, String action)throws IOException {
-
         final String SOAP_ACTION = "urn:Configurationwsdl#" + action;
         String response = null;
         HttpClient httpClient = new DefaultHttpClient();

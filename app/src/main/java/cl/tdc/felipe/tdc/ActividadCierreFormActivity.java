@@ -105,7 +105,7 @@ import android.os.PowerManager;
         QUESTION questionTMP;
         ITEM itemTMP;
         Button buttonTMP;
-        ArrayList<SYSTEM> SYSTEMS;
+        public static ArrayList<SYSTEM> SYSTEMS;
 
 
         ProgressDialog dialog;
@@ -390,7 +390,7 @@ import android.os.PowerManager;
             return qAux;
         }
 
-        private void init() {
+        public void init() {
             try {
                 SYSTEMS = XMLParserTDC.parseFormulario(QUERY);
 
@@ -1147,8 +1147,6 @@ import android.os.PowerManager;
                                     if (pos != -100) {
                                         ((RadioButton) ((RadioGroup) I.getView()).getChildAt(pos)).setChecked(true);
                                     }
-
-
                                     itemLayout.addView(repeatLayout);
                                 }
 
@@ -1376,8 +1374,6 @@ import android.os.PowerManager;
                                             }
                                         }
                                     });
-
-
                                 }
                                 if (I.getIdType().equals(Constantes.TEXT)) {
                                     String text = REG.getString("TEXT" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem());
@@ -1388,12 +1384,9 @@ import android.os.PowerManager;
                                     ((EditText) I.getView()).setText(text);
                                 }
                             }
-
                             CONTENIDO.addView(itemLayout);
                         }
                     }
-
-
                 }
             } catch (ParserConfigurationException | SAXException | XPathExpressionException |
                     IOException e
@@ -1507,23 +1500,11 @@ import android.os.PowerManager;
                                                                 Log.d("GUARDANDO", "nada seleccionado");
                                                             }
                                                         }
-
                                                     }
                                                 }
-
                                             }
                                         }
-
-
-
                                     }
-
-
-
-
-
-
-
                                 }
 
                                 if (Q.getIdType().equals(Constantes.NUM)) {
@@ -2200,13 +2181,12 @@ import android.os.PowerManager;
                     TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
                     String response = SoapRequestTDC.sendAnswerIDEN(telephonyManager.getDeviceId(), IDMAIN, SYSTEMS);
 
-                LocalText localT = new LocalText();      //Desde Aqui guardamos el fichero local para posteriormente ser enviado en Cierre ACtividad
+                    LocalText localT = new LocalText();                                             //Desde Aqui guardamos el fichero local
 
-                if(localT.isDisponibleSD() && localT.isAccesoEscrituraSD())
-                    localT.escribirFicheroMemoriaExterna(IDMAIN+",answerIden",response);
+                    if(localT.isDisponibleSD() && localT.isAccesoEscrituraSD())
+                        localT.escribirFicheroMemoriaExterna(IDMAIN+",answerIden",response);
 
-                return "Datos exitosamente guardados";
-
+                    return "Datos exitosamente guardados";
 
                     /*ArrayList<String> parse = XMLParser.getReturnCode2(response);
                     if (parse.get(0).equals("0")) {
@@ -2357,7 +2337,7 @@ import android.os.PowerManager;
                 b.show();
             }
         }
-
+//Falta este
         private class Enviar extends AsyncTask<String, String, String> {
 
             boolean ok = false;
@@ -2432,7 +2412,7 @@ import android.os.PowerManager;
             boolean ok = false;
 
             private EnviarTransport() {
-                dialog = new ProgressDialog(actividad);
+                dialog = new ProgressDialog(mContext);
                 dialog.setMessage("Enviando formulario...");
                 Button bEnviar = (Button) findViewById(R.id.btnEnviar);
                 bEnviar.setEnabled(false);
@@ -2450,17 +2430,13 @@ import android.os.PowerManager;
                 try {
                     TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
                     String response = SoapRequestTDC.sendAnswerTransport(telephonyManager.getDeviceId(), IDMAIN, SYSTEMS);
-                    ArrayList<String> parse = XMLParser.getReturnCode2(response);
-                    if (parse.get(0).equals("0")) {
-                        ok = true;
-                        return parse.get(1);
-                    } else {
-                        return "Error Code:" + parse.get(0) + "\n" + parse.get(1);
-                    }
-                } catch (IOException e) {
-                    return "Se agotó el tiempo de conexión.";
-                } catch (ParserConfigurationException | SAXException | XPathExpressionException e) {
-                    return "Error al leer XML";
+                    LocalText localT = new LocalText();      //Desde Aqui guardamos el fichero local para posteriormente ser enviado en Cierre ACtividad
+
+                    if(localT.isDisponibleSD() && localT.isAccesoEscrituraSD())
+                        localT.escribirFicheroMemoriaExterna(IDMAIN+",answerTransport",response);
+
+                    return "Datos exitosamente guardados";
+
                 } catch (Exception e) {
                     return "Error al enviar la respuesta.";
 
@@ -2472,21 +2448,20 @@ import android.os.PowerManager;
             protected void onPostExecute(String s) {
                 if (dialog.isShowing()) dialog.dismiss();
 
-                formSended = ok;
-                if (ok) {
-                    subir_fotos(s);
-                } else {
-                    AlertDialog.Builder b = new AlertDialog.Builder(mContext);
-                    b.setMessage(s);
-                    b.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            dialogInterface.dismiss();
-                        }
-                    });
-                    b.show();
-                }
 
+                AlertDialog.Builder b = new AlertDialog.Builder(actividad);
+                b.setMessage(s);
+                b.setCancelable(false);
+                b.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                        REG.clearPreferences();
+                        setResult(RESULT_OK);
+                        actividad.finish();
+                    }
+                });
+                b.show();
             }
         }
 
@@ -2495,7 +2470,7 @@ import android.os.PowerManager;
             boolean ok = false;
 
             private EnviarSG() {
-                dialog = new ProgressDialog(actividad);
+                dialog = new ProgressDialog(mContext);
                 dialog.setMessage("Enviando formulario...");
                 Button bEnviar = (Button) findViewById(R.id.btnEnviar);
                 bEnviar.setEnabled(false);
@@ -2513,17 +2488,14 @@ import android.os.PowerManager;
                 try {
                     TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
                     String response = SoapRequestTDC.sendAnswerSG(telephonyManager.getDeviceId(), IDMAIN, SYSTEMS);
-                    ArrayList<String> parse = XMLParser.getReturnCode2(response);
-                    if (parse.get(0).equals("0")) {
-                        ok = true;
-                        return parse.get(1);
-                    } else {
-                        return "Error Code:" + parse.get(0) + "\n" + parse.get(1);
-                    }
-                } catch (IOException e) {
-                    return "Se agotó el tiempo de conexión.";
-                } catch (ParserConfigurationException | SAXException | XPathExpressionException e) {
-                    return "Error al leer XML";
+
+                    LocalText localT = new LocalText();      //Desde Aqui guardamos el fichero local para posteriormente ser enviado en Cierre ACtividad
+
+                    if(localT.isDisponibleSD() && localT.isAccesoEscrituraSD())
+                        localT.escribirFicheroMemoriaExterna(IDMAIN+",answerSystem",response);
+
+                    return "Datos exitosamente guardados";
+
                 } catch (Exception e) {
                     return "Error al enviar la respuesta.";
 
@@ -2535,21 +2507,20 @@ import android.os.PowerManager;
             protected void onPostExecute(String s) {
                 if (dialog.isShowing()) dialog.dismiss();
 
-                formSended = ok;
-                if (ok) {
-                    subir_fotos(s);
-                } else {
-                    AlertDialog.Builder b = new AlertDialog.Builder(mContext);
-                    b.setMessage(s);
-                    b.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            dialogInterface.dismiss();
-                        }
-                    });
-                    b.show();
-                }
 
+                AlertDialog.Builder b = new AlertDialog.Builder(actividad);
+                b.setMessage(s);
+                b.setCancelable(false);
+                b.setPositiveButton("SALIR", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                        REG.clearPreferences();
+                        setResult(RESULT_OK);
+                        actividad.finish();
+                    }
+                });
+                b.show();
             }
         }
 
@@ -2558,7 +2529,7 @@ import android.os.PowerManager;
             boolean ok = false;
 
             private EnviarDC() {
-                dialog = new ProgressDialog(actividad);
+                dialog = new ProgressDialog(mContext);
                 dialog.setMessage("Enviando formulario...");
                 Button bEnviar = (Button) findViewById(R.id.btnEnviar);
                 bEnviar.setEnabled(false);
@@ -2576,17 +2547,13 @@ import android.os.PowerManager;
                 try {
                     TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
                     String response = SoapRequestTDC.sendAnswerDC(telephonyManager.getDeviceId(), IDMAIN, SYSTEMS);
-                    ArrayList<String> parse = XMLParser.getReturnCode2(response);
-                    if (parse.get(0).equals("0")) {
-                        ok = true;
-                        return parse.get(1);
-                    } else {
-                        return "Error Code:" + parse.get(0) + "\n" + parse.get(1);
-                    }
-                } catch (IOException e) {
-                    return "Se agotó el tiempo de conexión.";
-                } catch (ParserConfigurationException | SAXException | XPathExpressionException e) {
-                    return "Error al leer XML";
+                    LocalText localT = new LocalText();      //Desde Aqui guardamos el fichero local para posteriormente ser enviado en Cierre ACtividad
+
+                    if(localT.isDisponibleSD() && localT.isAccesoEscrituraSD())
+                        localT.escribirFicheroMemoriaExterna(IDMAIN+",answerDC",response);
+
+                    return "Datos exitosamente guardados";
+
                 } catch (Exception e) {
                     return "Error al enviar la respuesta.";
 
@@ -2598,21 +2565,20 @@ import android.os.PowerManager;
             protected void onPostExecute(String s) {
                 if (dialog.isShowing()) dialog.dismiss();
 
-                formSended = ok;
-                if (ok) {
-                    subir_fotos(s);
-                } else {
-                    AlertDialog.Builder b = new AlertDialog.Builder(mContext);
-                    b.setMessage(s);
-                    b.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            dialogInterface.dismiss();
-                        }
-                    });
-                    b.show();
-                }
 
+                AlertDialog.Builder b = new AlertDialog.Builder(actividad);
+                b.setMessage(s);
+                b.setCancelable(false);
+                b.setPositiveButton("SALIR", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                        REG.clearPreferences();
+                        setResult(RESULT_OK);
+                        actividad.finish();
+                    }
+                });
+                b.show();
             }
         }
 
@@ -2621,7 +2587,7 @@ import android.os.PowerManager;
             boolean ok = false;
 
             private EnviarAir() {
-                dialog = new ProgressDialog(actividad);
+                dialog = new ProgressDialog(mContext);
                 dialog.setMessage("Enviando formulario...");
                 Button bEnviar = (Button) findViewById(R.id.btnEnviar);
                 bEnviar.setEnabled(false);
@@ -2639,17 +2605,13 @@ import android.os.PowerManager;
                 try {
                     TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
                     String response = SoapRequestTDC.sendAnswerAir(telephonyManager.getDeviceId(), IDMAIN, SYSTEMS);
-                    ArrayList<String> parse = XMLParser.getReturnCode2(response);
-                    if (parse.get(0).equals("0")) {
-                        ok = true;
-                        return parse.get(1);
-                    } else {
-                        return "Error Code:" + parse.get(0) + "\n" + parse.get(1);
-                    }
-                } catch (IOException e) {
-                    return "Se agotó el tiempo de conexión.";
-                } catch (ParserConfigurationException | SAXException | XPathExpressionException e) {
-                    return "Error al leer XML";
+                    LocalText localT = new LocalText();      //Desde Aqui guardamos el fichero local para posteriormente ser enviado en Cierre ACtividad
+
+                    if(localT.isDisponibleSD() && localT.isAccesoEscrituraSD())
+                        localT.escribirFicheroMemoriaExterna(IDMAIN+",answerAir",response);
+
+                    return "Datos exitosamente guardados";
+
                 } catch (Exception e) {
                     return "Error al enviar la respuesta.";
 
@@ -2661,21 +2623,19 @@ import android.os.PowerManager;
             protected void onPostExecute(String s) {
                 if (dialog.isShowing()) dialog.dismiss();
 
-                formSended = ok;
-                if (ok) {
-                    subir_fotos(s);
-                } else {
-                    AlertDialog.Builder b = new AlertDialog.Builder(mContext);
-                    b.setMessage(s);
-                    b.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            dialogInterface.dismiss();
-                        }
-                    });
-                    b.show();
-                }
-
+                AlertDialog.Builder b = new AlertDialog.Builder(actividad);
+                b.setMessage(s);
+                b.setCancelable(false);
+                b.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                        REG.clearPreferences();
+                        setResult(RESULT_OK);
+                        actividad.finish();
+                    }
+                });
+                b.show();
             }
         }
 
@@ -2684,7 +2644,7 @@ import android.os.PowerManager;
             boolean ok = false;
 
             private EnviarAC() {
-                dialog = new ProgressDialog(actividad);
+                dialog = new ProgressDialog(mContext);
                 dialog.setMessage("Enviando formulario...");
                 Button bEnviar = (Button) findViewById(R.id.btnEnviar);
                 bEnviar.setEnabled(false);
@@ -2702,17 +2662,13 @@ import android.os.PowerManager;
                 try {
                     TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
                     String response = SoapRequestTDC.sendAnswerAC(telephonyManager.getDeviceId(), IDMAIN, SYSTEMS);
-                    ArrayList<String> parse = XMLParser.getReturnCode2(response);
-                    if (parse.get(0).equals("0")) {
-                        ok = true;
-                        return parse.get(1);
-                    } else {
-                        return "Error Code:" + parse.get(0) + "\n" + parse.get(1);
-                    }
-                } catch (IOException e) {
-                    return "Se agotó el tiempo de conexión.";
-                } catch (ParserConfigurationException | SAXException | XPathExpressionException e) {
-                    return "Error al leer XML";
+                    LocalText localT = new LocalText();      //Desde Aqui guardamos el fichero local para posteriormente ser enviado en Cierre ACtividad
+
+                    if(localT.isDisponibleSD() && localT.isAccesoEscrituraSD())
+                        localT.escribirFicheroMemoriaExterna(IDMAIN+",answerAC",response);
+
+                    return "Datos exitosamente guardados";
+
                 } catch (Exception e) {
                     return "Error al enviar la respuesta.";
 
@@ -2724,21 +2680,20 @@ import android.os.PowerManager;
             protected void onPostExecute(String s) {
                 if (dialog.isShowing()) dialog.dismiss();
 
-                formSended = ok;
-                if (ok) {
-                    subir_fotos(s);
-                } else {
-                    AlertDialog.Builder b = new AlertDialog.Builder(mContext);
-                    b.setMessage(s);
-                    b.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            dialogInterface.dismiss();
-                        }
-                    });
-                    b.show();
-                }
 
+                AlertDialog.Builder b = new AlertDialog.Builder(actividad);
+                b.setMessage(s);
+                b.setCancelable(false);
+                b.setPositiveButton("SALIR", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                        REG.clearPreferences();
+                        setResult(RESULT_OK);
+                        actividad.finish();
+                    }
+                });
+                b.show();
             }
         }
 
@@ -2747,7 +2702,7 @@ import android.os.PowerManager;
             boolean ok = false;
 
             private EnviarGE() {
-                dialog = new ProgressDialog(actividad);
+                dialog = new ProgressDialog(mContext);
                 dialog.setMessage("Enviando formulario...");
                 Button bEnviar = (Button) findViewById(R.id.btnEnviar);
                 bEnviar.setEnabled(false);
@@ -2765,17 +2720,13 @@ import android.os.PowerManager;
                 try {
                     TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
                     String response = SoapRequestTDC.sendAnswerGE(telephonyManager.getDeviceId(), IDMAIN, SYSTEMS);
-                    ArrayList<String> parse = XMLParser.getReturnCode2(response);
-                    if (parse.get(0).equals("0")) {
-                        ok = true;
-                        return parse.get(1);
-                    } else {
-                        return "Error Code:" + parse.get(0) + "\n" + parse.get(1);
-                    }
-                } catch (IOException e) {
-                    return "Se agotó el tiempo de conexión.";
-                } catch (ParserConfigurationException | SAXException | XPathExpressionException e) {
-                    return "Error al leer XML";
+                    LocalText localT = new LocalText();      //Desde Aqui guardamos el fichero local para posteriormente ser enviado en Cierre ACtividad
+
+                    if(localT.isDisponibleSD() && localT.isAccesoEscrituraSD())
+                        localT.escribirFicheroMemoriaExterna(IDMAIN+",answerGE",response);
+
+                    return "Datos exitosamente guardados";
+
                 } catch (Exception e) {
                     return "Error al enviar la respuesta.";
 
@@ -2787,21 +2738,20 @@ import android.os.PowerManager;
             protected void onPostExecute(String s) {
                 if (dialog.isShowing()) dialog.dismiss();
 
-                formSended = ok;
-                if (ok) {
-                    subir_fotos(s);
-                } else {
-                    AlertDialog.Builder b = new AlertDialog.Builder(mContext);
-                    b.setMessage(s);
-                    b.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            dialogInterface.dismiss();
-                        }
-                    });
-                    b.show();
-                }
 
+                AlertDialog.Builder b = new AlertDialog.Builder(mContext);
+                b.setMessage(s);
+                b.setCancelable(false);
+                b.setPositiveButton("SALIR", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                        REG.clearPreferences();
+                        setResult(RESULT_OK);
+                        actividad.finish();
+                    }
+                });
+                b.show();
             }
         }
 
@@ -2810,7 +2760,7 @@ import android.os.PowerManager;
             boolean ok = false;
 
             private EnviarEmergency() {
-                dialog = new ProgressDialog(actividad);
+                dialog = new ProgressDialog(mContext);
                 dialog.setMessage("Enviando formulario...");
                 Button bEnviar = (Button) findViewById(R.id.btnEnviar);
                 bEnviar.setEnabled(false);
@@ -2828,17 +2778,14 @@ import android.os.PowerManager;
                 try {
                     TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
                     String response = SoapRequestTDC.sendAnswerEmergency(telephonyManager.getDeviceId(), IDMAIN, SYSTEMS);
-                    ArrayList<String> parse = XMLParser.getReturnCode2(response);
-                    if (parse.get(0).equals("0")) {
-                        ok = true;
-                        return parse.get(1);
-                    } else {
-                        return "Error Code:" + parse.get(0) + "\n" + parse.get(1);
-                    }
-                } catch (IOException e) {
-                    return "Se agotó el tiempo de conexión.";
-                } catch (ParserConfigurationException | SAXException | XPathExpressionException e) {
-                    return "Error al leer XML";
+
+                    LocalText localT = new LocalText();      //Desde Aqui guardamos el fichero local para posteriormente ser enviado en Cierre ACtividad
+
+                    if(localT.isDisponibleSD() && localT.isAccesoEscrituraSD())
+                        localT.escribirFicheroMemoriaExterna(IDMAIN+",answerEmerg",response);
+
+                    return "Datos exitosamente guardados";
+
                 } catch (Exception e) {
                     return "Error al enviar la respuesta.";
 
@@ -2850,21 +2797,20 @@ import android.os.PowerManager;
             protected void onPostExecute(String s) {
                 if (dialog.isShowing()) dialog.dismiss();
 
-                formSended = ok;
-                if (ok) {
-                    subir_fotos(s);
-                } else {
-                    AlertDialog.Builder b = new AlertDialog.Builder(mContext);
-                    b.setMessage(s);
-                    b.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            dialogInterface.dismiss();
-                        }
-                    });
-                    b.show();
-                }
 
+                AlertDialog.Builder b = new AlertDialog.Builder(actividad);
+                b.setMessage(s);
+                b.setCancelable(false);
+                b.setPositiveButton("SALIR", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                        REG.clearPreferences();
+                        setResult(RESULT_OK);
+                        actividad.finish();
+                    }
+                });
+                b.show();
             }
         }
 
