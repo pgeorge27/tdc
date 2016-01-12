@@ -719,7 +719,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                                 //ArrayList<String> parse = XMLParser.getReturnCode2(response);
                                 cerrarMant = true;
                                 resp = "Datos exitosamente ingresados!";
-                                subir_fotos(resp,preg);
+                                subir_fotos(resp,subS);                                             //subS es el nombre del checklist Iden 3g etc
 
                             } catch (IOException e) {
                                 return "Se agotó el tiempo de conexión.";
@@ -936,7 +936,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         }
     }
 
-    public void subir_fotos(String mensaje, String xml) {
+    public void subir_fotos(String mensaje, String form) {
         //AlertDialog.Builder b = new AlertDialog.Builder(actividad);
         //b.setMessage(mensaje);
         //b.setCancelable(false);
@@ -955,7 +955,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             e.printStackTrace();
         }*/
 
-        for (SYSTEM S : ActividadCierreFormActivity.SYSTEMS) {
+        for (SYSTEM S : ActividadCierreFormActivity.SYSTEMSMAP.get(idMain+","+form.toUpperCase())) {
             for (AREA A : S.getAreas()) {
                 for (ITEM I : A.getItems()) {
                     if (I.getIdType().equals(Constantes.PHOTO)) {

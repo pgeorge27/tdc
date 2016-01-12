@@ -56,6 +56,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
@@ -106,7 +107,7 @@ import android.os.PowerManager;
         ITEM itemTMP;
         Button buttonTMP;
         public static ArrayList<SYSTEM> SYSTEMS;
-
+        public static HashMap<String, ArrayList<SYSTEM>> SYSTEMSMAP = new HashMap<String, ArrayList<SYSTEM>>();
 
         ProgressDialog dialog;
         public LinearLayout layquest2;
@@ -393,6 +394,7 @@ import android.os.PowerManager;
         public void init() {
             try {
                 SYSTEMS = XMLParserTDC.parseFormulario(QUERY);
+                SYSTEMSMAP.put(IDMAIN+","+TITLE, SYSTEMS);
 
                 for (final SYSTEM S : SYSTEMS) {
                     /**      CABECERA SYSTEMS  **/
