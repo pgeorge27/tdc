@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.location.Location;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -20,6 +21,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
@@ -47,6 +51,11 @@ public class CercanosActivity extends FragmentActivity implements GoogleMap.OnMa
 
     PositionTrackerTDC trackerTDC;
     ProgressDialog mapDialog;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
 
     @Override
@@ -92,7 +101,7 @@ public class CercanosActivity extends FragmentActivity implements GoogleMap.OnMa
         gps = new MyLocationListener(this);
 
         mapa = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
-        if(mapa != null) {
+        if (mapa != null) {
             mapa.setMapType(GoogleMap.MAP_TYPE_NORMAL);
             mapa.setMyLocationEnabled(true);
             mapa.setOnMapLoadedCallback(this);
@@ -125,8 +134,7 @@ public class CercanosActivity extends FragmentActivity implements GoogleMap.OnMa
             });
 
 
-        }
-        else{
+        } else {
             new AlertDialog.Builder(this).setMessage("Compruebe que tiene la aplicacion de GoogleMap y PlayStore").setTitle("No se pudo cargar el mapa").setNeutralButton("Cerrar", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
@@ -137,6 +145,9 @@ public class CercanosActivity extends FragmentActivity implements GoogleMap.OnMa
             finish();
         }
 
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
     // TODO: funcion onClick del botón apagar.
@@ -147,7 +158,7 @@ public class CercanosActivity extends FragmentActivity implements GoogleMap.OnMa
         b.setPositiveButton("SI", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                if(MainActivity.actividad != null){
+                if (MainActivity.actividad != null) {
                     MainActivity.actividad.finish();
                 }
                 actividad.finish();
@@ -211,9 +222,9 @@ public class CercanosActivity extends FragmentActivity implements GoogleMap.OnMa
 
         if (mapa.getMyLocation() != null && !ubicacionOK) {
             LatLng punto = new LatLng(mapa.getMyLocation().getLatitude(), mapa.getMyLocation().getLongitude());
-            LatLng cero = new LatLng(0,0);
+            LatLng cero = new LatLng(0, 0);
 
-            if(!punto.equals(cero) && !ubicacionOK) {
+            if (!punto.equals(cero) && !ubicacionOK) {
                 ubicacionOK = true;
                 mapa.addMarker(new MarkerOptions().position(punto).snippet("AQUI"));
                 mapa.moveCamera(CameraUpdateFactory.newLatLngZoom(punto, ZOOM_LEVEL));
@@ -227,9 +238,9 @@ public class CercanosActivity extends FragmentActivity implements GoogleMap.OnMa
     public void onMyLocationChange(Location loc) {
         if (loc != null && !ubicacionOK) {
             LatLng punto = new LatLng(loc.getLatitude(), loc.getLongitude());
-            LatLng cero = new LatLng(0,0);
+            LatLng cero = new LatLng(0, 0);
 
-            if(!punto.equals(cero) && !ubicacionOK) {
+            if (!punto.equals(cero) && !ubicacionOK) {
                 ubicacionOK = true;
                 mapa.addMarker(new MarkerOptions().position(punto).snippet("AQUI"));
                 mapa.moveCamera(CameraUpdateFactory.newLatLngZoom(punto, ZOOM_LEVEL));
@@ -239,12 +250,53 @@ public class CercanosActivity extends FragmentActivity implements GoogleMap.OnMa
         }
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Cercanos Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://cl.tdc.felipe.tdc/http/host/path")
+        );
+        AppIndex.AppIndexApi.start(client, viewAction);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        Action viewAction = Action.newAction(
+                Action.TYPE_VIEW, // TODO: choose an action type.
+                "Cercanos Page", // TODO: Define a title for the content shown.
+                // TODO: If you have web page content that matches this app activity's content,
+                // make sure this auto-generated web page URL is correct.
+                // Otherwise, set the URL to null.
+                Uri.parse("http://host/path"),
+                // TODO: Make sure this auto-generated app deep link URI is correct.
+                Uri.parse("android-app://cl.tdc.felipe.tdc/http/host/path")
+        );
+        AppIndex.AppIndexApi.end(client, viewAction);
+        client.disconnect();
+    }
+
     /**
      * CLASE ASINCRÓNICA
      */
     private class search_marker extends AsyncTask<String, String, ArrayList<String>> {
 
         ProgressDialog dialog;
+
         @Override
         protected ArrayList<String> doInBackground(String... params) {
             try {
@@ -254,6 +306,7 @@ public class CercanosActivity extends FragmentActivity implements GoogleMap.OnMa
                 Log.i("CERCANOS", response);
                 ArrayList<String> parse = XMLParser.getLocations(response);
                 Log.d("MAP", parse.toString());
+                // no entra en el return parse sino entra en el catch y retorna null
                 return parse;
             } catch (Exception e) {
                 Log.e("MAP", e.getMessage());
@@ -276,45 +329,50 @@ public class CercanosActivity extends FragmentActivity implements GoogleMap.OnMa
         @Override
         protected void onPostExecute(ArrayList<String> s) {
             super.onPostExecute(s);
-            if(dialog.isShowing())
+            if (dialog.isShowing())
                 dialog.dismiss();
 
-            if(s == null){
+            if (s == null) {
                 Toast.makeText(getApplicationContext(), "Error en la conexión.", Toast.LENGTH_LONG).show();
                 return;
             }
 
-            if(s.get(0).compareTo("0")==0){
+            if (s.get(0).compareTo("0") == 0) {
                 int count = 0;
-                for(int i=2; i<s.size();i++){
+                for (int i = 2; i < s.size(); i++) {
                     Log.d("CERCANOS", s.toString());
                     String[] Datos = s.get(i).split("&");
                     String[] latitud = Datos[Datos.length - 2].split(";");
                     String[] longitud = Datos[Datos.length - 1].split(";");
-                    if(longitud.length != 2 || latitud.length != 2){
+                    if (longitud.length != 2 || latitud.length != 2) {
                         continue;
                     }
                     double latitude = Double.valueOf(Datos[Datos.length - 2].split(";")[1]);
                     double longitude = Double.valueOf(Datos[Datos.length - 1].split(";")[1]);
-                    LatLng position = new LatLng(latitude,longitude);
-                    Log.i("MAP", "posicion:" + position.toString());
+                    LatLng position = new LatLng(latitude, longitude);
+                    Log.i("MAP AQUIIIIIIII", "posicion:" + position.toString());
+
+
+                    final LatLng PERTH = new LatLng(-31.90, 115.86);
                     mapa.addMarker(new MarkerOptions()
+                                    .position(PERTH)
+                                    .draggable(true)
+
+                    /*mapa.addMarker(new MarkerOptions()
                                     .position(position)
-                                    .snippet(s.get(i))
+                                    .snippet(s.get(i))*/
                     );
                     count++;
                 }
-                if(count == 0){
+                if (count == 0) {
                     Toast.makeText(getApplicationContext(), "No se encontraron sitios cercanos", Toast.LENGTH_LONG).show();
                 }
-                if(count >0 ){
-                    Toast.makeText(getApplicationContext(), "Se encontraron "+count+" sitios cercanos", Toast.LENGTH_LONG).show();
+                if (count > 0) {
+                    Toast.makeText(getApplicationContext(), "Se encontraron " + count + " sitios cercanos", Toast.LENGTH_LONG).show();
+
                 }
-            }
-            else
-                Toast.makeText(actividad, s.get(1),Toast.LENGTH_LONG).show();
-
-
+            } else
+                Toast.makeText(actividad, s.get(1), Toast.LENGTH_LONG).show();
         }
     }
 }

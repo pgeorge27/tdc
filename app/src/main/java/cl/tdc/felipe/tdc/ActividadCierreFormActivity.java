@@ -5,9 +5,12 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -47,6 +50,7 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -89,6 +93,7 @@ import android.os.PowerManager;
 
         private static int TAKE_PICTURE = 1;
         private static int TAKE_PICTURES = 2;
+        private static int SELECT_PICTURE = 3;
         boolean formSended = false;
 
         private PositionTrackerTDC trackerTDC;
@@ -299,6 +304,7 @@ import android.os.PowerManager;
                 public void onClick(View view) {
                     questionTMP = Q;
 
+
                     AlertDialog.Builder b = new AlertDialog.Builder(actividad);
                     final ArrayList<PHOTO> fotos = Q.getFotos();
                     int n_fotos = 0;
@@ -306,18 +312,19 @@ import android.os.PowerManager;
                         n_fotos = fotos.size();
                     }
                     b.setTitle("Actualmente tiene " + n_fotos + " fotos");
-                    b.setItems(new CharSequence[]{"Tomar Fotografía", "Ver Fotografías"}, new DialogInterface.OnClickListener() {
+                    b.setItems(new CharSequence[]{"Tomar Fotografía", "Ver Fotografías", "Buscar en Galería"}, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             if (i == 0) {
                                 photoTMP = new PHOTO();
                                 tomarFotos();
-                            } else {
-                                if (fotos != null && fotos.size() > 0)
-                                    verFotos();
-                                else
-                                    Toast.makeText(mContext, "No tiene fotografías", Toast.LENGTH_SHORT).show();
-                            }
+                            } else if (fotos != null && fotos.size() > 0 && i == 1) {
+                                verFotos();
+                            } else if (i == 2) {
+                                Log.d("Seleccion", "Valor de i: " + i);
+                                galleryfotos();
+                            } else
+                                Toast.makeText(mContext, "No tiene fotografías", Toast.LENGTH_SHORT).show();
                         }
                     });
                     b.setPositiveButton("Cerrar", new DialogInterface.OnClickListener() {
@@ -862,7 +869,7 @@ import android.os.PowerManager;
 
                                         ArrayList<SET> listaAuxSet = new ArrayList<>();
                                         for (SET set : I.getSetArrayList()) {
-
+//values a los items
                                             SET setAux = new SET();
                                             setAux.setIdSet(set.getIdSet());
                                             setAux.setNameSet(set.getNameSet());
@@ -870,6 +877,7 @@ import android.os.PowerManager;
 
                                             LinearLayout setLayout = create_setLayout();
                                             if (set.getQuestions() != null) {
+                                                //si los values tienen questions
                                                 ArrayList<QUESTION> listadoQ = new ArrayList<>();
 
                                                 for (final QUESTION Q : set.getQuestions()) {
@@ -1019,7 +1027,7 @@ import android.os.PowerManager;
 
                                             if (set.getQuestions() != null) {
                                                 ArrayList<QUESTION> listadoQ = new ArrayList<>();
-
+//pasa aqui
                                                 for (final QUESTION Q : set.getQuestions()) {
                                                     QUESTION qAux = copiar_question(Q);
                                                     LinearLayout questTitle = create_questionLayout();
@@ -2049,6 +2057,16 @@ import android.os.PowerManager;
             startActivityForResult(intent, code);
         }
 
+        private void galleryfotos(){
+
+            Intent intent = new Intent( Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            intent.setType("image/*");
+            startActivityForResult(Intent.createChooser(intent, "Select File"), SELECT_PICTURE);
+
+        }
+
+
+
         @Override
         protected void onActivityResult(int requestCode, int resultCode, Intent data) {
             Log.d("CODE", "resultcode" + resultCode);
@@ -2115,8 +2133,58 @@ import android.os.PowerManager;
                     b.show();
 
                 }
+                if (requestCode== SELECT_PICTURE) {
+
+                   /* Uri selectedImage = data.getData();
+                    InputStream is;
+                    try {
+                        is = getContentResolver().openInputStream(selectedImage);
+                        BufferedInputStream bis = new BufferedInputStream(is);
+                        Bitmap bitmap = BitmapFactory.decodeStream(bis);
+                        ImageView iv = new ImageView(mContext);
+                        iv.setImageBitmap(bitmap);
+                    } catch (FileNotFoundException e) {}*/
+                    onSelectFromGalleryResult(data);
+
+                    /*Uri selectedImageUri = data.getData();
+                    String[] projection = {MediaStore.MediaColumns.DATA};
+                    CursorLoader cursorLoader = new CursorLoader(this, selectedImageUri, projection, null, null,
+                            null);
+                    Cursor cursor = cursorLoader.loadInBackground();
+                    int column_index = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+                    cursor.moveToFirst();
+                    String selectedImagePath = cursor.getString(column_index);*/
+                }
             }
 
+        }
+        @SuppressWarnings("deprecation")
+        private void onSelectFromGalleryResult(Intent data) {
+
+
+                Uri selectedImageUri = data.getData();
+                String[] projection = { MediaStore.MediaColumns.DATA };
+                Cursor cursor = managedQuery(selectedImageUri, projection, null, null,
+                        null);
+                int column_index = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
+                cursor.moveToFirst();
+
+                String selectedImagePath = cursor.getString(column_index);
+
+                Bitmap bm;
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inJustDecodeBounds = true;
+                BitmapFactory.decodeFile(selectedImagePath, options);
+                final int REQUIRED_SIZE = 200;
+                int scale = 1;
+                while (options.outWidth / scale / 2 >= REQUIRED_SIZE
+                        && options.outHeight / scale / 2 >= REQUIRED_SIZE)
+                    scale *= 2;
+                options.inSampleSize = scale;
+                options.inJustDecodeBounds = false;
+                bm = BitmapFactory.decodeFile(selectedImagePath, options);
+
+              //  vImage.setImageBitmap(bm);
 
         }
 
@@ -2342,33 +2410,40 @@ import android.os.PowerManager;
 //Falta este
         private class Enviar extends AsyncTask<String, String, String> {
 
-            boolean ok = false;
+    boolean ok = false;
 
-            private Enviar() {
-                dialog = new ProgressDialog(actividad);
-                dialog.setMessage("Enviando formulario...");
-                Button bEnviar = (Button) findViewById(R.id.btnEnviar);
-                bEnviar.setEnabled(false);
-                dialog.setCancelable(false);
-                dialog.setCanceledOnTouchOutside(false);
-            }
+    private Enviar() {
+        dialog = new ProgressDialog(mContext);
+        dialog.setMessage("Enviando formulario...");
+        Button bEnviar = (Button) findViewById(R.id.btnEnviar);
+        bEnviar.setEnabled(false);
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
+    }
 
-            @Override
-            protected void onPreExecute() {
-                dialog.show();
-            }
+    @Override
+    protected void onPreExecute() {
+        dialog.show();
+    }
 
-            private String getAction() {
-                if (TITLE.equals("FAENA")) return SoapRequestTDC.ACTION_SEND_FAENA;
-                else return "";
-            }
+    private String getAction() {
+        if (TITLE.equals("FAENA")) return SoapRequestTDC.ACTION_SEND_FAENA;
+        else return "";
+    }
 
-            @Override
-            protected String doInBackground(String... strings) {
-                try {
-                    TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-                    String response = SoapRequestTDC.sendAnswer(telephonyManager.getDeviceId(), IDMAIN, SYSTEMS, getAction());
-                    ArrayList<String> parse = XMLParser.getReturnCode2(response);
+    @Override
+    protected String doInBackground(String... strings) {
+        try {
+            TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+            String response = SoapRequestTDC.sendAnswer(telephonyManager.getDeviceId(), IDMAIN, SYSTEMS, getAction());
+            LocalText localT = new LocalText();      //Desde Aqui guardamos el fichero local 3g para posteriormente ser enviado en Cierre ACtividad
+
+            if (localT.isDisponibleSD() && localT.isAccesoEscrituraSD())
+                localT.escribirFicheroMemoriaExterna(IDMAIN + ",answer" + getAction(), response);
+
+            return "Datos exitosamente guardados";
+
+                    /*ArrayList<String> parse = XMLParser.getReturnCode2(response);
                     if (parse.get(0).equals("0")) {
                         ok = true;
                         return parse.get(1);
@@ -2378,35 +2453,35 @@ import android.os.PowerManager;
                 } catch (IOException e) {
                     return "Se agotó el tiempo de conexión.";
                 } catch (ParserConfigurationException | SAXException | XPathExpressionException e) {
-                    return "Error al leer XML";
-                } catch (Exception e) {
-                    return "Error al enviar la respuesta.";
+                    return "Error al leer XML";*/
+        } catch (Exception e) {
+            return "Error al enviar la respuesta.";
 
-                }
-                //TODO AGREGAR CATCH GENERAL
-            }
-
-            @Override
-            protected void onPostExecute(String s) {
-                if (dialog.isShowing()) dialog.dismiss();
-
-                formSended = ok;
-                if (ok) {
-                    subir_fotos(s);
-                } else {
-                    AlertDialog.Builder b = new AlertDialog.Builder(mContext);
-                    b.setMessage(s);
-                    b.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            dialogInterface.dismiss();
-                        }
-                    });
-                    b.show();
-                }
-
-            }
         }
+        //TODO AGREGAR CATCH GENERAL
+    }
+
+    @Override
+    protected void onPostExecute(String s) {
+        if (dialog.isShowing()) dialog.dismiss();
+
+        AlertDialog.Builder b = new AlertDialog.Builder(actividad);
+        b.setMessage(s);
+        b.setCancelable(false);
+        b.setPositiveButton("SALIR", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+                REG.clearPreferences();
+                setResult(RESULT_OK);
+                actividad.finish();
+
+            }
+        });
+        b.show();
+    }
+}
+
 
         //Editado por S G
         private class EnviarTransport extends AsyncTask<String, String, String> {

@@ -657,7 +657,7 @@ public class SoapRequestTDC {
                 "</soapenv:Body>" +
                 "</soapenv:Envelope>";
 
-        StringEntity se = new StringEntity(xml, HTTP.UTF_8);
+       /* StringEntity se = new StringEntity(xml, HTTP.UTF_8);
         se.setContentType("text/xml");
         httpPost.addHeader(SOAP_ACTION, dummy.URL_TDC);
 
@@ -667,7 +667,8 @@ public class SoapRequestTDC {
         HttpEntity resEntity = httpResponse.getEntity();
         response = EntityUtils.toString(resEntity);
         Log.d("RESPONSE", response);
-        return response;
+        return response;*/
+        return xml;
     }
 
     //Editado por S G
@@ -2190,10 +2191,11 @@ public class SoapRequestTDC {
         }
 
         xml += "</Request3G>" +
-                "</RequestAnswer3G>" +
+                "</RequestAnswer3hh>" +
                 "</urn:answer3G>" +
                 "</soapenv:Body>" +
                 "</soapenv:Envelope>";
+
 
       /*  StringEntity se = new StringEntity(xml, HTTP.UTF_8);
         se.setContentType("text/xml");

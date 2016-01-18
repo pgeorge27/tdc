@@ -39,6 +39,7 @@ import java.util.List;
 
 import cl.tdc.felipe.tdc.adapters.Actividad;
 import cl.tdc.felipe.tdc.adapters.ComponenteCantidad;
+import cl.tdc.felipe.tdc.adapters.Maintenance;
 import cl.tdc.felipe.tdc.extras.Funciones;
 import cl.tdc.felipe.tdc.objects.FormImage;
 import cl.tdc.felipe.tdc.objects.FormSubSystem;
@@ -227,7 +228,7 @@ public class SoapRequest {
         Log.w("POSITIONTRACKER", bodyOut);
         StringEntity se = new StringEntity(xml, HTTP.UTF_8);
         se.setContentType("text/xml");
-        httpPost.addHeader(SOAP_ACTION, dummy.URL_TRACKING);
+        httpPost.addHeader(SOAP_ACTION, dummy.URL_TDC);
 
         httpPost.setEntity(se);
         HttpResponse httpResponse = httpClient.execute(httpPost);
@@ -935,14 +936,14 @@ public class SoapRequest {
 
 
     public static String getLocation(String LATITUDE, String LONGITUDE, String IMEI) throws Exception {
-        final String SOAP_ACTION = "urn:Configurationwsdl#request";
+        final String SOAP_ACTION = "urn:Configurationwsdl#nearbySite";
         String response = null;
         String xml = null;
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date fecha = new Date();
 
         HttpClient httpClient = new DefaultHttpClient();
-        HttpPost httpPost = new HttpPost(dummy.URL_SITES);
+        HttpPost httpPost = new HttpPost(dummy.URL_TDC);
 
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
         envelope.encodingStyle = SoapSerializationEnvelope.ENC;
@@ -953,7 +954,7 @@ public class SoapRequest {
                 "<soapenv:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:urn=\"urn:Configurationwsdl\">" +
                         "<soapenv:Header/>" +
                         "<soapenv:Body>" +
-                        "<urn:request soapenv:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" +
+                        "<urn:nearbySite soapenv:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" +
                         "<Mobile xsi:type=\"urn:Mobile\">" +
                         "<Request xsi:type=\"urn:Request\">" +
                         "<Parameters xsi:type=\"urn:Parameters\">" +
@@ -971,17 +972,16 @@ public class SoapRequest {
                         "</Parameter>" +
                         "</Parameters>" +
                         "<Header xsi:type=\"urn:Header\">" +
-                        "<Date xsi:type=\"xsd:string\">" +
-                        formatter.format(fecha) +
-                        "</Date>" +
-                        "<Platafform xsi:type=\"xsd:string\">MOBILE</Platafform>" +
-                        "<User xsi:type=\"xsd:string\">" + IMEI + "</User>" +
+                        "<Date xsi:type=\"xsd:string\">"+ fecha +"</Date>" +
+                        "<Platafform xsi:type=\"xsd:string\"></Platafform>" +
+                        "<Imei xsi:type=\"xsd:string\">" + IMEI +"</Imei>" +
+                        "<Maintenance xsi:type=\"xsd:string\"></Maintenance>" +
                         "</Header>" +
-                        "<OperationType xsi:type=\"xsd:string\">LOCATION</OperationType>" +
-                        "<Element xsi:type=\"xsd:string\">MAP</Element>" +
+                       /* "<OperationType xsi:type=\"xsd:string\">LOCATION</OperationType>" +
+                        "<Element xsi:type=\"xsd:string\">MAP</Element>" +*/
                         "</Request>" +
                         "</Mobile>" +
-                        "</urn:request>" +
+                        "</urn:nearbySite>" +
                         "</soapenv:Body>" +
                         "</soapenv:Envelope>";
 
@@ -989,7 +989,7 @@ public class SoapRequest {
         xml = bodyOut;
         StringEntity se = new StringEntity(xml, HTTP.UTF_8);
         se.setContentType("text/xml");
-        httpPost.addHeader(SOAP_ACTION, dummy.URL_SITES);
+        httpPost.addHeader(SOAP_ACTION, dummy.URL_TDC);
 
         httpPost.setEntity(se);
         HttpResponse httpResponse = httpClient.execute(httpPost);

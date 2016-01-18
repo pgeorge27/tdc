@@ -72,6 +72,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
     boolean cerrarMant=true;
     LocalText local = new LocalText();
     ArrayList<SYSTEM> SYSTEMS;
+    ProgressDialog p;
 
     TextView PAGETITLE;
     public static Activity actividad;
@@ -193,7 +194,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
     //Iteramos sobre idsActivities2 y obtenemos las actividades, deacuerdo a las actividades y el idMain hacemos visible los botones de mantenimiento
     private void mostrarBotonesAzules(int num) {
         for (String temp : AgendaActivity.idsActivities2) {
-//            System.out.println(temp + " idM " + idMain);
+            System.out.println(temp + " idM " + idMain);
             if (temp.equalsIgnoreCase("Preventivo,1," + idMain)) {
                 IDEN.setVisibility(View.VISIBLE);
             }
@@ -205,7 +206,9 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                 FAENA.setVisibility(View.VISIBLE);
             }
 
-            if (temp.equalsIgnoreCase("Emergencia,1," + idMain )) {
+            if( (temp.equalsIgnoreCase("Emergencia,1," + idMain )) || (temp.equalsIgnoreCase("Emergencia,2," + idMain )) ||
+                    (temp.equalsIgnoreCase("Emergencia,3," + idMain ))||(temp.equalsIgnoreCase("Emergencia,4," + idMain ))||
+                    (temp.equalsIgnoreCase("Emergencia,5," + idMain ))||(temp.equalsIgnoreCase("Emergencia,6," + idMain ))) {
                 EMERG.setVisibility(View.VISIBLE);
             }
             //Determinamos si mostramos el boton de RAN o no
@@ -213,6 +216,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             if (temp.equalsIgnoreCase("Preventivo,4," + idMain) || temp.equalsIgnoreCase("Preventivo,5," + idMain)
                     || temp.equalsIgnoreCase("Preventivo,6," + idMain) || temp.equalsIgnoreCase("Preventivo,7," + idMain)
                     || temp.equalsIgnoreCase("Preventivo,8," + idMain) || temp.equalsIgnoreCase("Preventivo,9," + idMain))
+
                 muestraRan();
 
             //Al pulsar sobre RAN
@@ -253,17 +257,13 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                     }
                 }
 
-
                 if (temp.equalsIgnoreCase("Preventivo,9," + idMain)) {
-
                     if (AC.getVisibility() == View.GONE) {
                         AC.setVisibility(View.VISIBLE);
                     } else {
                         AC.setVisibility(View.GONE);
                     }
                 }
-
-
             }
         }
     }
@@ -562,11 +562,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     EnviarMantOff env = new EnviarMantOff();
-                    env.execute();
-                    if(cerrarMant){
-                        Cierre t = new Cierre();
-                        t.execute();
-                    }
+                   env.execute();
                 }
             });
             b.setNegativeButton("NO", new DialogInterface.OnClickListener() {
@@ -592,39 +588,36 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
     }
 
     private class Cierre extends AsyncTask<String, String, String> {
-        ProgressDialog p;
+        //ProgressDialog p;
         boolean ok = false;
 
         private Cierre() {
-            p = new ProgressDialog(actividad);
+            /*p = new ProgressDialog(actividad);
             p.setMessage("Cerrando Mantenimiento...");
             p.setCanceledOnTouchOutside(false);
-            p.setCancelable(false);
+            p.setCancelable(false);*/
         }
 
         @Override
         protected void onPreExecute() {
-            p.show();
+            //p.show();
         }
 
         @Override
         protected String doInBackground(String... strings) {
             try {
                 String response = SoapRequestTDC.cerrarMantenimiento(IMEI, idMain);
-
                 ArrayList<String> parse = XMLParser.getReturnCode2(response);
                 if(parse.get(0).equals("0")){
                     ok = true;
                     return parse.get(1);
-
                 }else{
                     return "Error Code: "+parse.get(0)+"\n"+parse.get(1);
                 }
-
             } catch (ParserConfigurationException | SAXException | XPathExpressionException e) {
                 return "Problema al recibir la respuesta";
             } catch (IOException e) {
-                return "Problema al recibir la respuesta";
+                return "Debe conectarse a una red wifi";
             } catch (Exception e) {
                 return "Se agotó el tiempo de conexión";
             }
@@ -653,12 +646,9 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                         EMERGREG.clearPreferences();
                         if(AgendaActivity.actividad != null)
                             AgendaActivity.actividad.finish();
-
                         actividad.finish();
                     }
                 });
-
-
             }else{
                 b.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
@@ -673,19 +663,19 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
     }
 
     private class EnviarMantOff extends AsyncTask<String, String, String> {                                //probando para enviar localmente al servidor
-
         boolean ok = false;
         String xml;
         String preg;
 
         private EnviarMantOff() {
-
+            p = new ProgressDialog(actividad);
+            p.setMessage("Cerrando Mantenimiento...");
+            p.setCanceledOnTouchOutside(false);
+            p.setCancelable(false);
         }
 
         @Override
-        protected void onPreExecute() {
-
-        }
+        protected void onPreExecute() { p.show(); }
 
         @Override
         protected String doInBackground(String... strings) {
@@ -702,30 +692,22 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                             String[] nombre = nombreArch.split("\\.");                              //separamos antes y despues del punto
                             String accion = nombre[0];                                              //nombre del archivo antes del punto = a la accion
                             System.out.println("La Accion seria: " + accion);
-
                             String[] nomArch = local.itemAnsw.get(j).split("\\.");                  //separamos el nombre del archivo antes y despues del punto
                             String nomArchSinTxt = nomArch[0];                                      //Extraemos el nombre sin la extension .txt
-
                             xml = local.leerFicheroMemoriaExterna(nomArchSinTxt);                   //leemos el archivo del tlf
                             System.out.println("antes: " + xml);
-
                             String subS = accion.substring(6);
                             String check = idMain + ",check" + subS;
-
                             preg = local.leerFicheroMemoriaExterna(check);                          //leemos el archivo del tlf
-
                             try {                                                                   //Enviamos la petioncion al servidor SOAP (ESTO SE REALIZABA POR CADA CHECK ANTERIORMENTE AL PULSAR SOBRE ENVIAR)
                                 String response = SoapRequestTDC.sendAll(xml, accion);
                                 //ArrayList<String> parse = XMLParser.getReturnCode2(response);
                                 cerrarMant = true;
                                 resp = "Datos exitosamente ingresados!";
                                 subir_fotos(resp,subS);                                             //subS es el nombre del checklist Iden 3g etc
-
                             } catch (IOException e) {
                                 return "Se agotó el tiempo de conexión.";
-                            } /*catch (ParserConfigurationException | SAXException | XPathExpressionException e) {
-                                return "Error al leer XML";
-                            }*/ catch (Exception e) {
+                            }  catch (Exception e) {
                                 return "Error al enviar la respuesta.";
                             }
                         } else {
@@ -744,195 +726,10 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
 
         @Override
         protected void onPostExecute(String s) {
-
-        }
-    }
-    private QUESTION copiar_question(QUESTION Q) {
-        QUESTION qAux = new QUESTION();
-        qAux.setIdQuestion(Q.getIdQuestion());
-        qAux.setPhoto(Q.getPhoto());
-        qAux.setNumberPhoto(Q.getNumberPhoto());
-        qAux.setNameType(Q.getNameType());
-        qAux.setNameQuestion(Q.getNameQuestion());
-        qAux.setIdType(Q.getIdType());
-        qAux.setValues(Q.getValues());
-        return qAux;
-    }
-
-    private void cargar_fotos(QUESTION Q, String tag) {
-        int as = 0;
-        ArrayList<PHOTO> fotos = new ArrayList<>();
-        String name;
-        while (!(name = REG.getString("PHOTONAME" + tag + as)).equals("")) {
-            File tmp = new File(name);
-            if (tmp.exists()) {
-                PHOTO f = new PHOTO();
-                f.setNamePhoto(REG.getString("PHOTONAME" + tag + as));
-                f.setTitlePhoto(REG.getString("PHOTOTITLE" + tag + as));
-                f.setDateTime(REG.getString("PHOTODATE" + tag + as));
-                f.setCoordX(REG.getString("PHOTOCOORDX" + tag + as));
-                f.setCoordY(REG.getString("PHOTOCOORDY" + tag + as));
-
-                fotos.add(f);
+            if(cerrarMant){
+                Cierre t = new Cierre();
+                t.execute();
             }
-            as++;
-        }
-
-        if (fotos.size() > 0) Q.setFotos(fotos);
-    }
-
-    public void init2(String xml) {
-        try {
-            SYSTEMS = XMLParserTDC.parseFormulario(xml);
-            for (final SYSTEM S : SYSTEMS) {
-                for (final AREA A : S.getAreas()) {
-                    if (A.getItems() == null) {continue;}
-                    for (final ITEM I : A.getItems()) {
-                        if (I.getQuestions() != null) {
-                            for (final QUESTION Q : I.getQuestions()) {
-                                String tag = S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem() + "-" + Q.getIdQuestion() + "-" + Q.getNameQuestion();
-                                if (Q.getPhoto().equals("OK")) {
-                                    cargar_fotos(Q, tag);
-                                }
-                                if (Q.getIdType().equals(Constantes.RADIO)) {
-                                    if (Q.getQuestions() != null && TITLE.equalsIgnoreCase("ac")) {
-                                        ArrayList<QUESTION> listaAuxSet = new ArrayList<>();
-                                        if (Q.getIdType().equals(Constantes.RADIO)) {
-                                            ArrayList<VALUE> listadoV = new ArrayList<>();
-                                            for (int x = 0; x < Q.getValues().size(); x++) {
-                                                VALUE value = Q.getValues().get(x);
-                                                ArrayList<QUESTION> listadoQ = new ArrayList<>();
-                                                for (final QUESTION Q2 : Q.getQuestions()) {
-                                                    QUESTION qAux = copiar_question(Q2);
-                                                    tag = S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem() + "-" + Q.getIdQuestion() + "-" + Q.getNameQuestion() + "-" + value.getIdValue() + value.getNameValue() + "-" + Q2.getIdQuestion() + Q2.getNameQuestion();
-                                                    if (qAux.getPhoto().equals("OK")) {
-                                                        cargar_fotos(qAux, tag);
-                                                    }
-                                                    listadoQ.add(qAux);
-                                                    value.setQuestions(listadoQ);
-                                                }
-                                                listadoV.add(value);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        if (I.getSetArrayList() != null) {
-                            if (I.getIdType().equals(Constantes.TABLE)) {
-                                //Preparamos la tabla o lo que sea
-                                for (int x = 0; x < I.getValues().size(); x++) {
-                                    VALUE value = I.getValues().get(x);
-                                    ArrayList<SET> listaAuxSet = new ArrayList<>();
-                                    for (SET set : I.getSetArrayList()) {
-                                        SET setAux = new SET();
-                                        setAux.setIdSet(set.getIdSet());
-                                        setAux.setNameSet(set.getNameSet());
-                                        setAux.setValueSet(set.getValueSet());
-                                        if (set.getQuestions() != null) {
-                                            ArrayList<QUESTION> listadoQ = new ArrayList<>();
-                                            for (final QUESTION Q : set.getQuestions()) {
-                                                final QUESTION qAux = copiar_question(Q);
-
-                                                String tag = S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem() + "-" + value.getIdValue() + value.getNameValue() + "-" + setAux.getIdSet() + setAux.getNameSet() + "-" + Q.getIdQuestion() + "-" + Q.getNameQuestion();
-
-                                                if (qAux.getPhoto().equals("OK")) {
-                                                    cargar_fotos(qAux, tag);
-                                                }
-                                                listadoQ.add(qAux);
-                                            }
-                                            setAux.setQuestions(listadoQ);
-                                        }
-                                        listaAuxSet.add(setAux);
-                                    }
-                                    I.addListSet(listaAuxSet);
-                                }
-                            }
-
-                            if (I.getIdType().equals(Constantes.RADIO)) {
-                                for (int x = 0; x < I.getValues().size(); x++) {
-                                    VALUE value = I.getValues().get(x);
-                                    ArrayList<SET> listaAuxSet = new ArrayList<>();
-                                    for (SET set : I.getSetArrayList()) {
-                                        SET setAux = new SET();
-                                        setAux.setIdSet(set.getIdSet());
-                                        setAux.setNameSet(set.getNameSet());
-                                        setAux.setValueSet(set.getValueSet());
-                                        if (set.getQuestions() != null) {
-                                            ArrayList<QUESTION> listadoQ = new ArrayList<>();
-                                            for (final QUESTION Q : set.getQuestions()) {
-                                                QUESTION qAux = copiar_question(Q);
-                                                String tag = S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem() + "-" + value.getIdValue() + value.getNameValue() + "-" + setAux.getIdSet() + setAux.getNameSet() + "-" + Q.getIdQuestion() + "-" + Q.getNameQuestion();
-                                                if (qAux.getPhoto().equals("OK")) {
-                                                    cargar_fotos(qAux, tag);
-                                                }
-                                                listadoQ.add(qAux);
-                                            }
-                                            setAux.setQuestions(listadoQ);
-                                        }
-                                        listaAuxSet.add(setAux);
-                                    }
-                                    I.addListSet(listaAuxSet);
-                                }
-                            }
-
-                            if (I.getIdType().equals(Constantes.ADD)) {
-                                for (int x = 0; x < 3; x++) {
-                                    ArrayList<SET> listaAuxSet = new ArrayList<>();
-                                    for (SET set : I.getSetArrayList()) {
-                                        SET setAux = new SET();
-                                        setAux.setIdSet(set.getIdSet());
-                                        setAux.setNameSet(set.getNameSet());
-                                        setAux.setQuestions(set.getQuestions());
-                                        if (setAux.getQuestions() != null) {
-                                            ArrayList<QUESTION> listadoQ = new ArrayList<>();
-
-                                            for (final QUESTION Q : setAux.getQuestions()) {
-                                                QUESTION qAux = copiar_question(Q);
-                                                String tag = S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem() + "-" + "AIR" + x + "-" + setAux.getIdSet() + setAux.getNameSet() + "-" + qAux.getIdQuestion() + "-" + qAux.getNameQuestion();
-                                                if (qAux.getPhoto().equals("OK")) {
-                                                    cargar_fotos(qAux, tag);
-                                                }
-                                                listadoQ.add(qAux);
-                                            }
-                                            setAux.setQuestions(listadoQ);
-                                        }
-                                        listaAuxSet.add(setAux);
-                                    }
-                                    I.addListSet(listaAuxSet);
-                                }
-                            }
-                        } else {
-                            if (I.getIdType().equals(Constantes.CHECK_PHOTO)) {
-                                for (CheckBox c : I.getCheckBoxes()) {
-                                    boolean check = REG.getBoolean("CHECK-PHOTO" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem() + I.getCheckBoxes().indexOf(c));
-                                    c.setChecked(check);
-                                }
-                            }
-                            if (I.getIdType().equals(Constantes.PHOTO)) {
-                                String name = REG.getString("PHOTONAME" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem());
-                                File tmp = new File(name);
-                                if (tmp.exists()) {
-                                    PHOTO f = new PHOTO();
-                                    f.setNamePhoto(REG.getString("PHOTONAME" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem()));
-                                    f.setTitlePhoto(REG.getString("PHOTOTITLE" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem()));
-                                    f.setDateTime(REG.getString("PHOTODATE" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem()));
-                                    f.setCoordX(REG.getString("PHOTOCOORDX" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem()));
-                                    f.setCoordY(REG.getString("PHOTOCOORDY" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem()));
-                                    I.setPhoto(f);
-                                    I.getButtons().get(1).setEnabled(true);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        } catch (ParserConfigurationException | SAXException | XPathExpressionException |
-                IOException e
-                )
-        {
-            e.printStackTrace();
         }
     }
 
@@ -1053,6 +850,8 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                     }
                 }
             }
+            //aqui
+            ActividadCierreFormActivity.SYSTEMSMAP.remove(idMain+","+form.toUpperCase());
         }
         if (p.size() > 0) {
             UploadImage up = new UploadImage(p, mensaje);

@@ -62,7 +62,7 @@ public class dummy {
     public static final String URL_MW_IMG = "http://" + IP + "/telrad/uploadMw.php";
 
 
-    public static final String ERROR_CONNECTION = "No se pudo conectar con el servidor, compruebe su conexión a internet y reinente";
+    public static final String ERROR_CONNECTION = "No se pudo conectar con el servidor, se trabajará en modo OFFLINE";
     public static final String ERROR_PARSE = "Error al leer el XML, por favor reinente";
     public static final String ERROR_GENERAL = "Ha ocurrido un error, por favor reintente";
 

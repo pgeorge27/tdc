@@ -152,7 +152,7 @@ public class XMLParser {
 
 
     public static ArrayList<String> getLocations(String xml) throws ParserConfigurationException,
-            SAXException, IOException {
+        SAXException, IOException {
         DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         InputSource is = new InputSource();
         is.setCharacterStream(new StringReader(xml));

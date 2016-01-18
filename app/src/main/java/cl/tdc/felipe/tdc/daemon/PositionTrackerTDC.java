@@ -95,6 +95,7 @@ public class PositionTrackerTDC extends Service {
                                         MaintenanceReg m = new MaintenanceReg(getApplicationContext());
                                         String[] datas = m.getMaintenance().split(";");
                                         TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+                                        String prueba = telephonyManager.getDeviceId();
                                         String query = SoapRequest.sendPosition(longitude, latitude, "", telephonyManager.getDeviceId(), datas[0], datas[1]);
                                         Log.i(TAG, "ENVIADO\n" + query);
                                         ArrayList<String> result = XMLParser.getNotification(query);

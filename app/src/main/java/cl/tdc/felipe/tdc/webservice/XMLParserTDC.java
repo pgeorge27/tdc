@@ -199,7 +199,7 @@ public class XMLParserTDC {
                                                             }
                                                             V.setValues(valueArrayListR);                                                    //Agregamos los values a la question
                                                         }
-                                                        
+
                                                         repeatqArrayList.add(V);                                                      //Agregamos V a la lista de values
                                                     }
 
@@ -282,7 +282,6 @@ public class XMLParserTDC {
                                     }
                                     I.setValues(valueArrayList);                                                            //Agregamos la lista de values al item
                                 }
-
 
                                 itemArrayList.add(I);                                                                       //Agregamos I a la lista de items
                             }

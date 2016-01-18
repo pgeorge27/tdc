@@ -14,6 +14,7 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
     <permission android:name="cl.tdc.felipe.tdc.permission.MAP_RECEIVE" android:protectionLevel="signature"/>
     <uses-permission android:name="cl.tdc.felipe.tdc.permission.MAP_RECEIVE"/>
@@ -34,7 +35,8 @@
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyBSKewV3SxDRk9QQh06x4R9NLpFFr1SU4w"/>
+            android:value="AIzaSyDXrfEiaSBhvRJcJB_DtIdi4mDXvAH4X4g"/>
+
 
         <meta-data
             android:name="com.google.android.gms.version"

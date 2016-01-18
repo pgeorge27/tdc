@@ -401,6 +401,8 @@ public class AgendaActivity extends Activity {
                             } else {
                                 return "FINALIZADA " + position;
                             }*/
+                            Log.e("getPageTitleN",Integer.toString(position));
+                            Log.e("getPageTitle+1",Integer.toString(position+1));
                             return "Mantenimiento "+(position+1);
                         }
 
@@ -411,12 +413,17 @@ public class AgendaActivity extends Activity {
 
                         @Override
                         public void destroyItem(ViewGroup container, int position, Object object) {
-                            super.destroyItem(container, position, object);
+                            //super.destroyItem(container, position, object);
+                            ((ViewPager) container).removeView((View) object);
+
                         }
+
 
                         @Override
                         public Object instantiateItem(ViewGroup container, int position) {
                             final cl.tdc.felipe.tdc.objects.Maintenance.Maintenance m = s.getMaintenanceList().get(position);
+                            Log.e("position",Integer.toString(position));
+                            Log.e("m",s.getMaintenanceList().get(position).toString());
                             final Boolean terminated;
                             MaintenanceReg registro = new MaintenanceReg(getApplicationContext());
                             registro.newMaintenance(m.getIdMaintenance(), s.getFlag());
@@ -640,7 +647,9 @@ public class AgendaActivity extends Activity {
         if (type.equals("Faena de combustible,3")) return SoapRequestTDC.ACTION_FAENA;
         if (type.equals("Preventivo,7")) return SoapRequestTDC.ACTION_TRANSPORTE;
         if (type.equals("Preventivo,8")) return SoapRequestTDC.ACTION_GE;
-        if (type.equals("Emergencia,1")) return SoapRequestTDC.ACTION_EMERG;
+        //if (type.equals("Emergencia,1")) return SoapRequestTDC.ACTION_EMERG;
+        //if (type.equals("Emergencia,3")) return SoapRequestTDC.ACTION_EMERG;
+        if (type.startsWith("Emergencia")) return SoapRequestTDC.ACTION_EMERG;
         else return "";
     }
 
