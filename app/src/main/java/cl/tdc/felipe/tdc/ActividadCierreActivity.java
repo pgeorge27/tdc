@@ -202,9 +202,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                 TRESG.setVisibility(View.VISIBLE);
             }
 
-            if (temp.equalsIgnoreCase("Faena de combustible,3," + idMain)) {
-                FAENA.setVisibility(View.VISIBLE);
-            }
+            if (num == 1) {
 
             if( (temp.equalsIgnoreCase("Emergencia,1," + idMain )) || (temp.equalsIgnoreCase("Emergencia,2," + idMain )) ||
                     (temp.equalsIgnoreCase("Emergencia,3," + idMain ))||(temp.equalsIgnoreCase("Emergencia,4," + idMain ))||
@@ -216,11 +214,35 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             if (temp.equalsIgnoreCase("Preventivo,4," + idMain) || temp.equalsIgnoreCase("Preventivo,5," + idMain)
                     || temp.equalsIgnoreCase("Preventivo,6," + idMain) || temp.equalsIgnoreCase("Preventivo,7," + idMain)
                     || temp.equalsIgnoreCase("Preventivo,8," + idMain) || temp.equalsIgnoreCase("Preventivo,9," + idMain))
-
                 muestraRan();
 
+                if (temp.equalsIgnoreCase("Preventivo,1," + idMain)) {
+                    IDEN.setVisibility(View.VISIBLE);
+                }
+
+                if (temp.equalsIgnoreCase("Preventivo,2," + idMain)) {
+                    TRESG.setVisibility(View.VISIBLE);
+                }
+
+                if (temp.equalsIgnoreCase("Faena de combustible,3," + idMain)) {
+                    FAENA.setVisibility(View.VISIBLE);
+                }
+
+                if ((temp.equalsIgnoreCase("Emergencia,1," + idMain)) || (temp.equalsIgnoreCase("Emergencia,2," + idMain)) ||
+                        (temp.equalsIgnoreCase("Emergencia,3," + idMain)) || (temp.equalsIgnoreCase("Emergencia,4," + idMain)) ||
+                        (temp.equalsIgnoreCase("Emergencia,5," + idMain)) || (temp.equalsIgnoreCase("Emergencia,6," + idMain))) {
+                    EMERG.setVisibility(View.VISIBLE);
+                }
+                //Determinamos si mostramos el boton de RAN o no
+
+                if (temp.equalsIgnoreCase("Preventivo,4," + idMain) || temp.equalsIgnoreCase("Preventivo,5," + idMain)
+                        || temp.equalsIgnoreCase("Preventivo,6," + idMain) || temp.equalsIgnoreCase("Preventivo,7," + idMain)
+                        || temp.equalsIgnoreCase("Preventivo,8," + idMain) || temp.equalsIgnoreCase("Preventivo,9," + idMain))
+                    muestraRan();
+            }
+
             //Al pulsar sobre RAN
-            if (num == 2) {
+            else {
                 if (temp.equalsIgnoreCase("Preventivo,4," + idMain)) {
                     if (DC.getVisibility() == View.GONE) {
                         DC.setVisibility(View.VISIBLE);
@@ -228,36 +250,35 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                         DC.setVisibility(View.GONE);
                     }
                 }
-                if (temp.equalsIgnoreCase("Preventivo,5," + idMain)) {
+                else if (temp.equalsIgnoreCase("Preventivo,5," + idMain)) {
                     if (SG.getVisibility() == View.GONE) {
                         SG.setVisibility(View.VISIBLE);
                     } else {
                         SG.setVisibility(View.GONE);
                     }
                 }
-                if (temp.equalsIgnoreCase("Preventivo,6," + idMain)) {
+                else if (temp.equalsIgnoreCase("Preventivo,6," + idMain)) {
                     if (AIR.getVisibility() == View.GONE) {
                         AIR.setVisibility(View.VISIBLE);
                     } else {
                         AIR.setVisibility(View.GONE);
                     }
                 }
-                if (temp.equalsIgnoreCase("Preventivo,7," + idMain)) {
+                else if (temp.equalsIgnoreCase("Preventivo,7," + idMain)) {
                     if (TRANSPORTE.getVisibility() == View.GONE) {
                         TRANSPORTE.setVisibility(View.VISIBLE);
                     } else {
                         TRANSPORTE.setVisibility(View.GONE);
                     }
                 }
-                if (temp.equalsIgnoreCase("Preventivo,8," + idMain)) {
+                else if (temp.equalsIgnoreCase("Preventivo,8," + idMain)) {
                     if (GE.getVisibility() == View.GONE) {
                         GE.setVisibility(View.VISIBLE);
                     } else {
                         GE.setVisibility(View.GONE);
                     }
                 }
-
-                if (temp.equalsIgnoreCase("Preventivo,9," + idMain)) {
+                else if (temp.equalsIgnoreCase("Preventivo,9," + idMain)) {
                     if (AC.getVisibility() == View.GONE) {
                         AC.setVisibility(View.VISIBLE);
                     } else {
@@ -561,8 +582,8 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             b.setPositiveButton("SI", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    EnviarMantOff env = new EnviarMantOff();
-                   env.execute();
+                EnviarMantOff env = new EnviarMantOff();
+                env.execute();
                 }
             });
             b.setNegativeButton("NO", new DialogInterface.OnClickListener() {
@@ -734,24 +755,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
     }
 
     public void subir_fotos(String mensaje, String form) {
-        //AlertDialog.Builder b = new AlertDialog.Builder(actividad);
-        //b.setMessage(mensaje);
-        //b.setCancelable(false);
         ArrayList<PHOTO> p = new ArrayList<>();
-        /*try {
-            //String valor = REG.getString(idMain+",IDEN");
-            //SYSTEMS = XMLParserTDC.parseFormulario(xml);
-            //SYSTEMS = XMLParserTDC.parseFormulario(xml);
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (SAXException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (XPathExpressionException e) {
-            e.printStackTrace();
-        }*/
-
         for (SYSTEM S : ActividadCierreFormActivity.SYSTEMSMAP.get(idMain+","+form.toUpperCase())) {
             for (AREA A : S.getAreas()) {
                 for (ITEM I : A.getItems()) {
@@ -771,7 +775,6 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                                     p.add(P);
                                 }
                             }
-
                             if (Q.getQuestions() != null){
                                 for (QUESTION QQ : Q.getQuestions()){
                                     if (QQ.getFoto() != null) {
@@ -784,7 +787,6 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                                     }
                                 }
                             }
-
                             if (Q.getValues() != null){
                                 for (VALUE V : Q.getValues()) {
                                     if (V.getQuestions() != null) {
@@ -850,7 +852,6 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                     }
                 }
             }
-            //aqui
             ActividadCierreFormActivity.SYSTEMSMAP.remove(idMain+","+form.toUpperCase());
         }
         if (p.size() > 0) {

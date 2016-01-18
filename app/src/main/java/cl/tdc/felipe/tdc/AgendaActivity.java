@@ -50,7 +50,9 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.text.Normalizer;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
@@ -92,6 +94,8 @@ public class AgendaActivity extends Activity {
 
     public static ArrayList<String> idsActivities = new ArrayList<>();
     public static ArrayList<String> idsActivities2 = new ArrayList<>();
+    public static Set<String> hs = new HashSet<>();
+
     private String name;
     private String query;
     private String queryT;
@@ -456,7 +460,6 @@ public class AgendaActivity extends Activity {
                             bComplete.setEnabled(false);
                             bComplete.bringToFront();
 
-
                             //final ImageButton bMap = (ImageButton) rootView.findViewById(R.id.bMap);
                             //bMap.setVisibility(View.GONE);
 
@@ -476,9 +479,6 @@ public class AgendaActivity extends Activity {
                                     m.getLongitude() + "" +
                                     "&sensor=false";
                             ImageLoader.getInstance().displayImage(url, iMap);
-
-
-
 
                             if(m.getSystemList() != null) {
                                 int max = Funciones.getNumActivities(m.getSystemList());
@@ -551,7 +551,6 @@ public class AgendaActivity extends Activity {
                                         });
 
                                         if (!terminated && pref.isCompleteActivity(a)) {
-
                                             checkBox.setChecked(true);
                                             if (pProgress.getProgress() == pProgress.getMax()) {
                                                 bComplete.setEnabled(true);
@@ -559,9 +558,13 @@ public class AgendaActivity extends Activity {
                                                 bComplete.setEnabled(false);
                                             }
                                         }
-
                                         sytemLayout.addView(vista);
                                     }
+
+                                    hs.addAll(idsActivities2);                          //Agregamos idsAct2 a hs (No agrega duplicados)
+                                    idsActivities2.clear();                             //Limpiamos el idsActivities2
+                                    idsActivities2.addAll(hs);                          //Agregamos hs a idsAct2
+
                                     lActivities.addView(sytemLayout);
 
                                 }

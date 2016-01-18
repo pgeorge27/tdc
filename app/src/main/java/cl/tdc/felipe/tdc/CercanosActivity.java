@@ -352,16 +352,9 @@ public class CercanosActivity extends FragmentActivity implements GoogleMap.OnMa
                     LatLng position = new LatLng(latitude, longitude);
                     Log.i("MAP AQUIIIIIIII", "posicion:" + position.toString());
 
-
-                    final LatLng PERTH = new LatLng(-31.90, 115.86);
                     mapa.addMarker(new MarkerOptions()
-                                    .position(PERTH)
-                                    .draggable(true)
-
-                    /*mapa.addMarker(new MarkerOptions()
                                     .position(position)
-                                    .snippet(s.get(i))*/
-                    );
+                                    .snippet(s.get(i)));
                     count++;
                 }
                 if (count == 0) {

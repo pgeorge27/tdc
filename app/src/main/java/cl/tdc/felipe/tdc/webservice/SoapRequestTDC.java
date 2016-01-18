@@ -2075,7 +2075,6 @@ public class SoapRequestTDC {
                                     }
                                 }
 
-
                                 questionResponse += "<AnswerQuestion xsi:type=\"urn:AnswerQuestion\">" +
                                         "<IdQuestion xsi:type=\"xsd:string\">" + Q.getIdQuestion() + "</IdQuestion>" +
                                         "<IdType xsi:type=\"xsd:string\">" + Q.getIdType() + "</IdType>" +

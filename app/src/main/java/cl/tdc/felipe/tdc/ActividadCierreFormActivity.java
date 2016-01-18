@@ -93,7 +93,8 @@ import android.os.PowerManager;
 
         private static int TAKE_PICTURE = 1;
         private static int TAKE_PICTURES = 2;
-        private static int SELECT_PICTURE = 3;
+        private static int SELECT_FILE = 3;
+
         boolean formSended = false;
 
         private PositionTrackerTDC trackerTDC;
@@ -304,7 +305,6 @@ import android.os.PowerManager;
                 public void onClick(View view) {
                     questionTMP = Q;
 
-
                     AlertDialog.Builder b = new AlertDialog.Builder(actividad);
                     final ArrayList<PHOTO> fotos = Q.getFotos();
                     int n_fotos = 0;
@@ -312,19 +312,22 @@ import android.os.PowerManager;
                         n_fotos = fotos.size();
                     }
                     b.setTitle("Actualmente tiene " + n_fotos + " fotos");
-                    b.setItems(new CharSequence[]{"Tomar Fotografía", "Ver Fotografías", "Buscar en Galería"}, new DialogInterface.OnClickListener() {
+                    b.setItems(new CharSequence[]{"Tomar Fotografía", "Buscar en Galería", "Ver Fotografías"}, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             if (i == 0) {
                                 photoTMP = new PHOTO();
                                 tomarFotos();
-                            } else if (fotos != null && fotos.size() > 0 && i == 1) {
-                                verFotos();
-                            } else if (i == 2) {
-                                Log.d("Seleccion", "Valor de i: " + i);
-                                galleryfotos();
-                            } else
-                                Toast.makeText(mContext, "No tiene fotografías", Toast.LENGTH_SHORT).show();
+                            } else if (i == 1) {
+                                Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                                intent.setType("image/*");
+                                startActivityForResult(Intent.createChooser(intent, "Seleccione"), SELECT_FILE);
+                            } else {
+                                if (fotos != null && fotos.size() > 0)
+                                    verFotos();
+                                else
+                                    Toast.makeText(mContext, "No tiene fotografías", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     });
                     b.setPositiveButton("Cerrar", new DialogInterface.OnClickListener() {
@@ -1217,7 +1220,6 @@ import android.os.PowerManager;
                                                         if (qAux.getIdType().equals(Constantes.TEXT)) {
                                                             String text = REG.getString("TEXT" + tag);
                                                             ((TextView) qAux.getView()).setText(text);
-
                                                         }
                                                         if (qAux.getIdType().equals(Constantes.CHECK)) {
                                                             ArrayList<CheckBox> ch = qAux.getCheckBoxes();
@@ -1225,7 +1227,6 @@ import android.os.PowerManager;
                                                                 Boolean check = REG.getBoolean("CHECK" + tag + j);
                                                                 ch.get(j).setChecked(check);
                                                             }
-
                                                         }
                                                         if (qAux.getIdType().equals(Constantes.DIV)) {
                                                             String textL = REG.getString("DIVL" + tag);
@@ -1236,33 +1237,25 @@ import android.os.PowerManager;
 
                                                             left.setText(textL);
                                                             right.setText(textR);
-
-
                                                         }
                                                         if (qAux.getIdType().equals(Constantes.DATE)) {
                                                             EditText t = qAux.getEditTexts().get(0);
                                                             String text = REG.getString("DATE" + tag);
                                                             t.setText(text);
                                                         }
-
                                                         setLayout.addView(questTitle);
                                                         if (!qAux.getIdType().equals(Constantes.PHOTO))
                                                             setLayout.addView(question);
                                                     }
                                                     listadoQ.add(qAux);
-
-
                                                 }
                                                 setAux.setQuestions(listadoQ);
                                                 contentSetLayout.addView(setAux.getTitle(mContext));
                                                 contentSetLayout.addView(setLayout);
                                             }
-
-
                                             listaAuxSet.add(setAux);
                                         }
                                         I.addListSet(listaAuxSet);
-
 
                                         boton.setOnClickListener(new View.OnClickListener() {
                                             @Override
@@ -1286,13 +1279,9 @@ import android.os.PowerManager;
 
                                         repeatLayout.addView(boton);
                                         repeatLayout.addView(contentSetLayout);
-
                                     }
-
                                     itemLayout.addView(repeatLayout);
                                 }
-
-
                             } else {
                                 if (I.getIdType().equals(Constantes.RADIO)) {
                                     int pos = REG.getInt("RADIO" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem());
@@ -2057,16 +2046,6 @@ import android.os.PowerManager;
             startActivityForResult(intent, code);
         }
 
-        private void galleryfotos(){
-
-            Intent intent = new Intent( Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            intent.setType("image/*");
-            startActivityForResult(Intent.createChooser(intent, "Select File"), SELECT_PICTURE);
-
-        }
-
-
-
         @Override
         protected void onActivityResult(int requestCode, int resultCode, Intent data) {
             Log.d("CODE", "resultcode" + resultCode);
@@ -2100,7 +2079,6 @@ import android.os.PowerManager;
                         }
                     });
                     b.show();
-
                 }
                 if (requestCode == TAKE_PICTURES) {
                     AlertDialog.Builder b = new AlertDialog.Builder(actividad);
@@ -2131,61 +2109,62 @@ import android.os.PowerManager;
                         }
                     });
                     b.show();
-
                 }
-                if (requestCode== SELECT_PICTURE) {
 
-                   /* Uri selectedImage = data.getData();
-                    InputStream is;
-                    try {
-                        is = getContentResolver().openInputStream(selectedImage);
-                        BufferedInputStream bis = new BufferedInputStream(is);
-                        Bitmap bitmap = BitmapFactory.decodeStream(bis);
-                        ImageView iv = new ImageView(mContext);
-                        iv.setImageBitmap(bitmap);
-                    } catch (FileNotFoundException e) {}*/
-                    onSelectFromGalleryResult(data);
-
-                    /*Uri selectedImageUri = data.getData();
-                    String[] projection = {MediaStore.MediaColumns.DATA};
-                    CursorLoader cursorLoader = new CursorLoader(this, selectedImageUri, projection, null, null,
+                if (requestCode == SELECT_FILE) {
+                    Uri selectedImageUri = data.getData();
+                    String[] projection = { MediaStore.MediaColumns.DATA };
+                    CursorLoader cursorLoader = new CursorLoader(this,selectedImageUri, projection, null, null,
                             null);
-                    Cursor cursor = cursorLoader.loadInBackground();
+                    Cursor cursor =cursorLoader.loadInBackground();
                     int column_index = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
                     cursor.moveToFirst();
-                    String selectedImagePath = cursor.getString(column_index);*/
+                    final String selectedImagePath = cursor.getString(column_index);
+                    final Bitmap bm;
+                    BitmapFactory.Options options = new BitmapFactory.Options();
+                    options.inJustDecodeBounds = true;
+                    BitmapFactory.decodeFile(selectedImagePath, options);
+                    final int REQUIRED_SIZE = 200;
+                    int scale = 1;
+                    while (options.outWidth / scale / 2 >= REQUIRED_SIZE
+                            && options.outHeight / scale / 2 >= REQUIRED_SIZE)
+                        scale *= 2;
+                    options.inSampleSize = scale;
+                    options.inJustDecodeBounds = false;
+                    bm = BitmapFactory.decodeFile(selectedImagePath, options);
+
+                    AlertDialog.Builder b = new AlertDialog.Builder(actividad);
+                    final EditText titulo = new EditText(this);
+
+                    b.setCancelable(false);
+                    titulo.setHint("Título");
+                    b.setTitle("Información Fotografía");
+                    b.setView(titulo);
+                    b.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            photoTMP = new PHOTO();
+                            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                            photoTMP.setDateTime(timeStamp);
+                            photoTMP.setTitlePhoto(titulo.getText().toString());
+                            photoTMP.setCoordX(String.valueOf(trackerTDC.gps.getLatitude()));
+                            photoTMP.setCoordY(String.valueOf(trackerTDC.gps.getLongitude()));
+                            photoTMP.setNamePhoto(selectedImagePath);
+                            photoTMP.setBitmap(bm);
+                            questionTMP.addFoto(photoTMP);
+                            dialogInterface.dismiss();
+                        }
+                    });
+                    b.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            photoTMP = null;
+                            dialogInterface.dismiss();
+                        }
+                    });
+                    b.show();
                 }
             }
-
-        }
-        @SuppressWarnings("deprecation")
-        private void onSelectFromGalleryResult(Intent data) {
-
-
-                Uri selectedImageUri = data.getData();
-                String[] projection = { MediaStore.MediaColumns.DATA };
-                Cursor cursor = managedQuery(selectedImageUri, projection, null, null,
-                        null);
-                int column_index = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
-                cursor.moveToFirst();
-
-                String selectedImagePath = cursor.getString(column_index);
-
-                Bitmap bm;
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inJustDecodeBounds = true;
-                BitmapFactory.decodeFile(selectedImagePath, options);
-                final int REQUIRED_SIZE = 200;
-                int scale = 1;
-                while (options.outWidth / scale / 2 >= REQUIRED_SIZE
-                        && options.outHeight / scale / 2 >= REQUIRED_SIZE)
-                    scale *= 2;
-                options.inSampleSize = scale;
-                options.inJustDecodeBounds = false;
-                bm = BitmapFactory.decodeFile(selectedImagePath, options);
-
-              //  vImage.setImageBitmap(bm);
-
         }
 
         @Override
@@ -2481,7 +2460,6 @@ import android.os.PowerManager;
         b.show();
     }
 }
-
 
         //Editado por S G
         private class EnviarTransport extends AsyncTask<String, String, String> {
@@ -2890,7 +2868,6 @@ import android.os.PowerManager;
                 b.show();
             }
         }
-
 
         //End S G
         public void subir_fotos(String mensaje) {

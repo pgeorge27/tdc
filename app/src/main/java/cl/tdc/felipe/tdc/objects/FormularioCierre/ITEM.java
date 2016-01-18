@@ -69,7 +69,7 @@ public class ITEM {
             }else
                 Answer = "";
         }
-        if(idType.equals(Constantes.CHECK)){
+        if(idType.equals(Constantes.CHECK) || idType.equals(Constantes.CHECK_PHOTO) ){    //SI se cambia a 2 borrar || idType.equals(Constantes.CHECK_PHOTO)
             int count= 0;
             for(CheckBox c: checkBoxes){
 
