@@ -404,6 +404,7 @@ import android.os.PowerManager;
         public void init() {
             try {
                 SYSTEMS = XMLParserTDC.parseFormulario(QUERY);
+
                 SYSTEMSMAP.put(IDMAIN+","+TITLE, SYSTEMS);
 
                 for (final SYSTEM S : SYSTEMS) {

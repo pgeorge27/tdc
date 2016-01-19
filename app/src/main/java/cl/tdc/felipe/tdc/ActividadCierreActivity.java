@@ -756,6 +756,9 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
 
     public void subir_fotos(String mensaje, String form) {
         ArrayList<PHOTO> p = new ArrayList<>();
+
+        if (form.equalsIgnoreCase("Emerg"))form="emergency";
+
         for (SYSTEM S : ActividadCierreFormActivity.SYSTEMSMAP.get(idMain+","+form.toUpperCase())) {
             for (AREA A : S.getAreas()) {
                 for (ITEM I : A.getItems()) {
