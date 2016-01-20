@@ -263,6 +263,8 @@ import android.os.PowerManager;
             itemLayout.setLayoutParams(itemLayoutParam);
             itemLayout.setOrientation(LinearLayout.VERTICAL);
             itemLayout.setPadding(6, 6, 6, 6);
+            itemLayout.setFocusable(true);                                       //Con estas 2 lineas corregimos el problema de perder el foco al tomar una foto
+            itemLayout.setFocusableInTouchMode(true);
             return itemLayout;
         }
 
@@ -319,9 +321,7 @@ import android.os.PowerManager;
                                 photoTMP = new PHOTO();
                                 tomarFotos();
                             } else if (i == 1) {
-                                Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                                intent.setType("image/*");
-                                startActivityForResult(Intent.createChooser(intent, "Seleccione"), SELECT_FILE);
+                                seleccionarFotoGaleria();
                             } else {
                                 if (fotos != null && fotos.size() > 0)
                                     verFotos();
@@ -404,7 +404,6 @@ import android.os.PowerManager;
         public void init() {
             try {
                 SYSTEMS = XMLParserTDC.parseFormulario(QUERY);
-
                 SYSTEMSMAP.put(IDMAIN+","+TITLE, SYSTEMS);
 
                 for (final SYSTEM S : SYSTEMS) {
@@ -1318,7 +1317,7 @@ import android.os.PowerManager;
                                         f.setCoordX(REG.getString("PHOTOCOORDX" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem()));
                                         f.setCoordY(REG.getString("PHOTOCOORDY" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem()));
                                         I.setPhoto(f);
-                                        I.getButtons().get(1).setEnabled(true);
+                                        I.getButtons().get(2).setEnabled(true);
                                     }
 
                                     final ArrayList<Button> buttons = I.getButtons();
@@ -1328,12 +1327,21 @@ import android.os.PowerManager;
                                         public void onClick(View view) {
                                             itemTMP = I;
                                             photoTMP = new PHOTO();
-                                            buttonTMP = buttons.get(1);
+                                            buttonTMP = buttons.get(2);
                                             tomarFoto();
                                         }
                                     });
 
                                     buttons.get(1).setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+                                            itemTMP = I;
+                                            buttonTMP = buttons.get(2);
+                                            seleccionarFotoGaleria();
+                                        }
+                                    });
+
+                                    buttons.get(2).setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View view) {
                                             if (I.getPhoto() != null) {
@@ -1360,7 +1368,7 @@ import android.os.PowerManager;
                                                                     Log.d("FOTO", "Imagen eliminada");
                                                                 }
                                                             Toast.makeText(mContext, "Imagen eliminada", Toast.LENGTH_SHORT).show();
-                                                            buttons.get(1).setEnabled(false);
+                                                            buttons.get(2).setEnabled(false);
                                                             I.setPhoto(null);
                                                             dialogInterface.dismiss();
                                                         }
@@ -2047,6 +2055,15 @@ import android.os.PowerManager;
             startActivityForResult(intent, code);
         }
 
+        private void seleccionarFotoGaleria(){
+            Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            intent.setType("image/*");
+            startActivityForResult(Intent.createChooser(intent, "Seleccione"), SELECT_FILE);
+        }
+
+
+
+
         @Override
         protected void onActivityResult(int requestCode, int resultCode, Intent data) {
             Log.d("CODE", "resultcode" + resultCode);
@@ -2069,6 +2086,7 @@ import android.os.PowerManager;
                             photoTMP.setNamePhoto(imgName);
                             itemTMP.setPhoto(photoTMP);
                             buttonTMP.setEnabled(true);
+                            buttonTMP.setFocusable(true);
                             dialogInterface.dismiss();
                         }
                     });
@@ -2099,6 +2117,7 @@ import android.os.PowerManager;
                             photoTMP.setNamePhoto(imgName);
                             Log.d("PHOTO", "X " + photoTMP.getCoordX() + "  Y " + photoTMP.getCoordY());
                             questionTMP.addFoto(photoTMP);
+                            buttonTMP.setFocusable(true);
                             dialogInterface.dismiss();
                         }
                     });
@@ -2152,7 +2171,13 @@ import android.os.PowerManager;
                             photoTMP.setCoordY(String.valueOf(trackerTDC.gps.getLongitude()));
                             photoTMP.setNamePhoto(selectedImagePath);
                             photoTMP.setBitmap(bm);
-                            questionTMP.addFoto(photoTMP);
+                            if (questionTMP!=null)
+                                questionTMP.addFoto(photoTMP);
+                            if (itemTMP!=null) {
+                                itemTMP.setPhoto(photoTMP);
+                                buttonTMP.setEnabled(true);
+                                buttonTMP.setFocusable(true);
+                            }
                             dialogInterface.dismiss();
                         }
                     });
@@ -2237,6 +2262,7 @@ import android.os.PowerManager;
                         localT.escribirFicheroMemoriaExterna(IDMAIN+",answerIden",response);
 
                     return "Datos exitosamente guardados";
+
 
                     /*ArrayList<String> parse = XMLParser.getReturnCode2(response);
                     if (parse.get(0).equals("0")) {

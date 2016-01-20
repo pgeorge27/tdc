@@ -97,8 +97,10 @@ public class CercanosActivity extends FragmentActivity implements GoogleMap.OnMa
 
         mapDialog = new ProgressDialog(this);
         mapDialog.setMessage("Cargando Mapa...");
+        Log.e("Google map", "Cargando mapa");
         mapDialog.show();
         gps = new MyLocationListener(this);
+        Log.e("Google map","info gps : "+gps);
 
         mapa = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMap();
         if (mapa != null) {
@@ -108,6 +110,7 @@ public class CercanosActivity extends FragmentActivity implements GoogleMap.OnMa
             mapa.getUiSettings().setZoomControlsEnabled(true);
             mapa.getUiSettings().setCompassEnabled(true);
             mapa.getUiSettings().setMyLocationButtonEnabled(true);
+            Log.e("Google map", "vista cargado....:");
 
             mapa.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
                 @Override
@@ -117,6 +120,7 @@ public class CercanosActivity extends FragmentActivity implements GoogleMap.OnMa
 
                 @Override
                 public View getInfoContents(Marker marker) {
+                    Log.e("Google map","cargando marcad....");
                     View v = getLayoutInflater().inflate(R.layout.info_window_layout, null);
                     String[] datos = marker.getSnippet().split("&");
                     TextView t1 = (TextView) v.findViewById(R.id.t1);
@@ -129,7 +133,9 @@ public class CercanosActivity extends FragmentActivity implements GoogleMap.OnMa
                     t4.setText(datos[3].split(";")[1]);
                     TextView t5 = (TextView) v.findViewById(R.id.t5);
                     t5.setText(datos[4].split(";")[1]);
+                    Log.e("Google map", "marcador cargado");
                     return v;
+
                 }
             });
 

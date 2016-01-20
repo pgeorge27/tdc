@@ -288,18 +288,35 @@ public class ITEM {
             ((LinearLayout)view).addView(fecha);
         }
         if(idType.equals(Constantes.PHOTO)){
+           /* ImageButton photo = new ImageButton(mContext);
+            photo.setLayoutParams(new LinearLayout.LayoutParams((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48, getResources().getDisplayMetrics()),
+                    (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48, getResources().getDisplayMetrics())));
+            photo.setImageResource(R.drawable.ic_camerawhite);
+            photo.setPadding(10, 10, 10, 10);
+            photo.setBackgroundResource(R.drawable.button_gray_rounded);
+            photo.setFocusable(true);                                       //Con estas 2 lineas corregimos el problema de perder el foco al tomar una foto
+            photo.setFocusableInTouchMode(true);                            //El detalle es que debemos pulsar 2 veces el boton :-(
+            photo.setOnClickListener(new View.OnClickListener() {
+*/
             LinearLayout.LayoutParams left = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
             LinearLayout.LayoutParams right = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
-            left.weight = 3;
-            right.weight = 2;
+            left.weight = 4;
+            right.weight = 3;
             buttons = new ArrayList<>();
             Button take = new Button(ctx);
+            Button select_file = new Button(ctx);
             Button show = new Button(ctx);
 
             take.setText("Tomar Foto");
             take.setLayoutParams(left);
             take.setBackgroundResource(R.drawable.custom_button_blue_left);
             take.setTextColor(Color.WHITE);
+
+            select_file.setText("Buscar en Galería");
+            select_file.setLayoutParams(left);
+            select_file.setBackgroundResource(R.drawable.custom_button_blue_left);
+            select_file.setTextColor(Color.WHITE);
+
             show.setText("Ver");
             show.setLayoutParams(right);
             show.setBackgroundResource(R.drawable.custom_button_blue_right);
@@ -307,11 +324,13 @@ public class ITEM {
             show.setEnabled(false);
 
             buttons.add(take);
+            buttons.add(select_file);
             buttons.add(show);
 
             view = new LinearLayout(ctx);
             ((LinearLayout)view).setOrientation(LinearLayout.HORIZONTAL);
             ((LinearLayout)view).addView(take);
+            ((LinearLayout)view).addView(select_file);
             ((LinearLayout)view).addView(show);
         }
 
