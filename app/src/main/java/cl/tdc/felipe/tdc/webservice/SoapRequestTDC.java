@@ -184,6 +184,7 @@ public class SoapRequestTDC {
         String xml = null;
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date fecha = new Date();
+        boolean vacio= false;
 
         HttpClient httpClient = new DefaultHttpClient();
         HttpPost httpPost = new HttpPost(dummy.URL_TDC);
@@ -227,6 +228,7 @@ public class SoapRequestTDC {
                                     PHOTO photo = Q.getFoto();
                                     File file = new File(photo.getNamePhoto());
                                     if (file.exists()) {
+                                        vacio = true;
                                         xmlphotos += "<Photo xsi:type=\"urn:Photo\">" +
                                                 "<NamePhoto xsi:type=\"xsd:string\">" + file.getName() + "</NamePhoto>" +
                                                 "<TitlePhoto xsi:type=\"xsd:string\">" + photo.getTitlePhoto() + "</TitlePhoto>" +
@@ -241,6 +243,7 @@ public class SoapRequestTDC {
                                     for (PHOTO p : Q.getFotos()) {
                                         File file = new File(p.getNamePhoto());
                                         if (file.exists()) {
+                                            vacio = true;
                                             xmlphotos += "<Photo xsi:type=\"urn:Photo\">" +
                                                     "<NamePhoto xsi:type=\"xsd:string\">" + file.getName() + "</NamePhoto>" +
                                                     "<TitlePhoto xsi:type=\"xsd:string\">" + p.getTitlePhoto() + "</TitlePhoto>" +
@@ -259,7 +262,8 @@ public class SoapRequestTDC {
                                         "<IdType xsi:type=\"xsd:string\">" + Q.getIdType() + "</IdType>" +
                                         "<IdAnswer xsi:type=\"xsd:string\">" + Q.getAswerIDEN() + "</IdAnswer>" +
                                         "<CountPhoto xsi:type=\"xsd:string\">" + countFoto + "</CountPhoto>";
-
+                                if (!Q.getAswerIDEN().equalsIgnoreCase(""))
+                                        vacio = true;
                                 xml += "<SetPhotos xsi:type=\"urn:SetPhotos\">" +
                                         xmlphotos +
                                         "</SetPhotos>";
@@ -274,6 +278,7 @@ public class SoapRequestTDC {
                             int count = 0;
                             for (CheckBox checkBox : I.getCheckBoxes()) {
                                 if (checkBox.isChecked()) {
+                                    vacio = true;
                                     count += 1;
                                     int posChecked = I.getCheckBoxes().indexOf(checkBox);
                                     answerXML += "<SetAnswer xsi:type=\"urn:SetAnswer\">" +
@@ -322,8 +327,8 @@ public class SoapRequestTDC {
                                                         "<IdAnswer xsi:type=\"xsd:string\">" + Q.getAswerIDEN() + "</IdAnswer>" +
                                                         "<IdType xsi:type=\"xsd:string\">" + Q.getIdType() + "</IdType>" +
                                                         "<CountPhoto xsi:type=\"xsd:string\">" + countFoto + "</CountPhoto>";
-
-
+                                                if (!Q.getAswerIDEN().equalsIgnoreCase(""))
+                                                    vacio = true;
                                                 answerXML += "<SetPhotos xsi:type=\"urn:SetPhotos\">" +
                                                         xmlphotos +
                                                         "</SetPhotos>";
@@ -368,7 +373,14 @@ public class SoapRequestTDC {
         response = EntityUtils.toString(resEntity);
         return response;*/
 
-        return xml;
+        //return xml;
+        if (vacio){
+            return xml;
+        }
+        else{
+            return "false";
+        }
+       // return "false";
     }
 
     public static String sendAnswerEmergency(String IMEI, String ID_MAINTENANCE, ArrayList<SYSTEM> SYSTEMS) throws IOException {
@@ -580,30 +592,44 @@ public class SoapRequestTDC {
                 for (ITEM I : A.getItems()) {
                     String idItem = I.getIdItem();
 
-                    String lat = "", lon = "", title = "";
-                    if (I.getPhoto() != null) {
-                        PHOTO f = I.getPhoto();
-                        lat = f.getCoordX();
-                        lon = f.getCoordY();
-                        title = f.getTitlePhoto();
-                    }
+
+                    int countFoto = 0;
+                    String xmlphotos = "";
                     String aAux = "";
                     if(I.getSetlistArrayList() != null){
                         aAux = I.getAnswerFaena();
                     }
 
-                    xml += "<SetRptaItemUni xsi:type=\"urn:SetRptaItemUni\">" +
-                            "<IdArea xsi:type=\"xsd:string\">" + idArea + "</IdArea>" +
-                            "<IdItem xsi:type=\"xsd:string\">" + idItem + "</IdItem>" +
-                            "<IdSet xsi:type=\"xsd:string\"></IdSet>" +
-                            "<IdQuestion xsi:type=\"xsd:string\"></IdQuestion>" +
-                            "<Answer xsi:type=\"xsd:string\">" + I.getAnswerFaena() + "</Answer>" +
-                            "<AnswerAux xsi:type=\"xsd:string\">"+aAux+"</AnswerAux>" +
-                            "<Lat xsi:type=\"xsd:string\">" + lat + "</Lat>" +
-                            "<Long xsi:type=\"xsd:string\">" + lon + "</Long>" +
-                            "<Title xsi:type=\"xsd:string\">" + title + "</Title>" +
-                            "</SetRptaItemUni>";
+                    if (I.getFotos() != null) {
+                        xml += "<SetRptaItemUni xsi:type=\"urn:SetRptaItemUni\">" ;
+                        for (PHOTO photos : I.getFotos()) {
 
+                            File file = new File(photos.getNamePhoto());
+                            if (file.exists()) {
+
+                                xmlphotos += "<Photo xsi:type=\"urn:Photo\">" +
+                                        "<NamePhoto xsi:type=\"xsd:string\">" + file.getName() + "</NamePhoto>" +
+                                        "<TitlePhoto xsi:type=\"xsd:string\">" + photos.getTitlePhoto() + "</TitlePhoto>" +
+                                        "<DateTime xsi:type=\"xsd:string\">" + photos.getDateTime() + "</DateTime>" +
+                                        "<CoordX xsi:type=\"xsd:string\">" + photos.getCoordX() + "</CoordX>" +
+                                        "<CoordY xsi:type=\"xsd:string\">" + photos.getCoordY() + "</CoordY>" +
+                                        "</Photo>";
+                                countFoto += 1;
+                            }
+
+                            xml +=   "<IdArea xsi:type=\"xsd:string\">" + idArea + "</IdArea>" +
+                                    "<IdItem xsi:type=\"xsd:string\">" + idItem + "</IdItem>" +
+                                    "<IdSet xsi:type=\"xsd:string\"></IdSet>" +
+                                    "<IdQuestion xsi:type=\"xsd:string\"></IdQuestion>" +
+                                    "<Answer xsi:type=\"xsd:string\">" + I.getAnswerFaena() + "</Answer>" +
+                                    "<AnswerAux xsi:type=\"xsd:string\">"+aAux+"</AnswerAux>" +
+                                    "<CountPhoto xsi:type=\"xsd:string\">" + countFoto + "</CountPhoto>" +
+                                    "<SetPhotos xsi:type=\"urn:SetPhotos\">" + xmlphotos + "</SetPhotos>";
+
+
+                        }
+                        xml += "</SetRptaItemUni>";
+                    }
                     if (I.getQuestions() != null) {
                         for (int i = 0; i < I.getQuestions().size(); i++) {
                             QUESTION Q = I.getQuestions().get(i);
@@ -615,12 +641,11 @@ public class SoapRequestTDC {
                                     "<IdQuestion xsi:type=\"xsd:string\">" + Q.getIdQuestion() + "</IdQuestion>" +
                                     "<Answer xsi:type=\"xsd:string\">" + Q.getAswer3G() + "</Answer>" +
                                     "<AnswerAux xsi:type=\"xsd:string\"></AnswerAux>" +
-                                    "<Lat xsi:type=\"xsd:string\"></Lat>" +
-                                    "<Long xsi:type=\"xsd:string\"></Long>" +
-                                    "<Title xsi:type=\"xsd:string\"></Title>" +
+
                                     "</SetRptaItemUni>";
                         }
                     }
+
                     if (I.getSetlistArrayList() != null) {
                         String ans = I.getAnswerFaena();
                         if(!ans.equals("")) {
@@ -637,9 +662,9 @@ public class SoapRequestTDC {
                                                     "<IdQuestion xsi:type=\"xsd:string\">" + Q.getIdQuestion() + "</IdQuestion>" +
                                                     "<Answer xsi:type=\"xsd:string\">" + Q.getAswer3G() + "</Answer>" +
                                                     "<AnswerAux xsi:type=\"xsd:string\">" + (i + 1) + "</AnswerAux>" +
-                                                    "<Lat xsi:type=\"xsd:string\"></Lat>" +
-                                                    "<Long xsi:type=\"xsd:string\"></Long>" +
-                                                    "<Title xsi:type=\"xsd:string\"></Title>" +
+                                                   // "<Lat xsi:type=\"xsd:string\"></Lat>" +
+                                                   // "<Long xsi:type=\"xsd:string\"></Long>" +
+                                                  //  "<Title xsi:type=\"xsd:string\"></Title>" +
                                                     "</SetRptaItemUni>";
                                         }
                                     }
@@ -1992,6 +2017,7 @@ public class SoapRequestTDC {
         String xml = null;
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date fecha = new Date();
+        boolean vacio = false;
 
         HttpClient httpClient = new DefaultHttpClient();
         HttpPost httpPost = new HttpPost(dummy.URL_TDC);
@@ -2030,6 +2056,7 @@ public class SoapRequestTDC {
                         String questionResponse = "";
 
                         if (I.getSetArrayList() == null && I.getValues() != null) {
+                            //vacio = true;
                             itemResponse += "<AnswerQuestion xsi:type=\"urn:AnswerQuestion\">" +
                                     "<!--Optional:-->" +
                                     "<IdSet xsi:type=\"xsd:string\"></IdSet>" +
@@ -2037,6 +2064,8 @@ public class SoapRequestTDC {
                                     "<IdAnswer xsi:type=\"xsd:string\">" + I.getAnswer3G() + "</IdAnswer>" +
                                     "<CountPhoto xsi:type=\"xsd:string\">0</CountPhoto>" +
                                     "</AnswerQuestion>";
+                            if (!I.getAnswer3G().equalsIgnoreCase(""))
+                                vacio = true;
                         }
 
                         if (I.getQuestions() != null) {
@@ -2049,6 +2078,7 @@ public class SoapRequestTDC {
                                     PHOTO photo = Q.getFoto();
                                     File file = new File(photo.getNamePhoto());
                                     if (file.exists()) {
+                                        vacio =true;
                                         xmlphotos += "<Photo xsi:type=\"urn:Photo\">" +
                                                 "<NamePhoto xsi:type=\"xsd:string\">" + file.getName() + "</NamePhoto>" +
                                                 "<TitlePhoto xsi:type=\"xsd:string\">" + photo.getTitlePhoto() + "</TitlePhoto>" +
@@ -2063,6 +2093,7 @@ public class SoapRequestTDC {
                                     for (PHOTO p : Q.getFotos()) {
                                         File file = new File(p.getNamePhoto());
                                         if (file.exists()) {
+                                            vacio = true;
                                             xmlphotos += "<Photo xsi:type=\"urn:Photo\">" +
                                                     "<NamePhoto xsi:type=\"xsd:string\">" + file.getName() + "</NamePhoto>" +
                                                     "<TitlePhoto xsi:type=\"xsd:string\">" + p.getTitlePhoto() + "</TitlePhoto>" +
@@ -2079,15 +2110,18 @@ public class SoapRequestTDC {
                                         "<IdQuestion xsi:type=\"xsd:string\">" + Q.getIdQuestion() + "</IdQuestion>" +
                                         "<IdType xsi:type=\"xsd:string\">" + Q.getIdType() + "</IdType>" +
                                         "<IdAnswer xsi:type=\"xsd:string\">" + Q.getAswer3G() + "</IdAnswer>" +
-                                        "<CountPhoto xsi:type=\"xsd:string\">" + countFoto + "</CountPhoto>" +
-                                        "<SetPhotos xsi:type=\"urn:SetPhotos\">" +
-                                        xmlphotos +
-                                        "</SetPhotos>" +
+                                        "<CountPhoto xsi:type=\"xsd:string\">" + countFoto + "</CountPhoto>";
+
+                                if (!Q.getAswer3G().equalsIgnoreCase(""))
+                                    vacio = true;
+                                questionResponse+= "<SetPhotos xsi:type=\"urn:SetPhotos\">" + xmlphotos + "</SetPhotos>" +
                                         "</AnswerQuestion>";
+
                             }
                         }
 
                         if (!questionResponse.equals("") || !itemResponse.equals("")) {
+
                             xml += "<SetAnswerQuestion xsi:type=\"urn:SetAnswerQuestion\">" +
                                     itemResponse +
                                     questionResponse +
@@ -2105,6 +2139,7 @@ public class SoapRequestTDC {
                                 int selected = rg.getCheckedRadioButtonId();
 
                                 if (selected != -1) {
+                                    vacio=true;
                                     RadioButton btn = (RadioButton) rg.findViewById(rg.getCheckedRadioButtonId());
                                     int position = rg.indexOfChild(btn) + 1;
 
@@ -2126,6 +2161,7 @@ public class SoapRequestTDC {
                                                             PHOTO photo = Q.getFoto();
                                                             File file = new File(photo.getNamePhoto());
                                                             if (file.exists()) {
+                                                                vacio = true;
                                                                 xmlphotos += "<Photo xsi:type=\"urn:Photo\">" +
                                                                         "<NamePhoto xsi:type=\"xsd:string\">" + file.getName() + "</NamePhoto>" +
                                                                         "<TitlePhoto xsi:type=\"xsd:string\">" + photo.getTitlePhoto() + "</TitlePhoto>" +
@@ -2139,6 +2175,7 @@ public class SoapRequestTDC {
                                                             for (PHOTO p : Q.getFotos()) {
                                                                 File file = new File(p.getNamePhoto());
                                                                 if (file.exists()) {
+                                                                    vacio= true;
                                                                     xmlphotos += "<Photo xsi:type=\"urn:Photo\">" +
                                                                             "<NamePhoto xsi:type=\"xsd:string\">" + file.getName() + "</NamePhoto>" +
                                                                             "<TitlePhoto xsi:type=\"xsd:string\">" + p.getTitlePhoto() + "</TitlePhoto>" +
@@ -2156,8 +2193,8 @@ public class SoapRequestTDC {
                                                                 "<IdAnswer xsi:type=\"xsd:string\">" + Q.getAswer3G() + "</IdAnswer>" +
                                                                 "<IdType xsi:type=\"xsd:string\">" + Q.getIdType() + "</IdType>" +
                                                                 "<CountPhoto xsi:type=\"xsd:string\">" + countFoto + "</CountPhoto>";
-
-
+                                                        if (!Q.getAswer3G().equalsIgnoreCase(""))
+                                                            vacio = true;
                                                         answerXML += "<SetPhotos xsi:type=\"urn:SetPhotos\">" +
                                                                 xmlphotos +
                                                                 "</SetPhotos>";
@@ -2190,7 +2227,7 @@ public class SoapRequestTDC {
         }
 
         xml += "</Request3G>" +
-                "</RequestAnswer3hh>" +
+                "</RequestAnswer3G>" +
                 "</urn:answer3G>" +
                 "</soapenv:Body>" +
                 "</soapenv:Envelope>";
@@ -2207,7 +2244,13 @@ public class SoapRequestTDC {
         response = EntityUtils.toString(resEntity);
         Log.d("RESPONSE", response);
         return response;*/
-        return xml;
+        //return xml;
+        if (vacio){
+            return xml;
+        }
+        else{
+            return "false";
+        }
     }
 
     public static String sendAll(String xml, String action)throws IOException {
