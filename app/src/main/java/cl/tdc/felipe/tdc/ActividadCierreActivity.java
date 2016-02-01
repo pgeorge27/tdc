@@ -6,6 +6,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
@@ -27,9 +29,11 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DateFormat;
@@ -575,8 +579,9 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
 
     public void enviar(View v) {
         local.listarFicheros(idMain);
+      //  Log.e("titulo main", "El id maain es ::::" + idMain);
         local.crearListaEnvio("answer");
-        if (local.itemAnsw.size() > 0) {
+        if (local.itemAnsw.size() > 0 ) {
             AlertDialog.Builder b = new AlertDialog.Builder(actividad);
             b.setMessage("¿Desea cerrar el mantenimiento?");
             b.setPositiveButton("SI", new DialogInterface.OnClickListener() {
@@ -678,7 +683,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                     }
                 });
             }
-            local.eliminarFicheroMant();
+          //s  local.eliminarFicheroMant();
             b.show();
         }
     }
@@ -756,12 +761,22 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
 
     public void subir_fotos(String mensaje, String form) {
         ArrayList<PHOTO> p = new ArrayList<>();
+        Log.e("FORm","trae esto:" + form);
+
+        if (form.equalsIgnoreCase("emerg"))
+            form = "Emergency";
+
         for (SYSTEM S : ActividadCierreFormActivity.SYSTEMSMAP.get(idMain+","+form.toUpperCase())) {
             for (AREA A : S.getAreas()) {
                 for (ITEM I : A.getItems()) {
                     if (I.getIdType().equals(Constantes.PHOTO)) {
                         if (I.getPhoto() != null) {
                             p.add(I.getPhoto());
+                        }
+                        if (I.getFotos() != null) {
+                            for (PHOTO P : I.getFotos()) {
+                                p.add(P);
+                            }
                         }
                     }
                     if (I.getQuestions() != null) {
@@ -855,9 +870,34 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             ActividadCierreFormActivity.SYSTEMSMAP.remove(idMain+","+form.toUpperCase());
         }
         if (p.size() > 0) {
+            for (int i = 0; i < p.size(); i++){
+                redimencionarImagen(p.get(i).getNamePhoto());
+            }
             UploadImage up = new UploadImage(p, mensaje);
+            Log.e("UploadImage","UploadImage aquii:: " + up );
             up.execute(dummy.URL_UPLOAD_IMG_MAINTENANCE);
         }
+    }
+
+    private void redimencionarImagen(String dir) {
+        //File dir=Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+        Bitmap b = BitmapFactory.decodeFile(dir);
+        Bitmap out = Bitmap.createScaledBitmap(b, b.getHeight() / 2, b.getWidth()/2, false);
+
+        String[] textos = dir.split("/");
+        String nombreImagen = textos[textos.length-1];
+        String rutaImagen  = dir.replace(nombreImagen, "");
+
+        File file = new File(rutaImagen, nombreImagen);
+        FileOutputStream fOut;
+        try {
+            fOut = new FileOutputStream(file);
+            out.compress(Bitmap.CompressFormat.JPEG, 60, fOut);
+            fOut.flush();
+            fOut.close();
+            b.recycle();
+            out.recycle();
+        } catch (Exception e) {}
     }
 
     //TODO UPLOAD PHOTOS
@@ -920,12 +960,12 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                         dos.writeBytes(twoHyphens + boundary + lineEnd);
                         dos.writeBytes("Content-Disposition: form-data; name=\"uploaded_file\";filename=\"" + done.getName() + "\"" + lineEnd);
                         dos.writeBytes(lineEnd);
-
+//por aqui pasa
                         bytesAvailable = fileInputStream.available();
 
                         bufferSize = Math.min(bytesAvailable, 1 * 1024 * 1024);
                         byte[] buf = new byte[bufferSize];
-
+//lee el archivo y escribe
                         bytesRead = fileInputStream.read(buf, 0, bufferSize);
 
                         while (bytesRead > 0) {

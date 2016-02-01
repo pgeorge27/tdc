@@ -734,7 +734,7 @@ public class FormCheckActivity extends Activity {
                     done.createNewFile();
 
                     ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                    img.getImage().compress(Bitmap.CompressFormat.PNG, 0 /*ignored for PNG*/, bos);
+                    img.getImage().compress(Bitmap.CompressFormat.JPEG, 0 /*ignored for PNG*/, bos);
                     byte[] bitmapdata = bos.toByteArray();
 
                     FileOutputStream fos = new FileOutputStream(done);

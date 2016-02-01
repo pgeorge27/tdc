@@ -399,7 +399,7 @@ public class AgendaActivity extends Activity {
                         }
 
                         @Override
-                        public CharSequence getPageTitle(int position) {
+                        public CharSequence getPageTitle(int position ) {
                             /*if (position == 0) {
                                 return "ASIGNADA";
                             } else {
@@ -407,7 +407,10 @@ public class AgendaActivity extends Activity {
                             }*/
                             Log.e("getPageTitleN",Integer.toString(position));
                             Log.e("getPageTitle+1",Integer.toString(position+1));
-                            return "Mantenimiento "+(position+1);
+
+                            final cl.tdc.felipe.tdc.objects.Maintenance.Maintenance m = s.getMaintenanceList().get(position);
+                            Log.e("m",s.getMaintenanceList().get(position).toString());
+                            return "Mantenimiento "+ m.getIdMaintenance();
                         }
 
                         @Override
@@ -516,7 +519,7 @@ public class AgendaActivity extends Activity {
                                         ((TextView) vista.findViewById(R.id.tDescription)).setText(a.getDescription());
                                         CheckBox checkBox = (CheckBox) vista.findViewById(R.id.chCompleted);
                                         if (terminated) {
-                                            checkBox.setEnabled(false);
+                                            checkBox.setEnabled(true);
                                             checkBox.setChecked(true);
                                             pProgress.setProgress(pProgress.getMax());
                                             bComplete.setEnabled(false);

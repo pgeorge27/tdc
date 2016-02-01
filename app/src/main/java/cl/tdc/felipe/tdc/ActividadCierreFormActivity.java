@@ -51,6 +51,7 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -343,6 +344,55 @@ import android.os.PowerManager;
             return photo;
         }
 
+        private ImageButton create_photoButtonItem(final ITEM I) {
+            ImageButton photo = new ImageButton(mContext);
+            photo.setLayoutParams(new LinearLayout.LayoutParams((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48, getResources().getDisplayMetrics()),
+                    (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48, getResources().getDisplayMetrics())));
+            photo.setImageResource(R.drawable.ic_camerawhite);
+            photo.setPadding(10, 10, 10, 10);
+            photo.setBackgroundResource(R.drawable.button_gray_rounded);
+            photo.setFocusable(true);                                       //Con estas 2 lineas corregimos el problema de perder el foco al tomar una foto
+            photo.setFocusableInTouchMode(true);                            //El detalle es que debemos pulsar 2 veces el boton :-(
+            photo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    itemTMP = I;
+
+                    AlertDialog.Builder b = new AlertDialog.Builder(actividad);
+                    final ArrayList<PHOTO> fotos = I.getFotos();
+                    int n_fotos = 0;
+                    if (fotos != null) {
+                        n_fotos = fotos.size();
+                    }
+                    b.setTitle("Actualmente tiene " + n_fotos + " fotos");
+                    b.setItems(new CharSequence[]{"Tomar Fotografía", "Buscar en Galería", "Ver Fotografías"}, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            if (i == 0) {
+                                photoTMP = new PHOTO();
+                                tomarFoto();
+                            } else if (i == 1) {
+                                seleccionarFotoGaleria();
+                            } else {
+                                if (fotos != null && fotos.size() > 0)
+                                    verFotosItem();
+                                else
+                                    Toast.makeText(mContext, "No tiene fotografías", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                    b.setPositiveButton("Cerrar", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    });
+                    b.show();
+                }
+            });
+
+            return photo;
+        }
         private LinearLayout create_normalVerticalLayout() {
             LinearLayout l = new LinearLayout(mContext);
             l.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -370,6 +420,27 @@ import android.os.PowerManager;
             }
 
             if (fotos.size() > 0) Q.setFotos(fotos);
+        }
+        private void cargar_fotosI(ITEM I, String tag) {
+            int as = 0;
+            ArrayList<PHOTO> fotos = new ArrayList<>();
+            String name;
+            while (!(name = REG.getString("PHOTONAME" + tag + as)).equals("")) {
+                File tmp = new File(name);
+                if (tmp.exists()) {
+                    PHOTO f = new PHOTO();
+                    f.setNamePhoto(REG.getString("PHOTONAME" + tag + as));
+                    f.setTitlePhoto(REG.getString("PHOTOTITLE" + tag + as));
+                    f.setDateTime(REG.getString("PHOTODATE" + tag + as));
+                    f.setCoordX(REG.getString("PHOTOCOORDX" + tag + as));
+                    f.setCoordY(REG.getString("PHOTOCOORDY" + tag + as));
+
+                    fotos.add(f);
+                }
+                as++;
+            }
+
+            if (fotos.size() > 0) I.setFotos(fotos);
         }
 
         private Button crear_botonRepeat() {
@@ -1307,81 +1378,28 @@ import android.os.PowerManager;
                                     I.getEditText().setText(hora);
                                 }
                                 if (I.getIdType().equals(Constantes.PHOTO)) {
+                                    ImageButton photo = create_photoButtonItem(I);
+                                    itemLayout.addView(photo);
+
                                     String name = REG.getString("PHOTONAME" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem());
-                                    File tmp = new File(name);
-                                    if (tmp.exists()) {
-                                        PHOTO f = new PHOTO();
-                                        f.setNamePhoto(REG.getString("PHOTONAME" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem()));
-                                        f.setTitlePhoto(REG.getString("PHOTOTITLE" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem()));
-                                        f.setDateTime(REG.getString("PHOTODATE" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem()));
-                                        f.setCoordX(REG.getString("PHOTOCOORDX" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem()));
-                                        f.setCoordY(REG.getString("PHOTOCOORDY" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem()));
-                                        I.setPhoto(f);
-                                        I.getButtons().get(2).setEnabled(true);
+                                    //ImageButton photo = create_photoButton(Q);
+                                    //layquest.addView(photo);
+                                    cargar_fotosI(I,name);
+                                    /*if (Q.getPhoto().equals("OK")) { //Si requiere fotos agregamos el boton foto
+                                        ImageButton photo = create_photoButton(Q);
+                                        layquest.addView(photo);
                                     }
+                                    layquest.addView(Q.getTitle(mContext));
 
-                                    final ArrayList<Button> buttons = I.getButtons();
+                                    View question = Q.generateView(mContext);
+                                    if (question != null) {
+                                        agregar2 = false;
+                                        String tag = S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem() + "-" + Q.getIdQuestion() + "-" + Q.getNameQuestion();
 
-                                    buttons.get(0).setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View view) {
-                                            itemTMP = I;
-                                            photoTMP = new PHOTO();
-                                            buttonTMP = buttons.get(2);
-                                            tomarFoto();
+                                        if (Q.getPhoto().equals("OK")) { //Si requiere foto|, buscamos si hay fotos gardadas
+                                            cargar_fotos(Q, tag);
                                         }
-                                    });
-
-                                    buttons.get(1).setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View view) {
-                                            itemTMP = I;
-                                            buttonTMP = buttons.get(2);
-                                            seleccionarFotoGaleria();
-                                        }
-                                    });
-
-                                    buttons.get(2).setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View view) {
-                                            if (I.getPhoto() != null) {
-                                                PHOTO p = I.getPhoto();
-
-                                                File file = new File(p.getNamePhoto());
-                                                if (file.exists()) {
-                                                    ImageView joto = new ImageView(mContext);
-                                                    final PHOTO f = I.getPhoto();
-                                                    joto.setImageBitmap(BitmapFactory.decodeFile(f.getNamePhoto()));
-                                                    AlertDialog.Builder b = new AlertDialog.Builder(actividad);
-                                                    b.setPositiveButton("Cerrar", new DialogInterface.OnClickListener() {
-                                                        @Override
-                                                        public void onClick(DialogInterface dialogInterface, int i) {
-                                                            dialogInterface.dismiss();
-                                                        }
-                                                    });
-                                                    b.setNegativeButton("Borrar", new DialogInterface.OnClickListener() {
-                                                        @Override
-                                                        public void onClick(DialogInterface dialogInterface, int j) {
-                                                            File delete = new File(f.getNamePhoto());
-                                                            if (delete.exists())
-                                                                if (delete.delete()) {
-                                                                    Log.d("FOTO", "Imagen eliminada");
-                                                                }
-                                                            Toast.makeText(mContext, "Imagen eliminada", Toast.LENGTH_SHORT).show();
-                                                            buttons.get(2).setEnabled(false);
-                                                            I.setPhoto(null);
-                                                            dialogInterface.dismiss();
-                                                        }
-                                                    });
-
-                                                    b.setView(joto);
-                                                    b.setTitle(f.getTitlePhoto());
-                                                    b.show();
-                                                }
-
-                                            }
-                                        }
-                                    });
+*/
                                 }
                                 if (I.getIdType().equals(Constantes.TEXT)) {
                                     String text = REG.getString("TEXT" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem());
@@ -1582,9 +1600,13 @@ import android.os.PowerManager;
                         if (I.getIdType().equals(Constantes.HOUR)) {
                             REG.addValue("HOUR" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem(), I.getEditText().getText().toString());
                         }
+
+                        //modifique aqui
                         if (I.getIdType().equals(Constantes.PHOTO)) {
-                            PHOTO p = I.getPhoto();
-                            if (p != null) {
+                            ArrayList<PHOTO> fotos = I.getFotos();
+                            //PHOTO p = I.getPhoto();
+
+                          /*  if (p != null) {
                                 File tmp = new File(p.getNamePhoto());
                                 if (tmp.exists()) {
                                     REG.addValue("PHOTONAME" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem(), p.getNamePhoto());
@@ -1592,6 +1614,19 @@ import android.os.PowerManager;
                                     REG.addValue("PHOTODATE" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem(), p.getDateTime());
                                     REG.addValue("PHOTOCOORDX" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem(), p.getCoordX());
                                     REG.addValue("PHOTOCOORDY" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem(), p.getCoordY());
+                                }
+                            }*/
+
+                            //ArrayList<PHOTO> fotos = Q.getFotos();
+                            if (fotos != null) {
+                                for (int as = 0; as < fotos.size(); as++) {
+                                    PHOTO f = fotos.get(as);
+                                    Log.d("GUARDANDO", "foto: " + f.getTitlePhoto());
+                                    REG.addValue("PHOTONAME" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem(), f.getNamePhoto());
+                                    REG.addValue("PHOTOTITLE" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem(), f.getTitlePhoto());
+                                    REG.addValue("PHOTODATE" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem(), f.getDateTime());
+                                    REG.addValue("PHOTOCOORDX" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem(), f.getCoordX());
+                                    REG.addValue("PHOTOCOORDY" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem(), f.getCoordY());
                                 }
                             }
 
@@ -1987,6 +2022,14 @@ import android.os.PowerManager;
 
         }
 
+        public Bitmap redimencionarImagen(Bitmap b)
+        {
+            float factorH = 200 / (float) b.getHeight();
+            float factorW = 200 / (float) b.getWidth();
+            return Bitmap.createScaledBitmap(b, (int) (b.getWidth() * factorW),
+                    (int) (b.getHeight() * factorH), true);
+        }
+
         private void verFotos() {
             AlertDialog.Builder b = new AlertDialog.Builder(actividad);
             final ArrayList<PHOTO> fotos = questionTMP.getFotos();
@@ -2033,12 +2076,59 @@ import android.os.PowerManager;
 
         }
 
+        private void verFotosItem() {
+            AlertDialog.Builder b = new AlertDialog.Builder(actividad);
+            final ArrayList<PHOTO> fotos = itemTMP.getFotos();
+            ArrayList<String> list = new ArrayList<>();
+            for (PHOTO p : fotos) {
+                list.add(p.getTitlePhoto());
+            }
+
+            b.setItems(list.toArray(new CharSequence[list.size()]), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, final int i) {
+                    ImageView joto = new ImageView(mContext);
+                    final PHOTO f = fotos.get(i);
+                    joto.setImageBitmap(BitmapFactory.decodeFile(f.getNamePhoto()));
+                    AlertDialog.Builder b = new AlertDialog.Builder(actividad);
+                    b.setPositiveButton("Cerrar", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    });
+                    b.setNegativeButton("Borrar", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int j) {
+                            File delete = new File(f.getNamePhoto());
+                            if (delete.exists())
+                                if (delete.delete()) {
+                                    Log.d("FOTO", "Imagen eliminada");
+                                }
+                            fotos.remove(f);
+                            Toast.makeText(mContext, "Imagen eliminada", Toast.LENGTH_SHORT).show();
+
+                            dialogInterface.dismiss();
+                        }
+                    });
+
+                    b.setView(joto);
+                    b.setTitle(fotos.get(i).getTitlePhoto());
+                    b.show();
+                }
+            });
+            b.setTitle("Listado de Imágenes");
+            b.show();
+
+        }
+
+
         private void tomarFoto() {
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             int code = TAKE_PICTURE;
             String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
             photoTMP.setDateTime(timeStamp);
-            imgName = name + "item_" + itemTMP.getIdItem() + "_" + timeStamp + ".png";
+            imgName = name + itemTMP.getIdItem() + "_" + timeStamp + ".jpg";
             Uri output = Uri.fromFile(new File(imgName));
             intent.putExtra(MediaStore.EXTRA_OUTPUT, output);
             startActivityForResult(intent, code);
@@ -2049,7 +2139,7 @@ import android.os.PowerManager;
             int code = TAKE_PICTURES;
             String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
             photoTMP.setDateTime(timeStamp);
-            imgName = name + questionTMP.getIdQuestion() + "_" + timeStamp + ".png";
+            imgName = name + questionTMP.getIdQuestion() + "_" + timeStamp + ".jpg";
             Uri output = Uri.fromFile(new File(imgName));
             intent.putExtra(MediaStore.EXTRA_OUTPUT, output);
             startActivityForResult(intent, code);
@@ -2060,8 +2150,6 @@ import android.os.PowerManager;
             intent.setType("image/*");
             startActivityForResult(Intent.createChooser(intent, "Seleccione"), SELECT_FILE);
         }
-
-
 
 
         @Override
@@ -2084,12 +2172,14 @@ import android.os.PowerManager;
                             photoTMP.setCoordX(String.valueOf(trackerTDC.gps.getLatitude()));
                             photoTMP.setCoordY(String.valueOf(trackerTDC.gps.getLongitude()));
                             photoTMP.setNamePhoto(imgName);
-                            itemTMP.setPhoto(photoTMP);
-                            buttonTMP.setEnabled(true);
-                            buttonTMP.setFocusable(true);
+                            itemTMP.addFoto(photoTMP);
+                            //itemTMP.addFoto(photoTMP);
+                            //buttonTMP.setEnabled(true);
+                            //buttonTMP.setFocusable(true);
                             dialogInterface.dismiss();
                         }
                     });
+
                     b.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
@@ -2116,8 +2206,8 @@ import android.os.PowerManager;
                             photoTMP.setCoordY(String.valueOf(trackerTDC.gps.getLongitude()));
                             photoTMP.setNamePhoto(imgName);
                             Log.d("PHOTO", "X " + photoTMP.getCoordX() + "  Y " + photoTMP.getCoordY());
-                            questionTMP.addFoto(photoTMP);
-                            buttonTMP.setFocusable(true);
+                           questionTMP.addFoto(photoTMP);
+                            //buttonTMP.setFocusable(true);
                             dialogInterface.dismiss();
                         }
                     });
@@ -2146,12 +2236,14 @@ import android.os.PowerManager;
                     BitmapFactory.decodeFile(selectedImagePath, options);
                     final int REQUIRED_SIZE = 200;
                     int scale = 1;
-                    while (options.outWidth / scale / 2 >= REQUIRED_SIZE
-                            && options.outHeight / scale / 2 >= REQUIRED_SIZE)
-                        scale *= 2;
+
+                    while (options.outWidth / scale / 4 >= REQUIRED_SIZE  && options.outHeight / scale / 4 >= REQUIRED_SIZE)
+                        scale *= 20;
                     options.inSampleSize = scale;
                     options.inJustDecodeBounds = false;
                     bm = BitmapFactory.decodeFile(selectedImagePath, options);
+                    Log.e("selectedImagePath", "Valor que trae  bm = BitmapFactory.decodeFile(selectedImagePath, options) " + bm);
+
 
                     AlertDialog.Builder b = new AlertDialog.Builder(actividad);
                     final EditText titulo = new EditText(this);
@@ -2171,12 +2263,13 @@ import android.os.PowerManager;
                             photoTMP.setCoordY(String.valueOf(trackerTDC.gps.getLongitude()));
                             photoTMP.setNamePhoto(selectedImagePath);
                             photoTMP.setBitmap(bm);
+                            dialogInterface.dismiss();
                             if (questionTMP!=null)
                                 questionTMP.addFoto(photoTMP);
                             if (itemTMP!=null) {
-                                itemTMP.setPhoto(photoTMP);
-                                buttonTMP.setEnabled(true);
-                                buttonTMP.setFocusable(true);
+                                itemTMP.addFoto(photoTMP);
+                               // buttonTMP.setEnabled(true);
+                               // buttonTMP.setFocusable(true);
                             }
                             dialogInterface.dismiss();
                         }
@@ -2235,12 +2328,11 @@ import android.os.PowerManager;
 
         private class EnviarIden extends AsyncTask<String, String, String> {
             boolean ok = false;
+            Button bEnviar = (Button) findViewById(R.id.btnEnviar);
 
             private EnviarIden() {
                 dialog = new ProgressDialog(mContext);
                 dialog.setMessage("Enviando formulario...");
-                Button bEnviar = (Button) findViewById(R.id.btnEnviar);
-                bEnviar.setEnabled(false);
                 dialog.setCancelable(false);
                 dialog.setCanceledOnTouchOutside(false);
             }
@@ -2255,22 +2347,17 @@ import android.os.PowerManager;
                 try {
                     TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
                     String response = SoapRequestTDC.sendAnswerIDEN(telephonyManager.getDeviceId(), IDMAIN, SYSTEMS);
+                    if (response.equalsIgnoreCase("false")){
+                        return "Debe llenar el formulario.";
+                    }else {
+                        LocalText localT = new LocalText();                                             //Desde Aqui guardamos el fichero local
+                        if (localT.isDisponibleSD() && localT.isAccesoEscrituraSD())
+                            localT.escribirFicheroMemoriaExterna(IDMAIN + ",answerIden", response);
 
-                    LocalText localT = new LocalText();                                             //Desde Aqui guardamos el fichero local
-
-                    if(localT.isDisponibleSD() && localT.isAccesoEscrituraSD())
-                        localT.escribirFicheroMemoriaExterna(IDMAIN+",answerIden",response);
-
-                    return "Datos exitosamente guardados";
+                        return "Datos exitosamente guardados";
+                    }
 
 
-                    /*ArrayList<String> parse = XMLParser.getReturnCode2(response);
-                    if (parse.get(0).equals("0")) {
-                        ok = true;
-                        return parse.get(1);
-                    } else {
-                        return "Error Code:" + parse.get(0) + "\n" + parse.get(1);
-                    }*/
                 } catch (IOException e) {
                     return "Se agotó el tiempo de conexión.";
                /* } catch (ParserConfigurationException | SAXException | XPathExpressionException e) {
@@ -2280,29 +2367,8 @@ import android.os.PowerManager;
                 }
             }
 
-            /*@Override
-            protected void onPostExecute(String s) {
-                if (dialog.isShowing()) dialog.dismiss();
-
-                formSended = ok;
-                if (ok) {
-                    subir_fotos(s);
-                } else {
-                    AlertDialog.Builder b = new AlertDialog.Builder(mContext);
-                    b.setMessage(s);
-                    b.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            dialogInterface.dismiss();
-                        }
-                    });
-                    b.show();
-                }
-
-            }*/
-
         @Override
-        protected void onPostExecute(String s) {
+        protected void onPostExecute(final String s) {
             if (dialog.isShowing()) dialog.dismiss();
 
             AlertDialog.Builder b = new AlertDialog.Builder(actividad);
@@ -2312,10 +2378,12 @@ import android.os.PowerManager;
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     dialogInterface.dismiss();
-                    REG.clearPreferences();
-                    setResult(RESULT_OK);
-                    actividad.finish();
-
+                    if (s.equalsIgnoreCase("Datos exitosamente guardados")) {
+                        bEnviar.setEnabled(false);
+                        REG.clearPreferences();
+                        setResult(RESULT_OK);
+                        actividad.finish();
+                    }
                 }
             });
             b.show();
@@ -2325,12 +2393,11 @@ import android.os.PowerManager;
         private class Enviar3G extends AsyncTask<String, String, String> {
 
             boolean ok = false;
+            Button bEnviar = (Button) findViewById(R.id.btnEnviar);
 
             private Enviar3G() {
                 dialog = new ProgressDialog(mContext);
                 dialog.setMessage("Enviando formulario...");
-                Button bEnviar = (Button) findViewById(R.id.btnEnviar);
-                bEnviar.setEnabled(false);
                 dialog.setCancelable(false);
                 dialog.setCanceledOnTouchOutside(false);
             }
@@ -2346,25 +2413,16 @@ import android.os.PowerManager;
                     TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
                     String response = SoapRequestTDC.sendAnswer3G(telephonyManager.getDeviceId(), IDMAIN, SYSTEMS);
 
-                    LocalText localT = new LocalText();      //Desde Aqui guardamos el fichero local 3g para posteriormente ser enviado en Cierre ACtividad
+                    if (response.equalsIgnoreCase("false")){
+                        return "Debe llenar el formulario.";
+                    }else {
+                        LocalText localT = new LocalText();      //Desde Aqui guardamos el fichero local 3g para posteriormente ser enviado en Cierre ACtividad
 
-                    if (localT.isDisponibleSD() && localT.isAccesoEscrituraSD())
-                        localT.escribirFicheroMemoriaExterna(IDMAIN + ",answer3G", response);
+                        if (localT.isDisponibleSD() && localT.isAccesoEscrituraSD())
+                            localT.escribirFicheroMemoriaExterna(IDMAIN + ",answer3G", response);
 
-                    return "Datos exitosamente guardados";
-
-
-                  /*  ArrayList<String> parse = XMLParser.getReturnCode2(response);
-                    if (parse.get(0).equals("0")) {
-                        ok = true;
-                        return parse.get(1);
-                    } else {
-                        return "Error Code:" + parse.get(0) + "\n" + parse.get(1);
+                        return "Datos exitosamente guardados";
                     }
-                } catch (IOException e) {
-                    return "Se agotó el tiempo de conexión.";
-                } catch (ParserConfigurationException | SAXException | XPathExpressionException e) {
-                    return "Error al leer XML";*/
                 } catch (Exception e) {
                     return "Error al enviar la respuesta.";
 
@@ -2372,29 +2430,9 @@ import android.os.PowerManager;
                 //TODO AGREGAR CATCH GENERAL
             }
 
-        /*    @Override
-            protected void onPostExecute(String s) {
-                if (dialog.isShowing()) dialog.dismiss();
-
-                formSended = ok;
-                if (ok) {
-                    subir_fotos(s);
-                } else {
-                    AlertDialog.Builder b = new AlertDialog.Builder(mContext);
-                    b.setMessage(s);
-                    b.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            dialogInterface.dismiss();
-                        }
-                    });
-                    b.show();
-                }
-
-            }*/
 
             @Override
-            protected void onPostExecute(String s) {
+            protected void onPostExecute(final String s) {
                 if (dialog.isShowing()) dialog.dismiss();
 
                 AlertDialog.Builder b = new AlertDialog.Builder(actividad);
@@ -2404,16 +2442,17 @@ import android.os.PowerManager;
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.dismiss();
-                        REG.clearPreferences();
-                        setResult(RESULT_OK);
-                        actividad.finish();
-
+                        if (s.equalsIgnoreCase("Datos exitosamente guardados")) {
+                            REG.clearPreferences();
+                            setResult(RESULT_OK);
+                            actividad.finish();
+                        }
                     }
                 });
                 b.show();
             }
         }
-//Falta este
+
         private class Enviar extends AsyncTask<String, String, String> {
 
     boolean ok = false;
