@@ -38,7 +38,7 @@ public class ITEM {
     ArrayList<QUESTION> questions;
     ArrayList<VALUE> values;
     ArrayList<SET> setArrayList;
-
+    ArrayList<PHOTO> fotos;
 
 
     ArrayList<ArrayList<SET>> setlistArrayList;
@@ -58,81 +58,81 @@ public class ITEM {
         this.title = title;
     }
 
-    public String getAnswer3G(){
+    public String getAnswer3G() {
         String Answer = "";
-        if(idType.equals(Constantes.RADIO)){
+        if (idType.equals(Constantes.RADIO)) {
             RadioGroup rg = (RadioGroup) view;
             int id = rg.getCheckedRadioButtonId();
-            if(id != -1) {
+            if (id != -1) {
                 RadioButton rb = (RadioButton) rg.findViewById(id);
                 Answer = rb.getText().toString();
-            }else
+            } else
                 Answer = "";
         }
-        if(idType.equals(Constantes.CHECK) || idType.equals(Constantes.CHECK_PHOTO) ){    //SI se cambia a 2 borrar || idType.equals(Constantes.CHECK_PHOTO)
-            int count= 0;
-            for(CheckBox c: checkBoxes){
+        if (idType.equals(Constantes.CHECK) || idType.equals(Constantes.CHECK_PHOTO)) {    //SI se cambia a 2 borrar || idType.equals(Constantes.CHECK_PHOTO)
+            int count = 0;
+            for (CheckBox c : checkBoxes) {
 
-                if(c.isChecked()) {
-                    if(checkBoxes.indexOf(c)==0){
+                if (c.isChecked()) {
+                    if (checkBoxes.indexOf(c) == 0) {
                         Answer += c.getText().toString();
-                    }else{
-                        Answer += ";"+c.getText().toString();
+                    } else {
+                        Answer += ";" + c.getText().toString();
                     }
                     count++;
                 }
-                if(count==0)
+                if (count == 0)
                     Answer = "";
             }
         }
-        if(idType.equals(Constantes.TEXT) || idType.equals(Constantes.NUM)){
-            Answer = ((EditText)view).getText().toString();
+        if (idType.equals(Constantes.TEXT) || idType.equals(Constantes.NUM)) {
+            Answer = ((EditText) view).getText().toString();
         }
 
         return Answer;
     }
-    public String getAnswerFaena(){
+
+    public String getAnswerFaena() {
         String Answer = "";
-        if(idType.equals(Constantes.RADIO)){
+        if (idType.equals(Constantes.RADIO)) {
             RadioGroup rg = (RadioGroup) view;
             int id = rg.getCheckedRadioButtonId();
-            if(id != -1) {
+            if (id != -1) {
                 RadioButton rb = (RadioButton) rg.findViewById(id);
                 Answer = rb.getText().toString();
-            }else
+            } else
                 Answer = "";
         }
-        if(idType.equals(Constantes.CHECK)){
-            int count= 0;
-            for(CheckBox c: checkBoxes){
-                if(c.isChecked()) {
-                    if(checkBoxes.indexOf(c)==0){
+        if (idType.equals(Constantes.CHECK)) {
+            int count = 0;
+            for (CheckBox c : checkBoxes) {
+                if (c.isChecked()) {
+                    if (checkBoxes.indexOf(c) == 0) {
                         Answer += c.getText().toString();
-                    }else{
-                        Answer += ";"+c.getText().toString();
+                    } else {
+                        Answer += ";" + c.getText().toString();
                     }
                     count++;
                 }
-                if(count==0)
+                if (count == 0)
                     Answer = "";
             }
         }
-        if(idType.equals(Constantes.TEXT) || idType.equals(Constantes.NUM)){
-            Answer = ((EditText)view).getText().toString();
+        if (idType.equals(Constantes.TEXT) || idType.equals(Constantes.NUM)) {
+            Answer = ((EditText) view).getText().toString();
         }
-        if(idType.equals(Constantes.HOUR)){
+        if (idType.equals(Constantes.HOUR)) {
             Answer = editText.getText().toString();
         }
 
-        if(idType.equals(Constantes.PHOTO)){
-            if(photo != null) {
+        if (idType.equals(Constantes.PHOTO)) {
+            if (photo != null) {
 
                 File fot = new File(photo.getNamePhoto());
-                if(fot.exists()) {
+                if (fot.exists()) {
                     Answer = fot.getName();
-                }else Answer = "";
-            }
-            else{
+                } else Answer = "";
+            } else {
                 Answer = "";
             }
         }
@@ -144,7 +144,7 @@ public class ITEM {
     public View generateView(final Context ctx) {
         if (idType.equals(Constantes.ADD)) {
             view = new TextView(ctx);
-            ((TextView)view).setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+            ((TextView) view).setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
 
             /*LinearLayout.LayoutParams buttonParam = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
             LinearLayout.LayoutParams numParam = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -173,7 +173,7 @@ public class ITEM {
                 RadioButton b = new RadioButton(ctx);
                 b.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
                 b.setText(v.getNameValue());
-                ((RadioGroup)view).addView(b);
+                ((RadioGroup) view).addView(b);
             }
             ((RadioGroup) view).setGravity(Gravity.CENTER_HORIZONTAL);
             ((RadioGroup) view).setOrientation(LinearLayout.HORIZONTAL);
@@ -184,21 +184,21 @@ public class ITEM {
             checkBoxes = new ArrayList<>();
             int count = 0;
 
-            LinearLayout tmp ;
+            LinearLayout tmp;
             tmp = new LinearLayout(ctx);
             tmp.setOrientation(LinearLayout.HORIZONTAL);
             for (VALUE v : values) {
                 LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
-                param.weight=1;
+                param.weight = 1;
                 CheckBox c = new CheckBox(ctx);
                 c.setText(v.getNameValue());
                 c.setLayoutParams(param);
                 c.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
                 checkBoxes.add(c);
-                if(count == 0){
+                if (count == 0) {
                     tmp.addView(c);
                     count++;
-                }else if(count == 1){
+                } else if (count == 1) {
                     tmp.addView(c);
                     ((LinearLayout) view).addView(tmp);
                     tmp = new LinearLayout(ctx);
@@ -207,12 +207,12 @@ public class ITEM {
                 }
             }
         }
-        if(idType.equals(Constantes.TEXT) || idType.equals(Constantes.NUM)){
+        if (idType.equals(Constantes.TEXT) || idType.equals(Constantes.NUM)) {
             view = new EditText(ctx);
-            ((TextView)view).setTextSize(TypedValue.COMPLEX_UNIT_SP,15);
+            ((TextView) view).setTextSize(TypedValue.COMPLEX_UNIT_SP, 15);
             view.setBackgroundResource(R.drawable.fondo_edittext);
-            if(idType.equals(Constantes.NUM)){
-                ((TextView)view).setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            if (idType.equals(Constantes.NUM)) {
+                ((TextView) view).setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
             }
         }
 
@@ -222,18 +222,18 @@ public class ITEM {
                 RadioButton b = new RadioButton(ctx);
                 b.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
                 b.setText(v.getNameValue());
-                ((RadioGroup)view).addView(b);
+                ((RadioGroup) view).addView(b);
             }
             LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            p.leftMargin =(int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, ctx.getResources().getDisplayMetrics());
+            p.leftMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, ctx.getResources().getDisplayMetrics());
             ((RadioGroup) view).setGravity(Gravity.LEFT);
             view.setLayoutParams(p);
             ((RadioGroup) view).setOrientation(LinearLayout.HORIZONTAL);
-            if(values.size() > 3)
+            if (values.size() > 3)
                 ((RadioGroup) view).setOrientation(LinearLayout.VERTICAL);
         }
 
-        if(idType.equals(Constantes.HOUR)){
+        if (idType.equals(Constantes.HOUR)) {
             final Calendar myCalendar = Calendar.getInstance();
             final EditText fecha = new EditText(ctx);
             fecha.setBackgroundResource(R.drawable.fondo_edittext);
@@ -245,10 +245,10 @@ public class ITEM {
             pick.setBackgroundResource(R.drawable.button_gray);
             pick.setImageResource(R.drawable.ic_reloj_white);
 
-            LinearLayout.LayoutParams pButton = new LinearLayout.LayoutParams(0,(int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48, ctx.getResources().getDisplayMetrics()));
-            LinearLayout.LayoutParams pText = new LinearLayout.LayoutParams(0, (int)TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48, ctx.getResources().getDisplayMetrics()));
-            pButton.weight=1;
-            pText.weight=4;
+            LinearLayout.LayoutParams pButton = new LinearLayout.LayoutParams(0, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48, ctx.getResources().getDisplayMetrics()));
+            LinearLayout.LayoutParams pText = new LinearLayout.LayoutParams(0, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48, ctx.getResources().getDisplayMetrics()));
+            pButton.weight = 1;
+            pText.weight = 4;
             pText.leftMargin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, ctx.getResources().getDisplayMetrics());
 
 
@@ -276,68 +276,60 @@ public class ITEM {
             });
 
             view = new LinearLayout(ctx);
-            ((LinearLayout)view).setOrientation(LinearLayout.HORIZONTAL);
-            ((LinearLayout)view).setGravity(Gravity.CENTER_VERTICAL);
+            ((LinearLayout) view).setOrientation(LinearLayout.HORIZONTAL);
+            ((LinearLayout) view).setGravity(Gravity.CENTER_VERTICAL);
 
             fecha.setLayoutParams(pText);
             pick.setLayoutParams(pButton);
 
             editText = fecha;
 
-            ((LinearLayout)view).addView(pick);
-            ((LinearLayout)view).addView(fecha);
-        }
-        if(idType.equals(Constantes.PHOTO)){
-           /* ImageButton photo = new ImageButton(mContext);
-            photo.setLayoutParams(new LinearLayout.LayoutParams((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48, getResources().getDisplayMetrics()),
-                    (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48, getResources().getDisplayMetrics())));
-            photo.setImageResource(R.drawable.ic_camerawhite);
-            photo.setPadding(10, 10, 10, 10);
-            photo.setBackgroundResource(R.drawable.button_gray_rounded);
-            photo.setFocusable(true);                                       //Con estas 2 lineas corregimos el problema de perder el foco al tomar una foto
-            photo.setFocusableInTouchMode(true);                            //El detalle es que debemos pulsar 2 veces el boton :-(
-            photo.setOnClickListener(new View.OnClickListener() {
-*/
-            LinearLayout.LayoutParams left = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
-            LinearLayout.LayoutParams right = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
-            left.weight = 4;
-            right.weight = 3;
-            buttons = new ArrayList<>();
-            Button take = new Button(ctx);
-            Button select_file = new Button(ctx);
-            Button show = new Button(ctx);
-
-            take.setText("Tomar Foto");
-            take.setLayoutParams(left);
-            take.setBackgroundResource(R.drawable.custom_button_blue_left);
-            take.setTextColor(Color.WHITE);
-
-            select_file.setText("Buscar en Galería");
-            select_file.setLayoutParams(left);
-            select_file.setBackgroundResource(R.drawable.custom_button_blue_left);
-            select_file.setTextColor(Color.WHITE);
-
-            show.setText("Ver");
-            show.setLayoutParams(right);
-            show.setBackgroundResource(R.drawable.custom_button_blue_right);
-            show.setTextColor(Color.WHITE);
-            show.setEnabled(false);
-
-            buttons.add(take);
-            buttons.add(select_file);
-            buttons.add(show);
-
-            view = new LinearLayout(ctx);
-            ((LinearLayout)view).setOrientation(LinearLayout.HORIZONTAL);
-            ((LinearLayout)view).addView(take);
-            ((LinearLayout)view).addView(select_file);
-            ((LinearLayout)view).addView(show);
+            ((LinearLayout) view).addView(pick);
+            ((LinearLayout) view).addView(fecha);
         }
 
+   /* if(idType.equals(Constantes.PHOTO))
 
-        return view;
-    }
+    {
+        LinearLayout.LayoutParams left = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams right = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
+        left.weight = 4;
+        right.weight = 3;
+        buttons = new ArrayList<>();
+        Button take = new Button(ctx);
+        Button select_file = new Button(ctx);
+        Button show = new Button(ctx);
 
+        take.setText("Tomar Foto");
+        take.setLayoutParams(left);
+        take.setBackgroundResource(R.drawable.custom_button_blue_left);
+        take.setTextColor(Color.WHITE);
+
+        select_file.setText("Buscar en Galería");
+        select_file.setLayoutParams(left);
+        select_file.setBackgroundResource(R.drawable.custom_button_blue_left);
+        select_file.setTextColor(Color.WHITE);
+
+        show.setText("Ver");
+        show.setLayoutParams(right);
+        show.setBackgroundResource(R.drawable.custom_button_blue_right);
+        show.setTextColor(Color.WHITE);
+        show.setEnabled(false);
+
+        buttons.add(take);
+        buttons.add(select_file);
+        buttons.add(show);
+
+
+        view = new LinearLayout(ctx);
+        ((LinearLayout) view).setOrientation(LinearLayout.HORIZONTAL);
+        ((LinearLayout) view).addView(take);
+        ((LinearLayout) view).addView(select_file);
+        ((LinearLayout) view).addView(show);
+    }*/
+
+    return view;
+}
 
     public TextView getTitle(Context ctx) {
         title = new TextView(ctx);
@@ -362,6 +354,9 @@ public class ITEM {
     public void setButtons(ArrayList<Button> buttons) {
         this.buttons = buttons;
     }
+    public ArrayList<PHOTO> getFotos() {
+        return fotos;
+    }
 
     public PHOTO getPhoto() {
         return photo;
@@ -369,6 +364,15 @@ public class ITEM {
 
     public void setPhoto(PHOTO photo) {
         this.photo = photo;
+    }
+    public void setFotos(ArrayList<PHOTO> fotos) {
+        this.fotos = fotos;
+    }
+    public void addFoto(PHOTO p){
+        if(fotos == null)
+            fotos = new ArrayList<>();
+
+        fotos.add(p);
     }
 
     public Button getButton() {

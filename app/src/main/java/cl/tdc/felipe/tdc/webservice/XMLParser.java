@@ -105,6 +105,25 @@ public class XMLParser {
         //return cpe.elementAt(1).toString(); // Mostrar elemento 1 del Vector
     }
 
+    public static ArrayList<String> getReturnCodeProfile(String xmlRecords) throws ParserConfigurationException,
+            SAXException, IOException, XPathExpressionException {
+        ArrayList<String> models = new ArrayList<>();
+
+        DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        InputSource is = new InputSource();
+        is.setCharacterStream(new StringReader(xmlRecords));
+
+        Document doc = db.parse(is);
+        Element name = (Element) doc.getElementsByTagName("NameResource").item(0);
+        Element code = (Element) doc.getElementsByTagName("IdResource").item(0);
+
+        models.add(getCharacterDataFromElement(name));
+        models.add(getCharacterDataFromElement(code));
+
+        return models;
+        //return cpe.elementAt(1).toString(); // Mostrar elemento 1 del Vector
+    }
+
 
     public static ArrayList<String> getReturnCode1(String xmlRecords) throws ParserConfigurationException,
             SAXException, IOException, XPathExpressionException {

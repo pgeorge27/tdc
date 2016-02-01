@@ -126,6 +126,12 @@ public class MainActivity extends ActionBarActivity {
 
         Actualizar a = new Actualizar();
         a.execute();
+
+
+        ProfileTask profileTask = new ProfileTask(this);
+        profileTask.execute(); //
+
+
     }
 
     @Override
@@ -489,6 +495,82 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+    private class ProfileTask extends AsyncTask<String, String, ArrayList<String>> {
+        ProgressDialog progressDialog = null;
+        Context tContext;
+        String ATAG = "PROFILETASK";
+        String mensaje;
+
+        public ProfileTask(Context context) {
+            this.tContext = context;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            progressDialog = new ProgressDialog(tContext);
+            progressDialog.setTitle("Espere por favor...");
+            progressDialog.show();
+        }
+
+
+        @Override
+        protected void onProgressUpdate(String... values) {
+            progressDialog.setMessage(values[0]);
+        }
+
+        @Override
+        protected ArrayList<String> doInBackground(String... strings) {
+            try {
+                publishProgress("Verificando Perfil...");
+                String query = SoapRequest.profileResource(IMEI);
+                return XMLParser.getReturnCodeProfile(query);
+            } catch (IOException e) {
+
+               // LocalText localT = new LocalText();
+                //String mantenimientoLocal = localT.leerFicheroMemoriaExterna("profile-config");
+
+               /* if (mantenimientoLocal!=null){
+                    ArrayList<String> nombreArrayList = new ArrayList<String>();
+                    nombreArrayList.add("0");
+                    nombreArrayList.add("local");
+                    return nombreArrayList;
+                }else{
+                    Log.e(ATAG, e.getMessage() + ":\n" + e.getCause());
+                    mensaje = dummy.ERROR_CONNECTION;
+                }*/
+
+            } catch (SAXException | XPathExpressionException | ParserConfigurationException e) {
+                e.printStackTrace();
+                mensaje = dummy.ERROR_PARSE;
+            } catch (Exception e) {
+                e.printStackTrace();
+                mensaje = dummy.ERROR_GENERAL;
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<String> s) {
+            if (progressDialog.isShowing())
+                progressDialog.dismiss();
+
+            if (s == null) {
+                Toast.makeText(tContext, mensaje, Toast.LENGTH_LONG).show();
+            } else {
+                if (s.get(0).compareTo("0") == 0) {
+                    Intent i = new Intent(tContext, AgendaActivity.class);
+                    i.putExtra("RESPONSE", s);
+                    i.putExtra("LOCAL", s.get(1));
+                    startActivity(i);
+                } else {
+                    Toast.makeText(getApplicationContext(), s.get(1), Toast.LENGTH_LONG).show();
+                }
+
+            }
+        }
+    }
+
+
     private class Actualizar extends AsyncTask<String, String, ArrayList<String>> {
         ProgressDialog progressDialog = null;
         String ATAG = "ACTUALIZACION";
@@ -553,13 +635,7 @@ public class MainActivity extends ActionBarActivity {
                     builder.setPositiveButton("Descargar e Instalar", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                        /*Toast.makeText(mContext, "Descargando... si claro", Toast.LENGTH_LONG).show();
-                        Intent intent = new Intent(Intent.ACTION_VIEW);
-                        intent.setDataAndType(Uri.fromFile(new File(Environment.getExternalStorageDirectory() + "/app-debug.apk")), "application/vnd.android.package-archive");
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
-                        p.finish();
-                        dialog.dismiss();*/
+
                             Update u = new Update(mContext, s.get(1), s.get(2));
                             u.execute();
                         }

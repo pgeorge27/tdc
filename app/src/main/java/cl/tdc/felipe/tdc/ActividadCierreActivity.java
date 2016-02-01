@@ -8,6 +8,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
@@ -43,6 +45,8 @@ import java.util.ArrayList;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 
+import cl.tdc.felipe.tdc.daemon.PositionTrackerTDC;
+import cl.tdc.felipe.tdc.daemon.WifiTrackerTDC;
 import cl.tdc.felipe.tdc.extras.Constantes;
 import cl.tdc.felipe.tdc.extras.LocalText;
 import cl.tdc.felipe.tdc.objects.FormularioCierre.AREA;
@@ -72,6 +76,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
 
     private static String TITLE = "Cierre de Actividad";
     private static String IMEI;
+    public static Intent service_wifi, service_pos;
     String idMain;
     boolean cerrarMant=true;
     LocalText local = new LocalText();
@@ -479,42 +484,8 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                 }else
                     code = -1;
 
-//                if(type.equals("AIR")){
-//                    AlertDialog.Builder b = new AlertDialog.Builder(actividad);
-//                    final EditText nText = new EditText(mContext);
-//                    nText.setBackgroundResource(R.drawable.fondo_edittext);
-//                    nText.setInputType(InputType.TYPE_CLASS_NUMBER);
-//
-//                    String text = REG.getString("NAIR");
-//                    nText.setText(text);
-//                    b.setTitle("Ingrese cantidad de aires acondicionados");
-//                    b.setView(nText);
-//                    b.setPositiveButton("OK", null);
-//                    b.setNegativeButton("SALIR", new DialogInterface.OnClickListener() {
-//                        @Override
-//                        public void onClick(DialogInterface dialogInterface, int i) {
-//                            dialogInterface.dismiss();
-//                        }
-//                    });
-//                    final AlertDialog d = b.create();
-//                    d.show();
-//
-//                    d.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View view) {
-//                            if(nText.getText().length() > 0){
-//                                intent.putExtra("NAIR", nText.getText().toString());
-//                                REG.addValue("NAIR", nText.getText().toString());
-//                                d.dismiss();
-//                                startActivityForResult(intent, code);
-//                            }else{
-//                                Toast.makeText(mContext,"Debe ingresar un número para continuar", Toast.LENGTH_SHORT).show();
-//                            }
-//                        }
-//                    });
-//                }else {
                     startActivityForResult(intent, code);
-//                }
+
             } else {
                 AlertDialog.Builder b = new AlertDialog.Builder(actividad);
                 b.setTitle("Error");
@@ -577,39 +548,69 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         }
     }
 
+    public boolean isOnline() {
+        ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo mWifi = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+
+        NetworkInfo m4G = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+
+        int networkType = m4G.getSubtype();
+
+
+        if (mWifi.isConnected()) {
+            return true;
+        } else if (networkType == TelephonyManager.NETWORK_TYPE_LTE) {
+            return true;
+        }
+
+        return false;
+    }
+/*
+    ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+    NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+    if (mWifi.isConnected()) {
+     }*/
+
     public void enviar(View v) {
-        local.listarFicheros(idMain);
-      //  Log.e("titulo main", "El id maain es ::::" + idMain);
-        local.crearListaEnvio("answer");
-        if (local.itemAnsw.size() > 0 ) {
-            AlertDialog.Builder b = new AlertDialog.Builder(actividad);
-            b.setMessage("¿Desea cerrar el mantenimiento?");
-            b.setPositiveButton("SI", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                EnviarMantOff env = new EnviarMantOff();
-                env.execute();
-                }
-            });
-            b.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    dialogInterface.dismiss();
-                }
-            });
-            b.setCancelable(false);
-            b.show();
-        }else{
-            AlertDialog.Builder b = new AlertDialog.Builder(actividad);
-            b.setMessage("Por favor llene algún check");
-            b.setNegativeButton("OK", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    dialogInterface.dismiss();
-                }
-            });
-            b.setCancelable(false);
-            b.show();
+        if (isOnline()) {
+
+            local.listarFicheros(idMain);
+            //  Log.e("titulo main", "El id maain es ::::" + idMain);
+            local.crearListaEnvio("answer");
+            if (local.itemAnsw.size() > 0) {
+                AlertDialog.Builder b = new AlertDialog.Builder(actividad);
+                b.setMessage("¿Desea cerrar el mantenimiento?");
+                b.setPositiveButton("SI", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        EnviarMantOff env = new EnviarMantOff();
+                        env.execute();
+                    }
+                });
+                b.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                b.setCancelable(false);
+                b.show();
+            } else {
+                AlertDialog.Builder b = new AlertDialog.Builder(actividad);
+                b.setMessage("Por favor llene algún check");
+                b.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                b.setCancelable(false);
+                b.show();
+            }
+        } else {
+            Toast.makeText(ActividadCierreActivity.this, "Verifique si tiene plan de data movil 4G o Wifi", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -618,10 +619,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         boolean ok = false;
 
         private Cierre() {
-            /*p = new ProgressDialog(actividad);
-            p.setMessage("Cerrando Mantenimiento...");
-            p.setCanceledOnTouchOutside(false);
-            p.setCancelable(false);*/
+
         }
 
         @Override
@@ -727,7 +725,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                             preg = local.leerFicheroMemoriaExterna(check);                          //leemos el archivo del tlf
                             try {                                                                   //Enviamos la petioncion al servidor SOAP (ESTO SE REALIZABA POR CADA CHECK ANTERIORMENTE AL PULSAR SOBRE ENVIAR)
                                 String response = SoapRequestTDC.sendAll(xml, accion);
-                                //ArrayList<String> parse = XMLParser.getReturnCode2(response);
+                                //aqui
                                 cerrarMant = true;
                                 resp = "Datos exitosamente ingresados!";
                                 subir_fotos(resp,subS);                                             //subS es el nombre del checklist Iden 3g etc
@@ -960,12 +958,12 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                         dos.writeBytes(twoHyphens + boundary + lineEnd);
                         dos.writeBytes("Content-Disposition: form-data; name=\"uploaded_file\";filename=\"" + done.getName() + "\"" + lineEnd);
                         dos.writeBytes(lineEnd);
-//por aqui pasa
+
                         bytesAvailable = fileInputStream.available();
 
                         bufferSize = Math.min(bytesAvailable, 1 * 1024 * 1024);
                         byte[] buf = new byte[bufferSize];
-//lee el archivo y escribe
+
                         bytesRead = fileInputStream.read(buf, 0, bufferSize);
 
                         while (bytesRead > 0) {
@@ -1014,22 +1012,6 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
 
         @Override
         protected void onPostExecute(String s) {
-            /*if (dialog.isShowing())
-                dialog.dismiss();
-            AlertDialog.Builder b = new AlertDialog.Builder(actividad);
-            b.setMessage(mensaje);
-            b.setCancelable(false);
-            b.setPositiveButton("SALIR", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    dialogInterface.dismiss();
-                    REG.clearPreferences();
-                    setResult(RESULT_OK);
-                    actividad.finish();
-
-                }
-            });
-            b.show();*/
 
             REG.clearPreferences();
             setResult(RESULT_OK);

@@ -2531,12 +2531,11 @@ import android.os.PowerManager;
         private class EnviarTransport extends AsyncTask<String, String, String> {
 
             boolean ok = false;
+            Button bEnviar = (Button) findViewById(R.id.btnEnviar);
 
             private EnviarTransport() {
                 dialog = new ProgressDialog(mContext);
                 dialog.setMessage("Enviando formulario...");
-                Button bEnviar = (Button) findViewById(R.id.btnEnviar);
-                bEnviar.setEnabled(false);
                 dialog.setCancelable(false);
                 dialog.setCanceledOnTouchOutside(false);
             }
@@ -2551,13 +2550,16 @@ import android.os.PowerManager;
                 try {
                     TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
                     String response = SoapRequestTDC.sendAnswerTransport(telephonyManager.getDeviceId(), IDMAIN, SYSTEMS);
-                    LocalText localT = new LocalText();      //Desde Aqui guardamos el fichero local para posteriormente ser enviado en Cierre ACtividad
+                    if (response.equalsIgnoreCase("false")) {
+                        return "Debe llenar el formulario.";
+                    } else {
+                        LocalText localT = new LocalText();      //Desde Aqui guardamos el fichero local para posteriormente ser enviado en Cierre ACtividad
 
-                    if(localT.isDisponibleSD() && localT.isAccesoEscrituraSD())
-                        localT.escribirFicheroMemoriaExterna(IDMAIN+",answerTransport",response);
+                        if (localT.isDisponibleSD() && localT.isAccesoEscrituraSD())
+                            localT.escribirFicheroMemoriaExterna(IDMAIN + ",answerTransport", response);
 
-                    return "Datos exitosamente guardados";
-
+                        return "Datos exitosamente guardados";
+                    }
                 } catch (Exception e) {
                     return "Error al enviar la respuesta.";
 
@@ -2566,7 +2568,7 @@ import android.os.PowerManager;
             }
 
             @Override
-            protected void onPostExecute(String s) {
+            protected void onPostExecute(final String s) {
                 if (dialog.isShowing()) dialog.dismiss();
 
 
@@ -2577,9 +2579,12 @@ import android.os.PowerManager;
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.dismiss();
-                        REG.clearPreferences();
-                        setResult(RESULT_OK);
-                        actividad.finish();
+                        if (s.equalsIgnoreCase("Datos exitosamente guardados")) {
+                            bEnviar.setEnabled(false);
+                            REG.clearPreferences();
+                            setResult(RESULT_OK);
+                            actividad.finish();
+                        }
                     }
                 });
                 b.show();
@@ -2589,12 +2594,11 @@ import android.os.PowerManager;
         private class EnviarSG extends AsyncTask<String, String, String> {
 
             boolean ok = false;
+            Button bEnviar = (Button) findViewById(R.id.btnEnviar);
 
             private EnviarSG() {
                 dialog = new ProgressDialog(mContext);
                 dialog.setMessage("Enviando formulario...");
-                Button bEnviar = (Button) findViewById(R.id.btnEnviar);
-                bEnviar.setEnabled(false);
                 dialog.setCancelable(false);
                 dialog.setCanceledOnTouchOutside(false);
             }
@@ -2609,13 +2613,16 @@ import android.os.PowerManager;
                 try {
                     TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
                     String response = SoapRequestTDC.sendAnswerSG(telephonyManager.getDeviceId(), IDMAIN, SYSTEMS);
+                    if (response.equalsIgnoreCase("false")){
+                        return "Debe llenar el formulario.";
+                    }else {
+                        LocalText localT = new LocalText();      //Desde Aqui guardamos el fichero local para posteriormente ser enviado en Cierre ACtividad
 
-                    LocalText localT = new LocalText();      //Desde Aqui guardamos el fichero local para posteriormente ser enviado en Cierre ACtividad
+                        if (localT.isDisponibleSD() && localT.isAccesoEscrituraSD())
+                            localT.escribirFicheroMemoriaExterna(IDMAIN + ",answerSystem", response);
 
-                    if(localT.isDisponibleSD() && localT.isAccesoEscrituraSD())
-                        localT.escribirFicheroMemoriaExterna(IDMAIN+",answerSystem",response);
-
-                    return "Datos exitosamente guardados";
+                        return "Datos exitosamente guardados";
+                    }
 
                 } catch (Exception e) {
                     return "Error al enviar la respuesta.";
@@ -2625,7 +2632,7 @@ import android.os.PowerManager;
             }
 
             @Override
-            protected void onPostExecute(String s) {
+            protected void onPostExecute(final String s) {
                 if (dialog.isShowing()) dialog.dismiss();
 
 
@@ -2636,9 +2643,12 @@ import android.os.PowerManager;
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.dismiss();
-                        REG.clearPreferences();
-                        setResult(RESULT_OK);
-                        actividad.finish();
+                        if (s.equalsIgnoreCase("Datos exitosamente guardados")) {
+                            bEnviar.setEnabled(false);
+                            REG.clearPreferences();
+                            setResult(RESULT_OK);
+                            actividad.finish();
+                        }
                     }
                 });
                 b.show();
@@ -2648,12 +2658,11 @@ import android.os.PowerManager;
         private class EnviarDC extends AsyncTask<String, String, String> {
 
             boolean ok = false;
+            Button bEnviar = (Button) findViewById(R.id.btnEnviar);
 
             private EnviarDC() {
                 dialog = new ProgressDialog(mContext);
                 dialog.setMessage("Enviando formulario...");
-                Button bEnviar = (Button) findViewById(R.id.btnEnviar);
-                bEnviar.setEnabled(false);
                 dialog.setCancelable(false);
                 dialog.setCanceledOnTouchOutside(false);
             }
@@ -2668,12 +2677,17 @@ import android.os.PowerManager;
                 try {
                     TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
                     String response = SoapRequestTDC.sendAnswerDC(telephonyManager.getDeviceId(), IDMAIN, SYSTEMS);
-                    LocalText localT = new LocalText();      //Desde Aqui guardamos el fichero local para posteriormente ser enviado en Cierre ACtividad
 
-                    if(localT.isDisponibleSD() && localT.isAccesoEscrituraSD())
-                        localT.escribirFicheroMemoriaExterna(IDMAIN+",answerDC",response);
+                    if (response.equalsIgnoreCase("false")){
+                        return "Debe llenar el formulario.";
+                    }else {
+                        LocalText localT = new LocalText();      //Desde Aqui guardamos el fichero local para posteriormente ser enviado en Cierre ACtividad
 
-                    return "Datos exitosamente guardados";
+                        if (localT.isDisponibleSD() && localT.isAccesoEscrituraSD())
+                            localT.escribirFicheroMemoriaExterna(IDMAIN + ",answerDC", response);
+
+                        return "Datos exitosamente guardados";
+                    }
 
                 } catch (Exception e) {
                     return "Error al enviar la respuesta.";
@@ -2683,7 +2697,7 @@ import android.os.PowerManager;
             }
 
             @Override
-            protected void onPostExecute(String s) {
+            protected void onPostExecute(final String s) {
                 if (dialog.isShowing()) dialog.dismiss();
 
 
@@ -2694,9 +2708,12 @@ import android.os.PowerManager;
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.dismiss();
-                        REG.clearPreferences();
-                        setResult(RESULT_OK);
-                        actividad.finish();
+                        if (s.equalsIgnoreCase("Datos exitosamente guardados")) {
+                            bEnviar.setEnabled(false);
+                            REG.clearPreferences();
+                            setResult(RESULT_OK);
+                            actividad.finish();
+                        }
                     }
                 });
                 b.show();
@@ -2706,12 +2723,11 @@ import android.os.PowerManager;
         private class EnviarAir extends AsyncTask<String, String, String> {
 
             boolean ok = false;
+            Button bEnviar = (Button) findViewById(R.id.btnEnviar);
 
             private EnviarAir() {
                 dialog = new ProgressDialog(mContext);
                 dialog.setMessage("Enviando formulario...");
-                Button bEnviar = (Button) findViewById(R.id.btnEnviar);
-                bEnviar.setEnabled(false);
                 dialog.setCancelable(false);
                 dialog.setCanceledOnTouchOutside(false);
             }
@@ -2726,12 +2742,16 @@ import android.os.PowerManager;
                 try {
                     TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
                     String response = SoapRequestTDC.sendAnswerAir(telephonyManager.getDeviceId(), IDMAIN, SYSTEMS);
-                    LocalText localT = new LocalText();      //Desde Aqui guardamos el fichero local para posteriormente ser enviado en Cierre ACtividad
+                    if (response.equalsIgnoreCase("false")){
+                        return "Debe llenar el formulario.";
+                    }else {
+                        LocalText localT = new LocalText();      //Desde Aqui guardamos el fichero local para posteriormente ser enviado en Cierre ACtividad
 
-                    if(localT.isDisponibleSD() && localT.isAccesoEscrituraSD())
-                        localT.escribirFicheroMemoriaExterna(IDMAIN+",answerAir",response);
+                        if (localT.isDisponibleSD() && localT.isAccesoEscrituraSD())
+                            localT.escribirFicheroMemoriaExterna(IDMAIN + ",answerAir", response);
 
-                    return "Datos exitosamente guardados";
+                        return "Datos exitosamente guardados";
+                    }
 
                 } catch (Exception e) {
                     return "Error al enviar la respuesta.";
@@ -2741,7 +2761,7 @@ import android.os.PowerManager;
             }
 
             @Override
-            protected void onPostExecute(String s) {
+            protected void onPostExecute(final String s) {
                 if (dialog.isShowing()) dialog.dismiss();
 
                 AlertDialog.Builder b = new AlertDialog.Builder(actividad);
@@ -2751,9 +2771,12 @@ import android.os.PowerManager;
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.dismiss();
-                        REG.clearPreferences();
-                        setResult(RESULT_OK);
-                        actividad.finish();
+                        if (s.equalsIgnoreCase("Datos exitosamente guardados")) {
+                            bEnviar.setEnabled(false);
+                            REG.clearPreferences();
+                            setResult(RESULT_OK);
+                            actividad.finish();
+                        }
                     }
                 });
                 b.show();
@@ -2763,12 +2786,11 @@ import android.os.PowerManager;
         private class EnviarAC extends AsyncTask<String, String, String> {
 
             boolean ok = false;
+            Button bEnviar = (Button) findViewById(R.id.btnEnviar);
 
             private EnviarAC() {
                 dialog = new ProgressDialog(mContext);
                 dialog.setMessage("Enviando formulario...");
-                Button bEnviar = (Button) findViewById(R.id.btnEnviar);
-                bEnviar.setEnabled(false);
                 dialog.setCancelable(false);
                 dialog.setCanceledOnTouchOutside(false);
             }
@@ -2783,13 +2805,16 @@ import android.os.PowerManager;
                 try {
                     TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
                     String response = SoapRequestTDC.sendAnswerAC(telephonyManager.getDeviceId(), IDMAIN, SYSTEMS);
-                    LocalText localT = new LocalText();      //Desde Aqui guardamos el fichero local para posteriormente ser enviado en Cierre ACtividad
+                    if (response.equalsIgnoreCase("false")){
+                        return "Debe llenar el formulario.";
+                    }else {
+                        LocalText localT = new LocalText();      //Desde Aqui guardamos el fichero local para posteriormente ser enviado en Cierre ACtividad
 
-                    if(localT.isDisponibleSD() && localT.isAccesoEscrituraSD())
-                        localT.escribirFicheroMemoriaExterna(IDMAIN+",answerAC",response);
+                        if (localT.isDisponibleSD() && localT.isAccesoEscrituraSD())
+                            localT.escribirFicheroMemoriaExterna(IDMAIN + ",answerAC", response);
 
-                    return "Datos exitosamente guardados";
-
+                        return "Datos exitosamente guardados";
+                    }
                 } catch (Exception e) {
                     return "Error al enviar la respuesta.";
 
@@ -2798,7 +2823,7 @@ import android.os.PowerManager;
             }
 
             @Override
-            protected void onPostExecute(String s) {
+            protected void onPostExecute(final String s) {
                 if (dialog.isShowing()) dialog.dismiss();
 
 
@@ -2809,9 +2834,12 @@ import android.os.PowerManager;
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.dismiss();
-                        REG.clearPreferences();
-                        setResult(RESULT_OK);
-                        actividad.finish();
+                        if (s.equalsIgnoreCase("Datos exitosamente guardados")) {
+                            bEnviar.setEnabled(false);
+                            REG.clearPreferences();
+                            setResult(RESULT_OK);
+                            actividad.finish();
+                        }
                     }
                 });
                 b.show();
@@ -2821,12 +2849,11 @@ import android.os.PowerManager;
         private class EnviarGE extends AsyncTask<String, String, String> {
 
             boolean ok = false;
+            Button bEnviar = (Button) findViewById(R.id.btnEnviar);
 
             private EnviarGE() {
                 dialog = new ProgressDialog(mContext);
                 dialog.setMessage("Enviando formulario...");
-                Button bEnviar = (Button) findViewById(R.id.btnEnviar);
-                bEnviar.setEnabled(false);
                 dialog.setCancelable(false);
                 dialog.setCanceledOnTouchOutside(false);
             }
@@ -2841,12 +2868,16 @@ import android.os.PowerManager;
                 try {
                     TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
                     String response = SoapRequestTDC.sendAnswerGE(telephonyManager.getDeviceId(), IDMAIN, SYSTEMS);
-                    LocalText localT = new LocalText();      //Desde Aqui guardamos el fichero local para posteriormente ser enviado en Cierre ACtividad
+                    if (response.equalsIgnoreCase("false")){
+                        return "Debe llenar el formulario.";
+                    }else {
+                        LocalText localT = new LocalText();      //Desde Aqui guardamos el fichero local para posteriormente ser enviado en Cierre ACtividad
 
-                    if(localT.isDisponibleSD() && localT.isAccesoEscrituraSD())
-                        localT.escribirFicheroMemoriaExterna(IDMAIN+",answerGE",response);
+                        if (localT.isDisponibleSD() && localT.isAccesoEscrituraSD())
+                            localT.escribirFicheroMemoriaExterna(IDMAIN + ",answerGE", response);
 
-                    return "Datos exitosamente guardados";
+                        return "Datos exitosamente guardados";
+                    }
 
                 } catch (Exception e) {
                     return "Error al enviar la respuesta.";
@@ -2856,7 +2887,7 @@ import android.os.PowerManager;
             }
 
             @Override
-            protected void onPostExecute(String s) {
+            protected void onPostExecute(final String s) {
                 if (dialog.isShowing()) dialog.dismiss();
 
 
@@ -2867,9 +2898,12 @@ import android.os.PowerManager;
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.dismiss();
-                        REG.clearPreferences();
-                        setResult(RESULT_OK);
-                        actividad.finish();
+                        if (s.equalsIgnoreCase("Datos exitosamente guardados")) {
+                            bEnviar.setEnabled(false);
+                            REG.clearPreferences();
+                            setResult(RESULT_OK);
+                            actividad.finish();
+                        }
                     }
                 });
                 b.show();
@@ -2879,12 +2913,11 @@ import android.os.PowerManager;
         private class EnviarEmergency extends AsyncTask<String, String, String> {
 
             boolean ok = false;
+            Button bEnviar = (Button) findViewById(R.id.btnEnviar);
 
             private EnviarEmergency() {
                 dialog = new ProgressDialog(mContext);
                 dialog.setMessage("Enviando formulario...");
-                Button bEnviar = (Button) findViewById(R.id.btnEnviar);
-                bEnviar.setEnabled(false);
                 dialog.setCancelable(false);
                 dialog.setCanceledOnTouchOutside(false);
             }
@@ -2899,14 +2932,16 @@ import android.os.PowerManager;
                 try {
                     TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
                     String response = SoapRequestTDC.sendAnswerEmergency(telephonyManager.getDeviceId(), IDMAIN, SYSTEMS);
+                    if (response.equalsIgnoreCase("false")){
+                        return "Debe llenar el formulario.";
+                    }else {
+                        LocalText localT = new LocalText();      //Desde Aqui guardamos el fichero local para posteriormente ser enviado en Cierre ACtividad
 
-                    LocalText localT = new LocalText();      //Desde Aqui guardamos el fichero local para posteriormente ser enviado en Cierre ACtividad
+                        if (localT.isDisponibleSD() && localT.isAccesoEscrituraSD())
+                            localT.escribirFicheroMemoriaExterna(IDMAIN + ",answerEmerg", response);
 
-                    if(localT.isDisponibleSD() && localT.isAccesoEscrituraSD())
-                        localT.escribirFicheroMemoriaExterna(IDMAIN+",answerEmerg",response);
-
-                    return "Datos exitosamente guardados";
-
+                        return "Datos exitosamente guardados";
+                    }
                 } catch (Exception e) {
                     return "Error al enviar la respuesta.";
 
@@ -2915,7 +2950,7 @@ import android.os.PowerManager;
             }
 
             @Override
-            protected void onPostExecute(String s) {
+            protected void onPostExecute(final String s) {
                 if (dialog.isShowing()) dialog.dismiss();
 
 
@@ -2926,9 +2961,12 @@ import android.os.PowerManager;
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.dismiss();
-                        REG.clearPreferences();
-                        setResult(RESULT_OK);
-                        actividad.finish();
+                        if (s.equalsIgnoreCase("Datos exitosamente guardados")) {
+                            bEnviar.setEnabled(false);
+                            REG.clearPreferences();
+                            setResult(RESULT_OK);
+                            actividad.finish();
+                        }
                     }
                 });
                 b.show();

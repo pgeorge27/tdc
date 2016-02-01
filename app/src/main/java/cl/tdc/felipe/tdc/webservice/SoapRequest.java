@@ -1286,5 +1286,50 @@ public class SoapRequest {
         return response;
     }
 
+    public static String profileResource(String IMEI) throws Exception {
+        final String SOAP_ACTION = "urn:Configurationwsdl#profileResource";
+        String response = null;
+        String xml = null;
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date fecha = new Date();
+
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpPost httpPost = new HttpPost(dummy.URL_TDC);
+
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+        envelope.encodingStyle = SoapSerializationEnvelope.ENC;
+        envelope.dotNet = false;
+        envelope.implicitTypes = true;
+
+        String bodyOut =
+            "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:bean=\"http://bean.ws.sefi.com/\">" +
+                "<soapenv:Header/>" +
+                "<soapenv:Body>" +
+                "<urn:profileResource soapenv:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" +
+                "<Profile xsi:type=\"urn:Profile\">" +
+                "<RequestPlan xsi:type=\"urn:RequestPlan\">" +
+                "<!--Optional:-->" +
+                "<HeaderPlan xsi:type=\"urn:HeaderPlan\">" +
+                "<Date xsi:type=\"xsd:string\">" + formatter.format(fecha) + "</Date>" +
+                "<Platafform xsi:type=\"xsd:string\">MOBILE</Platafform>" +
+                "<User xsi:type=\"xsd:string\">" + IMEI + "</User>" +
+                "</HeaderPlan>" +
+                "</RequestPlan>" +
+                "</Profile>" +
+                "</urn:profileResource>" +
+                "</soapenv:Body>" +
+                "</soapenv:Envelope>";
+        xml = bodyOut;
+        StringEntity se = new StringEntity(xml, HTTP.UTF_8);
+        se.setContentType("text/xml");
+        httpPost.addHeader(SOAP_ACTION, dummy.URL_TDC);
+
+        httpPost.setEntity(se);
+        HttpResponse httpResponse = httpClient.execute(httpPost);
+        HttpEntity resEntity = httpResponse.getEntity();
+        response = EntityUtils.toString(resEntity);
+        return response;
+    }
+
 }
 
