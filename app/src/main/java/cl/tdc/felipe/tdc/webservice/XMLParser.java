@@ -107,20 +107,24 @@ public class XMLParser {
 
     public static ArrayList<String> getReturnCodeProfile(String xmlRecords) throws ParserConfigurationException,
             SAXException, IOException, XPathExpressionException {
-        ArrayList<String> models = new ArrayList<>();
-
         DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         InputSource is = new InputSource();
         is.setCharacterStream(new StringReader(xmlRecords));
-
         Document doc = db.parse(is);
-        Element name = (Element) doc.getElementsByTagName("NameResource").item(0);
-        Element code = (Element) doc.getElementsByTagName("IdResource").item(0);
 
-        models.add(getCharacterDataFromElement(name));
-        models.add(getCharacterDataFromElement(code));
+        ArrayList<String> profileBtn = new ArrayList<>();
 
-        return models;
+        NodeList Profile = doc.getElementsByTagName("Resource");
+        for (int j = 0; j < Profile.getLength(); j++) {
+            Element subElement = (Element) Profile.item(j);
+            String NameProfile = getCharacterDataFromElement((Element) subElement.getElementsByTagName("NameResource").item(0));
+            String IdProfile = getCharacterDataFromElement((Element) subElement.getElementsByTagName("IdResource").item(0));
+            //profileBtn.add(NameProfile);
+            profileBtn.add(IdProfile);
+        }
+
+
+        return profileBtn;
         //return cpe.elementAt(1).toString(); // Mostrar elemento 1 del Vector
     }
 

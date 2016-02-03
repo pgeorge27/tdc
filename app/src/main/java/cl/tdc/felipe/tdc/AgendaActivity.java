@@ -527,7 +527,7 @@ public class AgendaActivity extends Activity {
                                         if (!terminated) {
                                             checkBox.setEnabled(true);
                                         }
-
+////////// AQUI SE HACE EL CAMBIO DE TENERLOS TODOS CHEQUEADOS PARA QUE SOLO LE DE AL BOTON Y PASAR AL DETALLE DE MANTENIMIENTO .............
                                         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                                             @Override
                                             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -656,6 +656,7 @@ public class AgendaActivity extends Activity {
         //if (type.equals("Emergencia,1")) return SoapRequestTDC.ACTION_EMERG;
         //if (type.equals("Emergencia,3")) return SoapRequestTDC.ACTION_EMERG;
         if (type.startsWith("Emergencia")) return SoapRequestTDC.ACTION_EMERG;
+        if (type.equals("Preventivo,10")) return SoapRequestTDC.ACTION_WIMAX;
         else return "";
     }
 

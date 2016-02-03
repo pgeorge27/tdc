@@ -16,6 +16,7 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.util.Xml;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -56,7 +57,7 @@ public class MainActivity extends ActionBarActivity {
     public static PreferencesTDC preferencesTDC;
     private static int REQUEST_SETTINGS_ACTION = 0;
     LocationManager locationManager;
-    public ImageButton agendabtn;
+    public ImageButton agendabtn, averiabtn;
 
     FormCierreReg REGCIERRE, IDENREG, TRESGREG, FAENAREG, TRANSPREG, SGREG, DCREG, AIRREG, ACREG, GEREG, EMERGREG;
     MaintenanceReg MAINREG;
@@ -82,6 +83,7 @@ public class MainActivity extends ActionBarActivity {
         ACREG = new FormCierreReg(this, "AC");
         EMERGREG = new FormCierreReg(this, "EMERGENCY");
         MAINREG = new MaintenanceReg(this);
+
 
         File carpetaTDC = new File(Environment.getExternalStorageDirectory() + "/TDC@");
         if (!carpetaTDC.exists())
@@ -128,9 +130,11 @@ public class MainActivity extends ActionBarActivity {
         a.execute();
 
 
-        ProfileTask profileTask = new ProfileTask(this);
-        profileTask.execute(); //
+        averiabtn = (ImageButton) findViewById(R.id.btn_averia);
 
+        /*ProfileTask profileTask = new ProfileTask(this);
+        profileTask.execute(); //
+*/
 
     }
 
@@ -554,17 +558,23 @@ public class MainActivity extends ActionBarActivity {
             if (progressDialog.isShowing())
                 progressDialog.dismiss();
 
+
+
             if (s == null) {
                 Toast.makeText(tContext, mensaje, Toast.LENGTH_LONG).show();
             } else {
-                if (s.get(0).compareTo("0") == 0) {
-                    Intent i = new Intent(tContext, AgendaActivity.class);
-                    i.putExtra("RESPONSE", s);
-                    i.putExtra("LOCAL", s.get(1));
-                    startActivity(i);
-                } else {
-                    Toast.makeText(getApplicationContext(), s.get(1), Toast.LENGTH_LONG).show();
-                }
+                     for (int i = 0; i < s.size(); i++){
+                        if (s.get(i).toString().equalsIgnoreCase("68")){
+                           agendabtn.setClickable(false);
+                            agendabtn.setEnabled(false);
+
+                        }else if (s.get(i).toString().equalsIgnoreCase("70")){
+                            averiabtn.setClickable(false);
+                            averiabtn.setEnabled(false);
+
+                        }
+                    }
+                    //Toast.makeText(getApplicationContext(), s.get(1), Toast.LENGTH_LONG).show();
 
             }
         }

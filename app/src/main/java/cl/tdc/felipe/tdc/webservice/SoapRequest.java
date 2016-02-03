@@ -1330,6 +1330,5 @@ public class SoapRequest {
         response = EntityUtils.toString(resEntity);
         return response;
     }
-
 }
 

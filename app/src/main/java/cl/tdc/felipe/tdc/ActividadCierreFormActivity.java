@@ -1382,24 +1382,9 @@ import android.os.PowerManager;
                                     itemLayout.addView(photo);
 
                                     String name = REG.getString("PHOTONAME" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem());
-                                    //ImageButton photo = create_photoButton(Q);
-                                    //layquest.addView(photo);
+
                                     cargar_fotosI(I,name);
-                                    /*if (Q.getPhoto().equals("OK")) { //Si requiere fotos agregamos el boton foto
-                                        ImageButton photo = create_photoButton(Q);
-                                        layquest.addView(photo);
-                                    }
-                                    layquest.addView(Q.getTitle(mContext));
 
-                                    View question = Q.generateView(mContext);
-                                    if (question != null) {
-                                        agregar2 = false;
-                                        String tag = S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem() + "-" + Q.getIdQuestion() + "-" + Q.getNameQuestion();
-
-                                        if (Q.getPhoto().equals("OK")) { //Si requiere foto|, buscamos si hay fotos gardadas
-                                            cargar_fotos(Q, tag);
-                                        }
-*/
                                 }
                                 if (I.getIdType().equals(Constantes.TEXT)) {
                                     String text = REG.getString("TEXT" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem());
@@ -2016,6 +2001,11 @@ import android.os.PowerManager;
 
             if (TITLE.equalsIgnoreCase("EMERGENCY")) {
                 EnviarEmergency e = new EnviarEmergency();
+                e.execute();
+            }
+
+            if (TITLE.equalsIgnoreCase("WIMAX")) {
+                EnviarWimax e = new EnviarWimax();
                 e.execute();
             }
             //END SG
@@ -2973,24 +2963,74 @@ import android.os.PowerManager;
             }
         }
 
+        private class EnviarWimax extends AsyncTask<String, String, String> {
+
+            boolean ok = false;
+            Button bEnviar = (Button) findViewById(R.id.btnEnviar);
+
+            private EnviarWimax() {
+                dialog = new ProgressDialog(mContext);
+                dialog.setMessage("Enviando formulario...");
+                dialog.setCancelable(false);
+                dialog.setCanceledOnTouchOutside(false);
+            }
+
+            @Override
+            protected void onPreExecute() {
+                dialog.show();
+            }
+
+            @Override
+            protected String doInBackground(String... strings) {
+                try {
+                    TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+                    String response = SoapRequestTDC.sendAnswerWIMAX(telephonyManager.getDeviceId(), IDMAIN, SYSTEMS);
+                    if (response.equalsIgnoreCase("false")){
+                        return "Debe llenar el formulario.";
+                    }else {
+                        LocalText localT = new LocalText();      //Desde Aqui guardamos el fichero local para posteriormente ser enviado en Cierre ACtividad
+
+                        if (localT.isDisponibleSD() && localT.isAccesoEscrituraSD())
+                            localT.escribirFicheroMemoriaExterna(IDMAIN + ",answerWimax", response);
+
+                        return "Datos exitosamente guardados";
+                    }
+                } catch (Exception e) {
+                    return "Error al enviar la respuesta.";
+
+                }
+                //TODO AGREGAR CATCH GENERAL
+            }
+
+            @Override
+            protected void onPostExecute(final String s) {
+                if (dialog.isShowing()) dialog.dismiss();
+
+
+                AlertDialog.Builder b = new AlertDialog.Builder(actividad);
+                b.setMessage(s);
+                b.setCancelable(false);
+                b.setPositiveButton("SALIR", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                        if (s.equalsIgnoreCase("Datos exitosamente guardados")) {
+                            bEnviar.setEnabled(false);
+                            REG.clearPreferences();
+                            setResult(RESULT_OK);
+                            actividad.finish();
+                        }
+                    }
+                });
+                b.show();
+            }
+        }
         //End S G
         public void subir_fotos(String mensaje) {
             AlertDialog.Builder b = new AlertDialog.Builder(actividad);
             b.setMessage(mensaje);
             b.setCancelable(false);
             ArrayList<PHOTO> p = new ArrayList<>();
-
-           /* try {
-                SYSTEMS = XMLParserTDC.parseFormulario(xml);
-            } catch (ParserConfigurationException e) {
-                e.printStackTrace();
-            } catch (SAXException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (XPathExpressionException e) {
-                e.printStackTrace();
-            }*/
 
             for (SYSTEM S : SYSTEMS) {
                 for (AREA A : S.getAreas()) {
@@ -3142,18 +3182,6 @@ import android.os.PowerManager;
                         int bytesRead, bytesAvailable, bufferSize;
 
                         File done = new File(fileName);
-                    /*
-
-                    ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                    img.getBitmap().compress(Bitmap.CompressFormat.PNG, 0, bos);
-                    byte[] bitmapdata = bos.toByteArray();
-
-//write the bytes in file
-                    FileOutputStream fos = new FileOutputStream(done);
-                    fos.write(bitmapdata);
-                    fos.flush();
-                    fos.close();*/
-
 
                         if (!done.isFile())
                             Log.e("DownloadManager", "no existe");

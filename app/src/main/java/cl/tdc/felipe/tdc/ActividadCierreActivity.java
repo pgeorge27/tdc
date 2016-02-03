@@ -88,10 +88,10 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
     Context mContext;
     ProgressDialog dialog;
 
-    FormCierreReg REG, IDENREG, TRESGREG, FAENAREG, TRANSPREG, ACREG, SGREG, DCREG, AIRREG, GEREG, EMERGREG;
+    FormCierreReg REG, IDENREG, TRESGREG, FAENAREG, TRANSPREG, ACREG, SGREG, DCREG, AIRREG, GEREG, EMERGREG,WIMAXREG ;
     MaintenanceReg MAINREG;
 
-    Button IDEN, TRESG, AC, DC, SG, AIR, FAENA, TRANSPORTE, GE, RAN, EMERG;
+    Button IDEN, TRESG, AC, DC, SG, AIR, FAENA, TRANSPORTE, GE, RAN, EMERG, WIMAX;
 
 
     @Override
@@ -118,6 +118,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         GEREG = new FormCierreReg(this, "GE");
         ACREG = new FormCierreReg(this, "AC");
         EMERGREG = new FormCierreReg(this, "EMERGENCY");
+        WIMAXREG = new FormCierreReg(this, "WIMAX");
         MAINREG = new MaintenanceReg(this);
 
         TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
@@ -137,6 +138,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         GE = (Button) this.findViewById(R.id.GE);
         RAN = (Button) this.findViewById(R.id.RAN);
         EMERG = (Button) this.findViewById(R.id.EMERG);
+        WIMAX = (Button) this.findViewById(R.id.WIMAX);
         IDEN.setOnClickListener(this);
         TRESG.setOnClickListener(this);
         AC.setOnClickListener(this);
@@ -148,6 +150,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         GE.setOnClickListener(this);
         RAN.setOnClickListener(this);
         EMERG.setOnClickListener(this);
+        WIMAX.setOnClickListener(this);
 
         boolean state = REG.getBoolean("IDEN" + idMain);
         if (state)
@@ -196,6 +199,11 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             EMERG.setEnabled(false);
         }
 
+        state = REG.getBoolean("WIMAX" + idMain);
+        if(state){
+            WIMAX.setEnabled(false);
+        }
+
         mostrarBotonesAzules(1);
 
     }
@@ -222,7 +230,8 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
 
             if (temp.equalsIgnoreCase("Preventivo,4," + idMain) || temp.equalsIgnoreCase("Preventivo,5," + idMain)
                     || temp.equalsIgnoreCase("Preventivo,6," + idMain) || temp.equalsIgnoreCase("Preventivo,7," + idMain)
-                    || temp.equalsIgnoreCase("Preventivo,8," + idMain) || temp.equalsIgnoreCase("Preventivo,9," + idMain))
+                    || temp.equalsIgnoreCase("Preventivo,8," + idMain) || temp.equalsIgnoreCase("Preventivo,9," + idMain)
+                    || temp.equalsIgnoreCase("Preventivo,11," + idMain))
                 muestraRan();
 
                 if (temp.equalsIgnoreCase("Preventivo,1," + idMain)) {
@@ -242,11 +251,13 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                         (temp.equalsIgnoreCase("Emergencia,5," + idMain)) || (temp.equalsIgnoreCase("Emergencia,6," + idMain))) {
                     EMERG.setVisibility(View.VISIBLE);
                 }
+
                 //Determinamos si mostramos el boton de RAN o no
 
                 if (temp.equalsIgnoreCase("Preventivo,4," + idMain) || temp.equalsIgnoreCase("Preventivo,5," + idMain)
                         || temp.equalsIgnoreCase("Preventivo,6," + idMain) || temp.equalsIgnoreCase("Preventivo,7," + idMain)
-                        || temp.equalsIgnoreCase("Preventivo,8," + idMain) || temp.equalsIgnoreCase("Preventivo,9," + idMain))
+                        || temp.equalsIgnoreCase("Preventivo,8," + idMain) || temp.equalsIgnoreCase("Preventivo,9," + idMain)
+                        || temp.equalsIgnoreCase("Preventivo,11," + idMain))
                     muestraRan();
             }
 
@@ -292,6 +303,13 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                         AC.setVisibility(View.VISIBLE);
                     } else {
                         AC.setVisibility(View.GONE);
+                    }
+                }
+                else if (temp.equalsIgnoreCase("Preventivo,10," + idMain)) {
+                    if (WIMAX.getVisibility() == View.GONE) {
+                        WIMAX.setVisibility(View.VISIBLE);
+                    } else {
+                        WIMAX.setVisibility(View.GONE);
                     }
                 }
             }
@@ -392,6 +410,10 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             buscar_form task = new buscar_form("EMERGENCY");
             task.execute();
         }
+        if (view.getId() == R.id.WIMAX) {
+            buscar_form task = new buscar_form("WIMAX");
+            task.execute();
+        }
         if (view.getId() == R.id.RAN) {
             mostrarBotonesAzules(2);
         }
@@ -408,6 +430,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         if (type.equals("TRANSPORTE")) return SoapRequestTDC.ACTION_TRANSPORTE;
         if (type.equals("GRUPO ELECTROGEN")) return SoapRequestTDC.ACTION_GE;
         if (type.equals("EMERGENCY")) return SoapRequestTDC.ACTION_EMERG;
+        if (type.equals("WIMAX")) return SoapRequestTDC.ACTION_WIMAX;
         else return "";
     }
 
@@ -481,6 +504,8 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                     code = 8;
                 }else if(type.equals("EMERGENCY")) {
                     code = 10;
+                }else if(type.equals("WIMAX")) {
+                    code = 11;
                 }else
                     code = -1;
 
@@ -545,6 +570,10 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                 EMERG.setEnabled(false);
                 REG.addValue("EMERGENCY" + idMain, true);
             }
+            if (requestCode == 11) {
+                WIMAX.setEnabled(false);
+                REG.addValue("WIMAX" + idMain, true);
+            }
         }
     }
 
@@ -573,6 +602,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
      }*/
 
     public void enviar(View v) {
+        final Button btn_Enviar = (Button) findViewById(R.id.button2);
         if (isOnline()) {
 
             local.listarFicheros(idMain);
@@ -584,9 +614,10 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                 b.setPositiveButton("SI", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-
+                        btn_Enviar.setEnabled(false);
                         EnviarMantOff env = new EnviarMantOff();
                         env.execute();
+
                     }
                 });
                 b.setNegativeButton("NO", new DialogInterface.OnClickListener() {
@@ -610,7 +641,8 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                 b.show();
             }
         } else {
-            Toast.makeText(ActividadCierreActivity.this, "Verifique si tiene plan de data movil 4G o Wifi", Toast.LENGTH_LONG).show();
+            btn_Enviar.setEnabled(true);
+            Toast.makeText(ActividadCierreActivity.this, "Verifique si tiene plan de data móvil 4G o Wifi", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -641,7 +673,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             } catch (ParserConfigurationException | SAXException | XPathExpressionException e) {
                 return "Problema al recibir la respuesta";
             } catch (IOException e) {
-                return "Debe conectarse a una red wifi";
+                return "Debe conectarse a una red wifi o tener plan de data móvil";
             } catch (Exception e) {
                 return "Se agotó el tiempo de conexión";
             }
@@ -652,6 +684,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             if (p.isShowing()) p.dismiss();
             AlertDialog.Builder b = new AlertDialog.Builder(actividad);
             b.setMessage(s);
+            b.setCancelable(false);//ok
             if(ok){
                 b.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
@@ -668,6 +701,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                         GEREG.clearPreferences();
                         ACREG.clearPreferences();
                         EMERGREG.clearPreferences();
+                        WIMAXREG.clearPreferences();
                         if(AgendaActivity.actividad != null)
                             AgendaActivity.actividad.finish();
                         actividad.finish();
@@ -681,8 +715,9 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                     }
                 });
             }
-          //s  local.eliminarFicheroMant();
-            b.show();
+            local.eliminarFicheroMant(); //para borrar fichero
+             b.show();//ok
+
         }
     }
 
@@ -728,7 +763,8 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                                 //aqui
                                 cerrarMant = true;
                                 resp = "Datos exitosamente ingresados!";
-                                subir_fotos(resp,subS);                                             //subS es el nombre del checklist Iden 3g etc
+                                subir_fotos(resp, subS);                                             //subS es el nombre del checklist Iden 3g etc
+
                             } catch (IOException e) {
                                 return "Se agotó el tiempo de conexión.";
                             }  catch (Exception e) {
@@ -1008,7 +1044,6 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             }
             return response;
         }
-
 
         @Override
         protected void onPostExecute(String s) {
