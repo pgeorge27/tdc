@@ -715,7 +715,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                     }
                 });
             }
-            local.eliminarFicheroMant(); //para borrar fichero
+           // local.eliminarFicheroMant(); //para borrar fichero
              b.show();//ok
 
         }

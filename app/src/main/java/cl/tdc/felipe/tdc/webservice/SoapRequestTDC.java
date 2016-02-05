@@ -572,7 +572,7 @@ public class SoapRequestTDC {
                 "<Imei xsi:type=\"xsd:string\">" + IMEI + "</Imei>" +
                 "<Maintenance xsi:type=\"xsd:string\">" + ID_MAINTENANCE + "</Maintenance>" +
                 "</Header>";
-
+/*
         for (SYSTEM S : SYSTEMS) {
             xml += "<SystemsRptaUni xsi:type=\"urn:SystemsRptaUni\">";
             for (AREA A : S.getAreas()) {
@@ -670,6 +670,133 @@ public class SoapRequestTDC {
                 "</urn:answer" + ACTION + ">" +
                 "</soapenv:Body>" +
                 "</soapenv:Envelope>";
+        */
+
+        for (SYSTEM S : SYSTEMS) {
+            xml += "<SystemsRptaUni xsi:type=\"urn:SystemsRptaUni\">";
+            for (AREA A : S.getAreas()) {
+                String idArea = A.getIdArea();
+                for (ITEM I : A.getItems()) {
+                    String idItem = I.getIdItem();
+
+                    //String lat = "", lon = "", title = "";
+                    int countFoto = 0;
+                    String xmlphotos = "";
+                    String aAux = "";
+
+                    if (I.getFotos() != null) {
+                        //PHOTO f = I.getPhoto();
+                        // lat = f.getCoordX();
+                        // lon = f.getCoordY();
+                        //title = f.getTitlePhoto();
+                        xml += "<SetRptaItemUni xsi:type=\"urn:SetRptaItemUni\">";
+                        for (PHOTO photos : I.getFotos()) {
+
+                            File file = new File(photos.getNamePhoto());
+                            if (file.exists()) {
+                                 vacio=true;
+                                xmlphotos += "<Photo xsi:type=\"urn:Photo\">" +
+                                        "<NamePhoto xsi:type=\"xsd:string\">" + file.getName() + "</NamePhoto>" +
+                                        "<TitlePhoto xsi:type=\"xsd:string\">" + photos.getTitlePhoto() + "</TitlePhoto>" +
+                                        "<DateTime xsi:type=\"xsd:string\">" + photos.getDateTime() + "</DateTime>" +
+                                        "<CoordX xsi:type=\"xsd:string\">" + photos.getCoordX() + "</CoordX>" +
+                                        "<CoordY xsi:type=\"xsd:string\">" + photos.getCoordY() + "</CoordY>" +
+                                        "</Photo>";
+                                countFoto += 1;
+                            }
+
+                            xml += "<IdArea xsi:type=\"xsd:string\">" + idArea + "</IdArea>" +
+                                    "<IdItem xsi:type=\"xsd:string\">" + idItem + "</IdItem>" +
+                                    "<IdSet xsi:type=\"xsd:string\"></IdSet>" +
+                                    "<IdQuestion xsi:type=\"xsd:string\"></IdQuestion>" +
+                                    "<Answer xsi:type=\"xsd:string\">" + I.getAnswerFaena() + "</Answer>" +
+                                    "<AnswerAux xsi:type=\"xsd:string\">" + aAux + "</AnswerAux>" +
+                                    "<CountPhoto xsi:type=\"xsd:string\">" + countFoto + "</CountPhoto>" +
+                                    "<SetPhotos xsi:type=\"urn:SetPhotos\">" + xmlphotos + "</SetPhotos>";
+                            if (!I.getAnswerFaena().equalsIgnoreCase(""))
+                                vacio=true;
+
+                        }
+                        xml += "</SetRptaItemUni>";
+
+                    }
+
+                    //String aAux = "";
+                    if(I.getSetlistArrayList() != null){
+                        aAux = I.getAnswerFaena();
+                    }
+
+                    xml += "<SetRptaItemUni xsi:type=\"urn:SetRptaItemUni\">" +
+                            "<IdArea xsi:type=\"xsd:string\">" + idArea + "</IdArea>" +
+                            "<IdItem xsi:type=\"xsd:string\">" + idItem + "</IdItem>" +
+                            "<IdSet xsi:type=\"xsd:string\"></IdSet>" +
+                            "<IdQuestion xsi:type=\"xsd:string\"></IdQuestion>" +
+                            "<Answer xsi:type=\"xsd:string\">" + I.getAnswerFaena() + "</Answer>" +
+                            "<AnswerAux xsi:type=\"xsd:string\">"+aAux+"</AnswerAux>" +
+                          /*  "<Lat xsi:type=\"xsd:string\">" + lat + "</Lat>" +
+                            "<Long xsi:type=\"xsd:string\">" + lon + "</Long>" +
+                            "<Title xsi:type=\"xsd:string\">" + title + "</Title>" +*/
+                            "</SetRptaItemUni>";
+                    if (!I.getAnswerFaena().equalsIgnoreCase(""))
+                        vacio=true;
+
+                    if (I.getQuestions() != null) {
+                        for (int i = 0; i < I.getQuestions().size(); i++) {
+                            QUESTION Q = I.getQuestions().get(i);
+
+                            xml += "<SetRptaItemUni xsi:type=\"urn:SetRptaItemUni\">" +
+                                    "<IdArea xsi:type=\"xsd:string\">" + idArea + "</IdArea>" +
+                                    "<IdItem xsi:type=\"xsd:string\">" + idItem + "</IdItem>" +
+                                    "<IdSet xsi:type=\"xsd:string\"></IdSet>" +
+                                    "<IdQuestion xsi:type=\"xsd:string\">" + Q.getIdQuestion() + "</IdQuestion>" +
+                                    "<Answer xsi:type=\"xsd:string\">" + Q.getAswer3G() + "</Answer>" +
+                                    "<AnswerAux xsi:type=\"xsd:string\"></AnswerAux>" +
+                                  /*  "<Lat xsi:type=\"xsd:string\"></Lat>" +
+                                    "<Long xsi:type=\"xsd:string\"></Long>" +
+                                    "<Title xsi:type=\"xsd:string\"></Title>" +*/
+                                    "</SetRptaItemUni>";
+                            if (!Q.getAswer3G().equalsIgnoreCase(""))
+                                vacio=true;
+                        }
+                    }
+                    if (I.getSetlistArrayList() != null) {
+                        String ans = I.getAnswerFaena();
+                        if(!ans.equals("")) {
+                            int n = Integer.parseInt(ans);
+                            for (int i = 0; i < n; i++) {
+                                ArrayList<SET> setList = I.getSetlistArrayList().get(i);
+                                for (SET set : setList) {
+                                    if (set.getQuestions() != null) {
+                                        for (QUESTION Q : set.getQuestions()) {
+                                            xml += "<SetRptaItemUni xsi:type=\"urn:SetRptaItemUni\">" +
+                                                    "<IdArea xsi:type=\"xsd:string\">" + idArea + "</IdArea>" +
+                                                    "<IdItem xsi:type=\"xsd:string\">" + idItem + "</IdItem>" +
+                                                    "<IdSet xsi:type=\"xsd:string\">" + set.getIdSet() + "</IdSet>" +
+                                                    "<IdQuestion xsi:type=\"xsd:string\">" + Q.getIdQuestion() + "</IdQuestion>" +
+                                                    "<Answer xsi:type=\"xsd:string\">" + Q.getAswer3G() + "</Answer>" +
+                                                    "<AnswerAux xsi:type=\"xsd:string\">" + (i + 1) + "</AnswerAux>" +
+                                                 /*   "<Lat xsi:type=\"xsd:string\"></Lat>" +
+                                                    "<Long xsi:type=\"xsd:string\"></Long>" +
+                                                    "<Title xsi:type=\"xsd:string\"></Title>" +*/
+                                                    "</SetRptaItemUni>";
+                                            if (!Q.getAswer3G().equalsIgnoreCase(""))
+                                                vacio=true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            xml += "</SystemsRptaUni>";
+        }
+        xml += "</Request" + ACTION + ">" +
+                "</RequestAnswer" + ACTION + ">" +
+                "</urn:answer" + ACTION + ">" +
+                "</soapenv:Body>" +
+                "</soapenv:Envelope>";
+
         if (vacio){
             return xml;
         }
