@@ -715,7 +715,6 @@ public class SoapRequestTDC {
                                     "<SetPhotos xsi:type=\"urn:SetPhotos\">" + xmlphotos + "</SetPhotos>";
                             if (!I.getAnswerFaena().equalsIgnoreCase(""))
                                 vacio=true;
-
                         }
                         xml += "</SetRptaItemUni>";
 

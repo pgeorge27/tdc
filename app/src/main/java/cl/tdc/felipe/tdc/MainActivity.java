@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -57,7 +59,7 @@ public class MainActivity extends ActionBarActivity {
     public static PreferencesTDC preferencesTDC;
     private static int REQUEST_SETTINGS_ACTION = 0;
     LocationManager locationManager;
-    public ImageButton agendabtn, averiabtn;
+    public ImageButton agendabtn, cercanosbtn, averiabtn, seguimientobtn, preasbuiltbtn, relevobtn, seguridadbtn;
 
     FormCierreReg REGCIERRE, IDENREG, TRESGREG, FAENAREG, TRANSPREG, SGREG, DCREG, AIRREG, ACREG, GEREG, EMERGREG;
     MaintenanceReg MAINREG;
@@ -129,12 +131,16 @@ public class MainActivity extends ActionBarActivity {
         Actualizar a = new Actualizar();
         a.execute();
 
-
         averiabtn = (ImageButton) findViewById(R.id.btn_averia);
+        cercanosbtn = (ImageButton) findViewById(R.id.btn_cerca);
+        seguimientobtn = (ImageButton) findViewById(R.id.imageButton7);
+        preasbuiltbtn = (ImageButton) findViewById(R.id.btn_preasbuilt);
+        relevobtn = (ImageButton) findViewById(R.id.btn_relevo);
+        seguridadbtn = (ImageButton) findViewById(R.id.imageButton4);
 
-        /*ProfileTask profileTask = new ProfileTask(this);
+        ProfileTask profileTask = new ProfileTask(this);
         profileTask.execute(); //
-*/
+
 
     }
 
@@ -526,14 +532,28 @@ public class MainActivity extends ActionBarActivity {
         protected ArrayList<String> doInBackground(String... strings) {
             try {
                 publishProgress("Verificando Perfil...");
-                String query = SoapRequest.profileResource(IMEI);
-                return XMLParser.getReturnCodeProfile(query);
+
+                LocalText localT = new LocalText();
+
+                if (isOnline()){
+                    String query = SoapRequest.profileResource(IMEI);
+                    if (localT.isDisponibleSD() && localT.isAccesoEscrituraSD());
+                        localT.escribirFicheroMemoriaExterna("profileResource", query);
+                }
+
+                String perfiles = localT.leerFicheroMemoriaExterna("profileResource");
+
+
+
+                return XMLParser.getReturnCodeProfile(perfiles);
+                //return XMLParser.getReturnCodeProfile(query);
+
             } catch (IOException e) {
 
-               // LocalText localT = new LocalText();
-                //String mantenimientoLocal = localT.leerFicheroMemoriaExterna("profile-config");
+               /* LocalText localT = new LocalText();
+                String perfiles = localT.leerFicheroMemoriaExterna("profileResource");
 
-               /* if (mantenimientoLocal!=null){
+                if (perfiles!=null){
                     ArrayList<String> nombreArrayList = new ArrayList<String>();
                     nombreArrayList.add("0");
                     nombreArrayList.add("local");
@@ -558,28 +578,73 @@ public class MainActivity extends ActionBarActivity {
             if (progressDialog.isShowing())
                 progressDialog.dismiss();
 
-
-
             if (s == null) {
-                Toast.makeText(tContext, mensaje, Toast.LENGTH_LONG).show();
+                //Toast.makeText(tContext, mensaje, Toast.LENGTH_LONG).show();
+                AlertDialog.Builder b = new AlertDialog.Builder(actividad);
+                b.setMessage("Mensaje");
+                b.setCancelable(false);
+                b.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        actividad.finish();
+                    }
+                });
+                b.show();
             } else {
                      for (int i = 0; i < s.size(); i++){
                         if (s.get(i).toString().equalsIgnoreCase("68")){
                            agendabtn.setClickable(false);
                             agendabtn.setEnabled(false);
 
+                        }else if (s.get(i).toString().equalsIgnoreCase("69")) {
+                            cercanosbtn.setClickable(false);
+                            cercanosbtn.setEnabled(false);
+
                         }else if (s.get(i).toString().equalsIgnoreCase("70")){
                             averiabtn.setClickable(false);
                             averiabtn.setEnabled(false);
 
+                        }else if (s.get(i).toString().equalsIgnoreCase("71")) {
+                            seguimientobtn.setClickable(false);
+                            seguimientobtn.setEnabled(false);
+
+                        }else if (s.get(i).toString().equalsIgnoreCase("72")) {
+                            preasbuiltbtn.setClickable(false);
+                            preasbuiltbtn.setEnabled(false);
+
+                        }else if (s.get(i).toString().equalsIgnoreCase("73")) {
+                            relevobtn.setClickable(false);
+                            relevobtn.setEnabled(false);
+
+                        }else if (s.get(i).toString().equalsIgnoreCase("74")) {
+                            seguridadbtn.setClickable(false);
+                            seguridadbtn.setEnabled(false);
+
                         }
                     }
                     //Toast.makeText(getApplicationContext(), s.get(1), Toast.LENGTH_LONG).show();
-
             }
         }
     }
 
+    public boolean isOnline() {
+        ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo mWifi = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+
+        NetworkInfo m4G = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+
+        int networkType = m4G.getSubtype();
+
+
+        if (mWifi.isConnected()) {
+            return true;
+        } else if (networkType == TelephonyManager.NETWORK_TYPE_LTE) {
+            return true;
+        }
+
+        return false;
+    }
 
     private class Actualizar extends AsyncTask<String, String, ArrayList<String>> {
         ProgressDialog progressDialog = null;
