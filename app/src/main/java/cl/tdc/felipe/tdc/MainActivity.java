@@ -64,6 +64,9 @@ public class MainActivity extends ActionBarActivity {
     FormCierreReg REGCIERRE, IDENREG, TRESGREG, FAENAREG, TRANSPREG, SGREG, DCREG, AIRREG, ACREG, GEREG, EMERGREG;
     MaintenanceReg MAINREG;
 
+    boolean agendabtnAcceso= true, cercanosbtnAcceso = true, averiabtnAcceso = true, seguimientobtnAcceso = true,
+            preasbuiltbtnAcceso= true, relevobtnAcceso = true, seguridadbtnAcceso = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -185,75 +188,104 @@ public class MainActivity extends ActionBarActivity {
         MaintenanceReg pref = new MaintenanceReg(this);
         pref.newMaintenance("465", "0");
     }
-
+    final String perfilNoAutorizado="Su perfil no esta autorizado para esta opción";
 
     // TODO: AGENDA.
     public void onClick_btn2(View v) {
         //startActivity(new Intent(this,AgendaActivity.class));
-        AgendaTask agendaTask = new AgendaTask(this);
-        agendaTask.execute();
+        if (agendabtnAcceso) {
+            AgendaTask agendaTask = new AgendaTask(this);
+            agendaTask.execute();
+        }else {
+            Toast.makeText(getApplicationContext(), perfilNoAutorizado, Toast.LENGTH_LONG).show();
+        }
     }
 
     //TODO: NOTIFICAR AVERIA
     public void onClick_btn3(View v) {
-        startActivity(new Intent(this, AveriaActivity.class));
+        System.out.println("Aqui");
+        if (averiabtnAcceso) {
+            startActivity(new Intent(this, AveriaActivity.class));
+        }else {
+            Toast.makeText(getApplicationContext(), perfilNoAutorizado, Toast.LENGTH_LONG).show();
+        }
     }
 
     //TODO:  SITIOS CERCANOS
     public void onClick_btn4(View v) {
-        try {
-            startActivity(new Intent(this, CercanosActivity.class));
-        } catch (Exception e) {
-            AlertDialog.Builder b = new AlertDialog.Builder(this);
-            b.setMessage(e.getMessage() + ":\n" + e.getCause());
-            b.setTitle("Error al cargar Sitios Cercanos");
-            b.setNeutralButton("Cerrar", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    dialogInterface.dismiss();
-                }
-            });
-            AlertDialog dialog = b.create();
-            dialog.setCanceledOnTouchOutside(true);
-            dialog.show();
+        if (cercanosbtnAcceso) {
+            try {
+                startActivity(new Intent(this, CercanosActivity.class));
+            } catch (Exception e) {
+                AlertDialog.Builder b = new AlertDialog.Builder(this);
+                b.setMessage(e.getMessage() + ":\n" + e.getCause());
+                b.setTitle("Error al cargar Sitios Cercanos");
+                b.setNeutralButton("Cerrar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                AlertDialog dialog = b.create();
+                dialog.setCanceledOnTouchOutside(true);
+                dialog.show();
+            }
+        }else {
+            Toast.makeText(getApplicationContext(), perfilNoAutorizado, Toast.LENGTH_LONG).show();
         }
     }
 
     //TODO: SEGUIMIENTO DE OBRAS
     public void onClick_btn5(View v) {
-        startActivity(new Intent(this, Seguimiento.class));
+        if (seguimientobtnAcceso) {
+            startActivity(new Intent(this, Seguimiento.class));
+        }else {
+            Toast.makeText(getApplicationContext(), perfilNoAutorizado, Toast.LENGTH_LONG).show();
+        }
     }
 
     //TODO CHECKLIST SEGURIDAD DIARIO
     public void onClick_btn6(View v) {
-        ChecklistTask c = new ChecklistTask(this);
-        c.execute();
+        if (seguridadbtnAcceso) {
+            ChecklistTask c = new ChecklistTask(this);
+            c.execute();
+        }else {
+            Toast.makeText(getApplicationContext(), perfilNoAutorizado, Toast.LENGTH_LONG).show();
+        }
     }
 
     public void onClick_relevo(View v) {
-        startActivity(new Intent(this, RelevarActivity.class));
+        if (relevobtnAcceso) {
+            startActivity(new Intent(this, RelevarActivity.class));
+        } else {
+            Toast.makeText(getApplicationContext(), perfilNoAutorizado, Toast.LENGTH_LONG).show();
+        }
     }
 
     public void onClick_preasbuilt(View v) {
-        AlertDialog.Builder b = new AlertDialog.Builder(this);
+        if (preasbuiltbtnAcceso) {
+            AlertDialog.Builder b = new AlertDialog.Builder(this);
 
-        b.setItems(new CharSequence[]{"RF", "MW"}, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                PreAsBuilt task = new PreAsBuilt(mContext, i);
-                task.execute();
+            b.setItems(new CharSequence[]{"RF", "MW"}, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    PreAsBuilt task = new PreAsBuilt(mContext, i);
+                    task.execute();
 
-            }
-        });
-        b.setTitle("Seleccione una opción");
-        b.setNegativeButton("Cerrar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        });
+                }
+            });
+            b.setTitle("Seleccione una opción");
+            b.setNegativeButton("Cerrar", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                }
+            });
 
-        b.show();
+            b.show();
+        } else {
+            Toast.makeText(getApplicationContext(), perfilNoAutorizado, Toast.LENGTH_LONG).show();
+        }
     }
 
 
@@ -593,32 +625,46 @@ public class MainActivity extends ActionBarActivity {
             } else {
                      for (int i = 0; i < s.size(); i++){
                         if (s.get(i).toString().equalsIgnoreCase("68")){
-                           agendabtn.setClickable(false);
-                            agendabtn.setEnabled(false);
+                            agendabtnAcceso =false;
+                            agendabtn.getBackground().setAlpha(60);
+                           /*agendabtn.setClickable(false);
+                            agendabtn.setEnabled(false);*/
 
                         }else if (s.get(i).toString().equalsIgnoreCase("69")) {
-                            cercanosbtn.setClickable(false);
-                            cercanosbtn.setEnabled(false);
+                            cercanosbtnAcceso = false;
+                            cercanosbtn.getBackground().setAlpha(80);
+                            /*cercanosbtn.setClickable(false);
+                            cercanosbtn.setEnabled(false);*/
 
                         }else if (s.get(i).toString().equalsIgnoreCase("70")){
-                            averiabtn.setClickable(false);
-                            averiabtn.setEnabled(false);
+                            averiabtnAcceso = false;
+                            averiabtn.getBackground().setAlpha(90);
+                           // averiabtn.setClickable(false);
+                            //averiabtn.setEnabled(false);
 
                         }else if (s.get(i).toString().equalsIgnoreCase("71")) {
-                            seguimientobtn.setClickable(false);
-                            seguimientobtn.setEnabled(false);
+                            seguimientobtnAcceso = false;
+                            seguimientobtn.getBackground().setAlpha(60);
+                           /* seguimientobtn.setClickable(false);
+                            seguimientobtn.setEnabled(false);*/
 
                         }else if (s.get(i).toString().equalsIgnoreCase("72")) {
-                            preasbuiltbtn.setClickable(false);
-                            preasbuiltbtn.setEnabled(false);
+                            preasbuiltbtnAcceso = false;
+                            preasbuiltbtn.getBackground().setAlpha(60);
+                            /*preasbuiltbtn.setClickable(false);
+                            preasbuiltbtn.setEnabled(false);*/
 
                         }else if (s.get(i).toString().equalsIgnoreCase("73")) {
-                            relevobtn.setClickable(false);
-                            relevobtn.setEnabled(false);
+                            relevobtnAcceso = false;
+                            relevobtn.getBackground().setAlpha(60);
+                            /*relevobtn.setClickable(false);
+                            relevobtn.setEnabled(false);*/
 
                         }else if (s.get(i).toString().equalsIgnoreCase("74")) {
-                            seguridadbtn.setClickable(false);
-                            seguridadbtn.setEnabled(false);
+                            seguimientobtnAcceso = false;
+                            seguimientobtn.getBackground().setAlpha(50);
+                            /*seguridadbtn.setClickable(false);
+                            seguridadbtn.setEnabled(false);*/
 
                         }
                     }

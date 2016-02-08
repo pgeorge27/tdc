@@ -1008,7 +1008,6 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                             bytesAvailable = fileInputStream.available();
                             bufferSize = Math.min(bytesAvailable, 1 * 1024 * 1024);
                             bytesRead = fileInputStream.read(buf, 0, bufferSize);
-
                         }
 
                         dos.writeBytes(lineEnd);
@@ -1050,7 +1049,6 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
 
             REG.clearPreferences();
             setResult(RESULT_OK);
-
             super.onPostExecute(s);
         }
 

@@ -538,7 +538,6 @@ public class FormCheckSecurity extends Activity {
                 Log.e(ASYNCTAG, e.getMessage() + ": " + e.getCause());
                 return e.getMessage();
             }
-
         }
 
         @Override
