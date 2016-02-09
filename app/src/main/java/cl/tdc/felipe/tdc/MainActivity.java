@@ -613,7 +613,7 @@ public class MainActivity extends ActionBarActivity {
             if (s == null) {
                 //Toast.makeText(tContext, mensaje, Toast.LENGTH_LONG).show();
                 AlertDialog.Builder b = new AlertDialog.Builder(actividad);
-                b.setMessage("Mensaje");
+                b.setMessage("Por favor active su data movil o wifi");
                 b.setCancelable(false);
                 b.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
@@ -633,14 +633,12 @@ public class MainActivity extends ActionBarActivity {
                         }else if (s.get(i).toString().equalsIgnoreCase("69")) {
                             cercanosbtnAcceso = false;
                             cercanosbtn.getBackground().setAlpha(80);
-                            /*cercanosbtn.setClickable(false);
-                            cercanosbtn.setEnabled(false);*/
+
 
                         }else if (s.get(i).toString().equalsIgnoreCase("70")){
                             averiabtnAcceso = false;
                             averiabtn.getBackground().setAlpha(90);
-                           // averiabtn.setClickable(false);
-                            //averiabtn.setEnabled(false);
+
 
                         }else if (s.get(i).toString().equalsIgnoreCase("71")) {
                             seguimientobtnAcceso = false;
@@ -661,8 +659,8 @@ public class MainActivity extends ActionBarActivity {
                             relevobtn.setEnabled(false);*/
 
                         }else if (s.get(i).toString().equalsIgnoreCase("74")) {
-                            seguimientobtnAcceso = false;
-                            seguimientobtn.getBackground().setAlpha(50);
+                            seguridadbtnAcceso = false;
+                            seguridadbtn.getBackground().setAlpha(50);
                             /*seguridadbtn.setClickable(false);
                             seguridadbtn.setEnabled(false);*/
 

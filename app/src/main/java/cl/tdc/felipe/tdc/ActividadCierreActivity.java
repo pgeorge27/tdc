@@ -595,11 +595,6 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
 
         return false;
     }
-/*
-    ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-    NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-    if (mWifi.isConnected()) {
-     }*/
 
     public void enviar(View v) {
         final Button btn_Enviar = (Button) findViewById(R.id.button2);
@@ -617,7 +612,6 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                         btn_Enviar.setEnabled(false);
                         EnviarMantOff env = new EnviarMantOff();
                         env.execute();
-
                     }
                 });
                 b.setNegativeButton("NO", new DialogInterface.OnClickListener() {
@@ -661,8 +655,14 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
 
         @Override
         protected String doInBackground(String... strings) {
+            LocalText localT = new LocalText();
+            String query = "";
+
             try {
                 String response = SoapRequestTDC.cerrarMantenimiento(IMEI, idMain);
+                query = SoapRequestTDC.getPlanningMaintenance(IMEI);
+                if (localT.isDisponibleSD() && localT.isAccesoEscrituraSD())
+                    localT.escribirFicheroMemoriaExterna("planing-mantience", query);
                 ArrayList<String> parse = XMLParser.getReturnCode2(response);
                 if(parse.get(0).equals("0")){
                     ok = true;
@@ -681,6 +681,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
 
         @Override
         protected void onPostExecute(String s) {
+
             if (p.isShowing()) p.dismiss();
             AlertDialog.Builder b = new AlertDialog.Builder(actividad);
             b.setMessage(s);
@@ -717,7 +718,6 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             }
            // local.eliminarFicheroMant(); //para borrar fichero
              b.show();//ok
-
         }
     }
 
@@ -780,7 +780,6 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             }  else {
                 cerrarMant=false;
             }
-
             return resp;
         }
 
@@ -908,9 +907,10 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                 redimencionarImagen(p.get(i).getNamePhoto());
             }
             UploadImage up = new UploadImage(p, mensaje);
-            Log.e("UploadImage","UploadImage aquii:: " + up );
+            //Log.e("UploadImage","UploadImage aquii:: " + up );
             up.execute(dummy.URL_UPLOAD_IMG_MAINTENANCE);
         }
+
     }
 
     private void redimencionarImagen(String dir) {
@@ -1041,18 +1041,20 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                     response = "ERROR";
                 }
             }
+
             return response;
         }
 
         @Override
         protected void onPostExecute(String s) {
-
             REG.clearPreferences();
             setResult(RESULT_OK);
             super.onPostExecute(s);
         }
 
     }
+
+
 
     protected void onDestroy(){
         super.onDestroy();
