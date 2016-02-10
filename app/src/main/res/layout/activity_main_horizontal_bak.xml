@@ -76,11 +76,6 @@
     </LinearLayout>
 
     <!-- end header -->
-    <ScrollView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/main_header"
-        android:layout_above="@+id/main_footer">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -101,7 +96,7 @@
             <LinearLayout
                 android:id="@+id/row1"
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
+                android:layout_height="50dp"
                 android:layout_gravity="center_horizontal"
                 android:orientation="horizontal"
                 android:layout_weight="2">
@@ -129,7 +124,7 @@
                     <TextView
                         android:id="@+id/textView2"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_gravity="center_horizontal"
                         android:gravity="center_horizontal"
                         android:text="Agenda"
@@ -139,7 +134,8 @@
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentTop="false"
                         android:layout_alignParentBottom="true"
-                        android:layout_alignParentRight="true" />
+                        android:layout_alignParentRight="true"
+                        android:textSize="20dp"/>
                 </RelativeLayout>
             </LinearLayout>
 
@@ -188,7 +184,8 @@
                         android:textStyle="normal"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentTop="false"
-                        android:layout_alignParentRight="true" />
+                        android:layout_alignParentRight="true"
+                        android:textSize="20dp"/>
                 </RelativeLayout>
             </LinearLayout>
 
@@ -237,7 +234,8 @@
                         android:textStyle="normal"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentTop="false"
-                        android:layout_alignParentRight="true" />
+                        android:layout_alignParentRight="true"
+                        android:textSize="20dp"/>
                 </RelativeLayout>
             </LinearLayout>
 
@@ -286,7 +284,8 @@
                         android:textStyle="normal"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentTop="false"
-                        android:layout_alignParentRight="true" />
+                        android:layout_alignParentRight="true"
+                        android:textSize="20dp"/>
                 </RelativeLayout>
             </LinearLayout>
 
@@ -335,7 +334,8 @@
                         android:textStyle="normal"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentTop="false"
-                        android:layout_alignParentRight="true" />
+                        android:layout_alignParentRight="true"
+                        android:textSize="20dp"/>
                 </RelativeLayout>
             </LinearLayout>
 
@@ -385,7 +385,8 @@
                         android:textStyle="normal"
                         android:layout_alignParentTop="true"
                         android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true" />
+                        android:layout_alignParentStart="true"
+                        android:textSize="20dp"/>
                 </RelativeLayout>
             </LinearLayout>
 
@@ -434,7 +435,8 @@
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentTop="false"
                         android:layout_alignParentBottom="false"
-                        android:layout_alignParentRight="true" />
+                        android:layout_alignParentRight="true"
+                        android:textSize="20dp"/>
                 </RelativeLayout>
             </LinearLayout>
 
@@ -484,13 +486,13 @@
                         android:textStyle="normal"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentTop="false"
-                        android:layout_alignParentRight="true" />
+                        android:layout_alignParentRight="true"
+                        android:textSize="20dp"/>
                 </RelativeLayout>
             </LinearLayout>
 
 
         </LinearLayout>
-    </ScrollView>
 
 
     <!-- Footer  -->

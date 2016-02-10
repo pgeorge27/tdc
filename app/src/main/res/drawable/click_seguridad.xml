@@ -2,7 +2,7 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_pressed="true">
         <layer-list>
-            <item android:drawable="@drawable/btn_checklist1"/>
+            <item android:drawable="@drawable/btn_checklist11"/>
             <item>
                 <shape android:shape="rectangle">
                     <solid android:color="#39000000"/>
@@ -10,5 +10,5 @@
             </item>
         </layer-list>
     </item>
-  <item android:drawable="@drawable/btn_checklist1" />
+  <item android:drawable="@drawable/btn_checklist11" />
 </selector>

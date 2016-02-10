@@ -61,8 +61,8 @@ public class MainActivity extends ActionBarActivity {
     private static int REQUEST_SETTINGS_ACTION = 0;
     LocationManager locationManager;
     public ImageButton agendabtn, cercanosbtn, averiabtn, seguimientobtn, preasbuiltbtn, relevobtn, seguridadbtn, vigilantebtn;
-    public static String proveedor, latitud, longitud, estado_gps="1";
-    private boolean networkon;
+    public static String proveedor, latitud, longitud;
+    public String estado_gps="1";
 
     FormCierreReg REGCIERRE, IDENREG, TRESGREG, FAENAREG, TRANSPREG, SGREG, DCREG, AIRREG, ACREG, GEREG, EMERGREG;
     MaintenanceReg MAINREG;
@@ -123,9 +123,7 @@ public class MainActivity extends ActionBarActivity {
             dialog.setCanceledOnTouchOutside(false);
             dialog.show();
         }
-        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            estado_gps = "0";
-        }
+
 
 
 
@@ -153,7 +151,6 @@ public class MainActivity extends ActionBarActivity {
         profileTask.execute();
 
         proveedor = LocationManager.NETWORK_PROVIDER;
-        networkon = locationManager.isProviderEnabled(proveedor);
 
     }
 
@@ -248,6 +245,16 @@ public class MainActivity extends ActionBarActivity {
 
     //TODO:  VIGILANTE
     public void onClick_vigilante(View v) {
+
+        //Si GPS está activado
+        if ( locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+            estado_gps = "1";
+        }
+
+        //Si GPS está desactivado
+        if ( !locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+            estado_gps = "0";
+        }
 
         if (vigilantebtnAcceso) {
             //  LocalizacionGPS lgps = new LocalizacionGPS(this);
@@ -396,7 +403,18 @@ public class MainActivity extends ActionBarActivity {
         protected void onPostExecute(String s) {
             if (ok) {
 
-                Toast.makeText(MainActivity.this, "ESTADO GPS: "+ estado_gps, Toast.LENGTH_SHORT).show();
+                //Si GPS está activado
+                if ( locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+                    estado_gps = "1";
+
+                    Toast.makeText(MainActivity.this, "Coordenadas enviadas Correctamente", Toast.LENGTH_SHORT).show();
+                }
+                //Si GPS está desactivado
+                if ( !locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+                    estado_gps = "0";
+
+                    Toast.makeText(MainActivity.this, "GPS DESACTIVADO. Coordenadas enviadas con Detalles", Toast.LENGTH_SHORT).show();
+                }
 
             } else {
                 Toast.makeText(tContext, s, Toast.LENGTH_LONG).show();
@@ -530,6 +548,10 @@ public class MainActivity extends ActionBarActivity {
                         seguridadbtn.getBackground().setAlpha(50);
                             /*seguridadbtn.setClickable(false);
                             seguridadbtn.setEnabled(false);*/
+
+                    }else if (s.get(i).toString().equalsIgnoreCase("75")) {
+                        vigilantebtnAcceso = false;
+                        vigilantebtn.getBackground().setAlpha(50);
 
                     }
                 }

@@ -1013,6 +1013,21 @@ public class SoapRequest {
         envelope.encodingStyle = SoapSerializationEnvelope.ENC;
         envelope.dotNet = false;
         envelope.implicitTypes = true;
+        String longitud = null, latitud = null;
+
+        if (longitud != null) {
+           longitud = LONGITUDE;
+
+        }else {
+            longitud = "0.0";
+        }
+        if (latitud != null) {
+            latitud = LATITUDE;
+
+        }else {
+            latitud = "0.0";
+        }
+
 
         String bodyOut =
                 "<soapenv:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:urn=\"urn:Configurationwsdl\">" +
@@ -1021,8 +1036,8 @@ public class SoapRequest {
                         "<urn:securityCoord soapenv:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" +
                         "<SecurityCoord xsi:type=\"urn:SecurityCoord\">" +
                         "<RequestSecurityCoord xsi:type=\"urn:RequestSecurityCoord\">" +
-                        "<Coordx xsi:type=\"xsd:string\">"+ LONGITUDE + "</Coordx>" +
-                        "<Coordy xsi:type=\"xsd:string\">" + LATITUDE +"</Coordy>" +
+                        "<Coordx xsi:type=\"xsd:string\">"+ longitud + "</Coordx>" +
+                        "<Coordy xsi:type=\"xsd:string\">" + latitud +"</Coordy>" +
                         "<StatusGps xsi:type=\"xsd:string\">" + ESTADO_GPS +"</StatusGps>" +
                         "<DateTime xsi:type=\"xsd:string\">"+  formatter.format(fecha) +"</DateTime>" +
                         "<Imei xsi:type=\"xsd:string\">866440026969486</Imei>" +
