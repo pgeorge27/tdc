@@ -111,7 +111,7 @@
             android:layout_centerVertical="true"
             android:onClick="onClick_back"
             android:backgroundTintMode="src_over"
-            android:src="@drawable/ic_close1" />
+            android:src="@drawable/save"/>
 
         <ImageButton
             android:layout_width="58dp"

@@ -230,20 +230,48 @@ import android.os.PowerManager;
             b.show();
         }
 
+        //Boton volver 'atrás' del equipo.
         @Override
         public void onBackPressed() {
-            onClick_back(null);
-        }
-
-        public void onClick_back(View v) {
+            //onClick_back(null);
             AlertDialog.Builder b = new AlertDialog.Builder(this);
-            b.setMessage("¿Seguro que desea salir del Formulario?");
+            b.setMessage("¿Desea salir del formualario sin guardar?");
             b.setPositiveButton("SI", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
-                    saveData();
+                    //saveData();
                     actividad.finish();
                 }
+            });
+            b.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                }
+            });
+            b.show();
+            //actividad.finish();
+
+        }
+
+        //Imagen guardar del Formulario
+        public void onClick_back(View v) {
+            AlertDialog.Builder b = new AlertDialog.Builder(this);
+            b.setMessage("¿Desea guardar la información?");
+
+            b.setPositiveButton("SI", new DialogInterface.OnClickListener() {
+
+
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    saveData();
+                    //actividad.finish();
+
+                    Toast.makeText(ActividadCierreFormActivity.this, "Datos Guardados Exitosamente", Toast.LENGTH_SHORT).show();
+
+                }
+
+
             });
             b.setNegativeButton("No", new DialogInterface.OnClickListener() {
                 @Override

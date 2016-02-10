@@ -998,6 +998,53 @@ public class SoapRequest {
         return response;
     }
 
+
+    public static String getsecurity(String LATITUDE, String LONGITUDE, String IMEI) throws Exception {
+        final String SOAP_ACTION = "urn:Configurationwsdl#securityCoord";
+        String response = null;
+        String xml = null;
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date fecha = new Date();
+
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpPost httpPost = new HttpPost(dummy.URL_TDC);
+
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+        envelope.encodingStyle = SoapSerializationEnvelope.ENC;
+        envelope.dotNet = false;
+        envelope.implicitTypes = true;
+
+        String bodyOut =
+                "<soapenv:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:urn=\"urn:Configurationwsdl\">" +
+                        "<soapenv:Header/>" +
+                        "<soapenv:Body>" +
+                        "<urn:securityCoord soapenv:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" +
+                        "<SecurityCoord xsi:type=\"urn:SecurityCoord\">" +
+                        "<RequestSecurityCoord xsi:type=\"urn:RequestSecurityCoord\">" +
+                        "<Coordx xsi:type=\"xsd:string\">"+ LATITUDE + "</Coordx>" +
+                        "<Coordy xsi:type=\"xsd:string\">" + LONGITUDE +"</Coordy>" +
+                        "<DateTime xsi:type=\"xsd:string\">"+  formatter.format(fecha) +"</DateTime>" +
+                        "<Imei xsi:type=\"xsd:string\">866440026969486</Imei>" +
+                        "</RequestSecurityCoord>" +
+                        "</SecurityCoord>" +
+                        "</urn:securityCoord>" +
+                        "</soapenv:Body>" +
+                        "</soapenv:Envelope>";
+
+        Log.i("CERCANOS SEND", bodyOut);
+        xml = bodyOut;
+        StringEntity se = new StringEntity(xml, HTTP.UTF_8);
+        se.setContentType("text/xml");
+        httpPost.addHeader(SOAP_ACTION, dummy.URL_TDC);
+
+        httpPost.setEntity(se);
+        HttpResponse httpResponse = httpClient.execute(httpPost);
+        HttpEntity resEntity = httpResponse.getEntity();
+        response = EntityUtils.toString(resEntity);
+        return response;
+    }
+
+
     public static String FormClosing(String IMEI, int IdMaintenance) throws Exception {
         final String SOAP_ACTION = "";//"urn:Configurationwsdl#request";
         String response = null;

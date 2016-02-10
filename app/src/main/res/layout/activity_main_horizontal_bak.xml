@@ -10,6 +10,7 @@
     tools:context=".MainActivity">
 
     <!-- header -->
+
     <LinearLayout
         android:id="@+id/main_header"
         android:layout_width="fill_parent"
@@ -17,7 +18,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:layout_gravity="center_horizontal"
+        android:layout_gravity="center_vertical"
         android:background="@drawable/fondo_general"
         android:gravity="fill_vertical"
         android:orientation="horizontal">
@@ -75,26 +76,32 @@
     </LinearLayout>
 
     <!-- end header -->
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/main_header"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:background="@drawable/fondo_general"
-        android:orientation="vertical"
-        android:paddingBottom="10dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:paddingTop="10dp"
         android:layout_above="@+id/main_footer">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/main_header"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:background="@drawable/fondo_general"
+            android:orientation="vertical"
+            android:paddingBottom="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="10dp"
+            android:layout_above="@+id/main_footer"
+            android:id="@+id/main_menu">
 
             <LinearLayout
                 android:id="@+id/row1"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="100dp"
                 android:layout_gravity="center_horizontal"
                 android:orientation="horizontal"
                 android:layout_weight="2">
@@ -137,16 +144,16 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/linearLayout5"
+                android:id="@+id/linearLayout2"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="50dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="4dp"
                 android:orientation="horizontal"
                 android:layout_weight="1">
 
                 <RelativeLayout
-                    android:id="@+id/linearLayout3"
+                    android:id="@+id/linearLayou3"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -154,7 +161,7 @@
                     android:orientation="vertical">
 
                     <ImageButton
-                        android:id="@+id/imageButton7"
+                        android:id="@+id/imageButton2"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:adjustViewBounds="true"
@@ -169,7 +176,7 @@
                         />
 
                     <TextView
-                        android:id="@+id/textView9"
+                        android:id="@+id/textView3"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center_horizontal"
@@ -186,20 +193,20 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/row2"
+                android:id="@+id/linearLayout4"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="50dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="4dp"
                 android:orientation="horizontal"
-                android:layout_weight="2">
+                android:layout_weight="1">
 
                 <RelativeLayout
                     android:id="@+id/btn_3"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="2dp"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:gravity="center_vertical"
                     android:orientation="vertical">
 
                     <ImageButton
@@ -209,6 +216,7 @@
                         android:adjustViewBounds="true"
                         android:background="@drawable/click_averia"
                         android:onClick="onClick_btn3"
+                        android:scaleType="fitXY"
                         android:layout_alignParentLeft="true"
                         android:layout_marginLeft="0dp"
                         android:layout_alignParentTop="true"
@@ -216,13 +224,12 @@
                         android:clickable="true"
                         />
 
-
                     <TextView
-                        android:id="@+id/textView3"
+                        android:id="@+id/textView4"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_gravity="center_horizontal"
-                        android:gravity="center_horizontal"
+                        android:gravity="center_vertical|center_horizontal"
                         android:paddingBottom="0dp"
                         android:text="Notificar Avería"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
@@ -230,16 +237,25 @@
                         android:textStyle="normal"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentTop="false"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentBottom="true" />
+                        android:layout_alignParentRight="true" />
                 </RelativeLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayout6"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="4dp"
+                android:orientation="horizontal"
+                android:layout_weight="1">
 
                 <RelativeLayout
-                    android:id="@+id/btn_4"
+                    android:id="@+id/linearLayout7"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="2dp"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:gravity="center_vertical"
                     android:orientation="vertical">
 
                     <ImageButton
@@ -249,17 +265,20 @@
                         android:adjustViewBounds="true"
                         android:background="@drawable/click_cercanos"
                         android:onClick="onClick_btn4"
+                        android:scaleType="fitXY"
                         android:layout_alignParentLeft="true"
                         android:layout_marginLeft="0dp"
                         android:layout_alignParentTop="true"
-                        android:layout_marginTop="0dp" />
+                        android:layout_marginTop="0dp"
+                        android:clickable="true"
+                        />
 
                     <TextView
-                        android:id="@+id/textView4"
+                        android:id="@+id/textView5"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_gravity="center_horizontal"
-                        android:gravity="center_horizontal"
+                        android:gravity="center_vertical|center_horizontal"
                         android:paddingBottom="0dp"
                         android:text="Sitios Cercanos"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
@@ -267,100 +286,114 @@
                         android:textStyle="normal"
                         android:layout_alignParentLeft="true"
                         android:layout_alignParentTop="false"
-                        android:layout_alignParentBottom="true"
                         android:layout_alignParentRight="true" />
                 </RelativeLayout>
             </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/row2"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="4dp"
-            android:orientation="horizontal"
-            android:layout_weight="2">
-
-            <RelativeLayout
-                android:id="@+id/btn_3"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="2dp"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <ImageButton
-                    android:id="@+id/btn_preasbuilt"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:adjustViewBounds="true"
-                    android:background="@drawable/click_preasbuilt"
-                    android:onClick="onClick_preasbuilt"
-                    android:layout_alignParentLeft="true"
-                    android:layout_marginLeft="0dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginTop="0dp" />
-
-
-                <TextView
-                    android:id="@+id/textView32"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:gravity="center_horizontal"
-                    android:paddingBottom="0dp"
-                    android:text="PreAsBuilt"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                    android:textColor="#ffffff"
-                    android:textStyle="normal"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentTop="false"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentBottom="true" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/btn_4"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="2dp"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <ImageButton
-                    android:id="@+id/btn_relevo"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:adjustViewBounds="true"
-                    android:background="@drawable/click_relevo"
-                    android:onClick="onClick_relevo"
-                    android:layout_alignParentLeft="true"
-                    android:layout_marginLeft="0dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginTop="0dp" />
-
-                <TextView
-                    android:id="@+id/textView42"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:gravity="center_horizontal"
-                    android:paddingBottom="0dp"
-                    android:text="Relevamiento\nde Capacidades"
-                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
-                    android:textColor="#ffffff"
-                    android:textStyle="normal"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentTop="false"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentBottom="true" />
-            </RelativeLayout>
-        </LinearLayout>
-
-        <LinearLayout
-                android:id="@+id/linearLayout2"
+            <LinearLayout
+                android:id="@+id/linearLayout8"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="4dp"
+                android:orientation="horizontal"
+                android:layout_weight="1">
+
+                <RelativeLayout
+                    android:id="@+id/linearLayout9"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <ImageButton
+                        android:id="@+id/imageButton5"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:adjustViewBounds="true"
+                        android:background="@drawable/click_preasbuilt"
+                        android:onClick="onClick_preasbuilt"
+                        android:scaleType="fitXY"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginLeft="0dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginTop="0dp"
+                        android:clickable="true"
+                        />
+
+                    <TextView
+                        android:id="@+id/textView6"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_horizontal"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:paddingBottom="0dp"
+                        android:text="PreAsBuilt"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                        android:textColor="#ffffff"
+                        android:textStyle="normal"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="false"
+                        android:layout_alignParentRight="true" />
+                </RelativeLayout>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/linearLayout10"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="4dp"
+                android:orientation="horizontal"
+                android:layout_weight="1">
+
+                <RelativeLayout
+                    android:id="@+id/linearLayout11"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <ImageButton
+                        android:id="@+id/imageButton6"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:adjustViewBounds="true"
+                        android:background="@drawable/click_relevo"
+                        android:onClick="onClick_relevo"
+                        android:scaleType="fitXY"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginLeft="0dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginTop="0dp"
+                        android:clickable="true"
+                        />
+
+                    <TextView
+                        android:id="@+id/textView10"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_horizontal"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:paddingBottom="0dp"
+                        android:text="Revelamiento de Capacidades"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                        android:textColor="#ffffff"
+                        android:textStyle="normal"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true" />
+                </RelativeLayout>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/linearLayout3"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="4dp"
                 android:orientation="horizontal"
@@ -375,7 +408,7 @@
                     android:orientation="vertical">
 
                     <ImageButton
-                        android:id="@+id/imageButton4"
+                        android:id="@+id/imageButton7"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:adjustViewBounds="true"
@@ -405,7 +438,62 @@
                 </RelativeLayout>
             </LinearLayout>
 
-    </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayout18"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="4dp"
+                android:orientation="horizontal"
+                android:layout_weight="1">
+
+                <RelativeLayout
+                    android:id="@+id/linearLayout19"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical">
+
+                    <ImageButton
+                        android:id="@+id/imageButton15"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:adjustViewBounds="true"
+                        android:background="@drawable/click_vigilante"
+                        android:onClick="onClick_vigilante"
+                        android:scaleType="fitXY"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginLeft="0dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_marginTop="0dp"
+                        android:clickable="true"
+                        />
+
+                    <TextView
+                        android:id="@+id/textView16"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_horizontal"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:paddingBottom="0dp"
+                        android:text="Vigilante"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+                        android:textColor="#ffffff"
+                        android:textStyle="normal"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="false"
+                        android:layout_alignParentRight="true" />
+                </RelativeLayout>
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </ScrollView>
+
+
+    <!-- Footer  -->
 
     <RelativeLayout
         android:id="@+id/main_footer"

@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -59,13 +60,12 @@ public class MainActivity extends ActionBarActivity {
     public static PreferencesTDC preferencesTDC;
     private static int REQUEST_SETTINGS_ACTION = 0;
     LocationManager locationManager;
-    public ImageButton agendabtn, cercanosbtn, averiabtn, seguimientobtn, preasbuiltbtn, relevobtn, seguridadbtn;
+    public ImageButton agendabtn, averiabtn;
+    public static String proveedor, latitud, longitud;
+    private boolean networkon;
 
     FormCierreReg REGCIERRE, IDENREG, TRESGREG, FAENAREG, TRANSPREG, SGREG, DCREG, AIRREG, ACREG, GEREG, EMERGREG;
     MaintenanceReg MAINREG;
-
-    boolean agendabtnAcceso= true, cercanosbtnAcceso = true, averiabtnAcceso = true, seguimientobtnAcceso = true,
-            preasbuiltbtnAcceso= true, relevobtnAcceso = true, seguridadbtnAcceso = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +75,7 @@ public class MainActivity extends ActionBarActivity {
         actividad = this;
         preferencesTDC = new PreferencesTDC(this);
         mContext = this;
+
 
         REGCIERRE = new FormCierreReg(this, "LISTADO");
         IDENREG = new FormCierreReg(this, "IDEN");
@@ -134,16 +135,14 @@ public class MainActivity extends ActionBarActivity {
         Actualizar a = new Actualizar();
         a.execute();
 
+
         averiabtn = (ImageButton) findViewById(R.id.btn_averia);
-        cercanosbtn = (ImageButton) findViewById(R.id.btn_cerca);
-        seguimientobtn = (ImageButton) findViewById(R.id.imageButton7);
-        preasbuiltbtn = (ImageButton) findViewById(R.id.btn_preasbuilt);
-        relevobtn = (ImageButton) findViewById(R.id.btn_relevo);
-        seguridadbtn = (ImageButton) findViewById(R.id.imageButton4);
 
-        ProfileTask profileTask = new ProfileTask(this);
+        /*ProfileTask profileTask = new ProfileTask(this);
         profileTask.execute(); //
-
+*/
+        proveedor = LocationManager.NETWORK_PROVIDER;
+        networkon = locationManager.isProviderEnabled(proveedor);
 
     }
 
@@ -188,104 +187,105 @@ public class MainActivity extends ActionBarActivity {
         MaintenanceReg pref = new MaintenanceReg(this);
         pref.newMaintenance("465", "0");
     }
-    final String perfilNoAutorizado="Su perfil no esta autorizado para esta opción";
+
 
     // TODO: AGENDA.
     public void onClick_btn2(View v) {
         //startActivity(new Intent(this,AgendaActivity.class));
-        if (agendabtnAcceso) {
-            AgendaTask agendaTask = new AgendaTask(this);
-            agendaTask.execute();
-        }else {
-            Toast.makeText(getApplicationContext(), perfilNoAutorizado, Toast.LENGTH_LONG).show();
-        }
+        AgendaTask agendaTask = new AgendaTask(this);
+        agendaTask.execute();
     }
 
     //TODO: NOTIFICAR AVERIA
     public void onClick_btn3(View v) {
-        System.out.println("Aqui");
-        if (averiabtnAcceso) {
-            startActivity(new Intent(this, AveriaActivity.class));
-        }else {
-            Toast.makeText(getApplicationContext(), perfilNoAutorizado, Toast.LENGTH_LONG).show();
-        }
+        startActivity(new Intent(this, AveriaActivity.class));
     }
 
     //TODO:  SITIOS CERCANOS
     public void onClick_btn4(View v) {
-        if (cercanosbtnAcceso) {
-            try {
-                startActivity(new Intent(this, CercanosActivity.class));
-            } catch (Exception e) {
-                AlertDialog.Builder b = new AlertDialog.Builder(this);
-                b.setMessage(e.getMessage() + ":\n" + e.getCause());
-                b.setTitle("Error al cargar Sitios Cercanos");
-                b.setNeutralButton("Cerrar", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                    }
-                });
-                AlertDialog dialog = b.create();
-                dialog.setCanceledOnTouchOutside(true);
-                dialog.show();
-            }
-        }else {
-            Toast.makeText(getApplicationContext(), perfilNoAutorizado, Toast.LENGTH_LONG).show();
-        }
-    }
-
-    //TODO: SEGUIMIENTO DE OBRAS
-    public void onClick_btn5(View v) {
-        if (seguimientobtnAcceso) {
-            startActivity(new Intent(this, Seguimiento.class));
-        }else {
-            Toast.makeText(getApplicationContext(), perfilNoAutorizado, Toast.LENGTH_LONG).show();
-        }
-    }
-
-    //TODO CHECKLIST SEGURIDAD DIARIO
-    public void onClick_btn6(View v) {
-        if (seguridadbtnAcceso) {
-            ChecklistTask c = new ChecklistTask(this);
-            c.execute();
-        }else {
-            Toast.makeText(getApplicationContext(), perfilNoAutorizado, Toast.LENGTH_LONG).show();
-        }
-    }
-
-    public void onClick_relevo(View v) {
-        if (relevobtnAcceso) {
-            startActivity(new Intent(this, RelevarActivity.class));
-        } else {
-            Toast.makeText(getApplicationContext(), perfilNoAutorizado, Toast.LENGTH_LONG).show();
-        }
-    }
-
-    public void onClick_preasbuilt(View v) {
-        if (preasbuiltbtnAcceso) {
+        try {
+            startActivity(new Intent(this, CercanosActivity.class));
+        } catch (Exception e) {
             AlertDialog.Builder b = new AlertDialog.Builder(this);
-
-            b.setItems(new CharSequence[]{"RF", "MW"}, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    PreAsBuilt task = new PreAsBuilt(mContext, i);
-                    task.execute();
-
-                }
-            });
-            b.setTitle("Seleccione una opción");
-            b.setNegativeButton("Cerrar", new DialogInterface.OnClickListener() {
+            b.setMessage(e.getMessage() + ":\n" + e.getCause());
+            b.setTitle("Error al cargar Sitios Cercanos");
+            b.setNeutralButton("Cerrar", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialogInterface, int i) {
                     dialogInterface.dismiss();
                 }
             });
-
-            b.show();
-        } else {
-            Toast.makeText(getApplicationContext(), perfilNoAutorizado, Toast.LENGTH_LONG).show();
+            AlertDialog dialog = b.create();
+            dialog.setCanceledOnTouchOutside(true);
+            dialog.show();
         }
+    }
+
+
+    //TODO:  VIGILANTE
+    public void onClick_vigilante(View v) {
+
+        //  LocalizacionGPS lgps = new LocalizacionGPS(this);
+
+        Location lg = locationManager.getLastKnownLocation(proveedor);
+        Log.e("LLGG", "LG: " + lg);
+        if (lg != null) {
+
+            StringBuilder builder = new StringBuilder();
+            StringBuilder builder2 = new StringBuilder();
+
+            //latitud = builder.append("Latitud: ").append((lg.getLatitude())).toString();
+            latitud = builder.append(lg.getLatitude()).toString();
+            Log.e("LATITUD", "LATITUDDDD" + latitud);
+
+
+            //longitud = builder.append(" Longitud: ").append((lg.getLongitude())).toString();
+            longitud = builder2.append(lg.getLongitude()).toString();
+            Log.e("LONGITUD", "LONGITUDDD" + longitud);
+
+
+        }
+
+        SecurityTask securityTask = new SecurityTask(this);
+        securityTask.execute(longitud, latitud,IMEI);
+
+    }
+
+    //TODO: SEGUIMIENTO DE OBRAS
+    public void onClick_btn5(View v) {
+        startActivity(new Intent(this, Seguimiento.class));
+    }
+
+    //TODO CHECKLIST SEGURIDAD DIARIO
+    public void onClick_btn6(View v) {
+        ChecklistTask c = new ChecklistTask(this);
+        c.execute();
+    }
+
+    public void onClick_relevo(View v) {
+        startActivity(new Intent(this, RelevarActivity.class));
+    }
+
+    public void onClick_preasbuilt(View v) {
+        AlertDialog.Builder b = new AlertDialog.Builder(this);
+
+        b.setItems(new CharSequence[]{"RF", "MW"}, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                PreAsBuilt task = new PreAsBuilt(mContext, i);
+                task.execute();
+
+            }
+        });
+        b.setTitle("Seleccione una opción");
+        b.setNegativeButton("Cerrar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+
+        b.show();
     }
 
 
@@ -300,6 +300,146 @@ public class MainActivity extends ActionBarActivity {
 
 
 //-----------------TASK ASINCRONICO------------------------------------
+
+
+
+    private class SecurityTask extends AsyncTask<String, String, String> {
+        Context tContext;
+        ProgressDialog dialog;
+        String message;
+        boolean ok = false;
+
+        private SecurityTask(Context tContext) {
+            this.tContext = tContext;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            dialog = new ProgressDialog(tContext);
+            dialog.setMessage("Enviando coordenadas...");
+            dialog.setCancelable(false);
+            dialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            try {
+                String query = SoapRequest.getsecurity(longitud, latitud, IMEI);
+
+                ArrayList<String> parse = XMLParser.getReturnCode2(query);
+
+                ok = parse.get(0).equals("0");
+
+                if (ok)
+                    return query;
+                else
+                    return parse.get(1);
+            } catch (SAXException | ParserConfigurationException | XPathExpressionException e) {
+                e.printStackTrace();
+                message = dummy.ERROR_PARSE;
+            } catch (IOException e) {
+                e.printStackTrace();
+                message = dummy.ERROR_CONNECTION;
+            } catch (Exception e) {
+                e.printStackTrace();
+                message = dummy.ERROR_GENERAL;
+            }
+            return dummy.ERROR_GENERAL;
+        }
+
+
+        @Override
+        protected void onPostExecute(String s) {
+            if (ok) {
+
+                Toast.makeText(MainActivity.this, "Coordenadas enviadas Exitosamente", Toast.LENGTH_SHORT).show();
+
+            } else {
+                Toast.makeText(tContext, s, Toast.LENGTH_LONG).show();
+            }
+            if (dialog.isShowing()) dialog.dismiss();
+        }
+    }
+    private class ProfileTask extends AsyncTask<String, String, ArrayList<String>> {
+        ProgressDialog progressDialog = null;
+        Context tContext;
+        String ATAG = "PROFILETASK";
+        String mensaje;
+
+        public ProfileTask(Context context) {
+            this.tContext = context;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            progressDialog = new ProgressDialog(tContext);
+            progressDialog.setTitle("Espere por favor...");
+            progressDialog.show();
+        }
+
+
+        @Override
+        protected void onProgressUpdate(String... values) {
+            progressDialog.setMessage(values[0]);
+        }
+
+        @Override
+        protected ArrayList<String> doInBackground(String... strings) {
+            try {
+                publishProgress("Verificando Perfil...");
+                String query = SoapRequest.profileResource(IMEI);
+                return XMLParser.getReturnCodeProfile(query);
+            } catch (IOException e) {
+
+                // LocalText localT = new LocalText();
+                //String mantenimientoLocal = localT.leerFicheroMemoriaExterna("profile-config");
+
+               /* if (mantenimientoLocal!=null){
+                    ArrayList<String> nombreArrayList = new ArrayList<String>();
+                    nombreArrayList.add("0");
+                    nombreArrayList.add("local");
+                    return nombreArrayList;
+                }else{
+                    Log.e(ATAG, e.getMessage() + ":\n" + e.getCause());
+                    mensaje = dummy.ERROR_CONNECTION;
+                }*/
+
+            } catch (SAXException | XPathExpressionException | ParserConfigurationException e) {
+                e.printStackTrace();
+                mensaje = dummy.ERROR_PARSE;
+            } catch (Exception e) {
+                e.printStackTrace();
+                mensaje = dummy.ERROR_GENERAL;
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<String> s) {
+            if (progressDialog.isShowing())
+                progressDialog.dismiss();
+
+
+
+            if (s == null) {
+                Toast.makeText(tContext, mensaje, Toast.LENGTH_LONG).show();
+            } else {
+                for (int i = 0; i < s.size(); i++){
+                    if (s.get(i).toString().equalsIgnoreCase("68")){
+                        agendabtn.setClickable(false);
+                        agendabtn.setEnabled(false);
+
+                    }else if (s.get(i).toString().equalsIgnoreCase("70")){
+                        averiabtn.setClickable(false);
+                        averiabtn.setEnabled(false);
+
+                    }
+                }
+                //Toast.makeText(getApplicationContext(), s.get(1), Toast.LENGTH_LONG).show();
+
+            }
+        }
+    }
 
     private class PreAsBuilt extends AsyncTask<String, String, String> {
         Context context;
@@ -537,158 +677,6 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
-    private class ProfileTask extends AsyncTask<String, String, ArrayList<String>> {
-        ProgressDialog progressDialog = null;
-        Context tContext;
-        String ATAG = "PROFILETASK";
-        String mensaje;
-
-        public ProfileTask(Context context) {
-            this.tContext = context;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            progressDialog = new ProgressDialog(tContext);
-            progressDialog.setTitle("Espere por favor...");
-            progressDialog.show();
-        }
-
-
-        @Override
-        protected void onProgressUpdate(String... values) {
-            progressDialog.setMessage(values[0]);
-        }
-
-        @Override
-        protected ArrayList<String> doInBackground(String... strings) {
-            try {
-                publishProgress("Verificando Perfil...");
-
-                LocalText localT = new LocalText();
-
-                if (isOnline()){
-                    String query = SoapRequest.profileResource(IMEI);
-                    if (localT.isDisponibleSD() && localT.isAccesoEscrituraSD());
-                        localT.escribirFicheroMemoriaExterna("profileResource", query);
-                }
-
-                String perfiles = localT.leerFicheroMemoriaExterna("profileResource");
-
-
-
-                return XMLParser.getReturnCodeProfile(perfiles);
-                //return XMLParser.getReturnCodeProfile(query);
-
-            } catch (IOException e) {
-
-               /* LocalText localT = new LocalText();
-                String perfiles = localT.leerFicheroMemoriaExterna("profileResource");
-
-                if (perfiles!=null){
-                    ArrayList<String> nombreArrayList = new ArrayList<String>();
-                    nombreArrayList.add("0");
-                    nombreArrayList.add("local");
-                    return nombreArrayList;
-                }else{
-                    Log.e(ATAG, e.getMessage() + ":\n" + e.getCause());
-                    mensaje = dummy.ERROR_CONNECTION;
-                }*/
-
-            } catch (SAXException | XPathExpressionException | ParserConfigurationException e) {
-                e.printStackTrace();
-                mensaje = dummy.ERROR_PARSE;
-            } catch (Exception e) {
-                e.printStackTrace();
-                mensaje = dummy.ERROR_GENERAL;
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(ArrayList<String> s) {
-            if (progressDialog.isShowing())
-                progressDialog.dismiss();
-
-            if (s == null) {
-                //Toast.makeText(tContext, mensaje, Toast.LENGTH_LONG).show();
-                AlertDialog.Builder b = new AlertDialog.Builder(actividad);
-                b.setMessage("Por favor active su data movil o wifi");
-                b.setCancelable(false);
-                b.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        actividad.finish();
-                    }
-                });
-                b.show();
-            } else {
-                     for (int i = 0; i < s.size(); i++){
-                        if (s.get(i).toString().equalsIgnoreCase("68")){
-                            agendabtnAcceso =false;
-                            agendabtn.getBackground().setAlpha(60);
-                           /*agendabtn.setClickable(false);
-                            agendabtn.setEnabled(false);*/
-
-                        }else if (s.get(i).toString().equalsIgnoreCase("69")) {
-                            cercanosbtnAcceso = false;
-                            cercanosbtn.getBackground().setAlpha(80);
-
-
-                        }else if (s.get(i).toString().equalsIgnoreCase("70")){
-                            averiabtnAcceso = false;
-                            averiabtn.getBackground().setAlpha(90);
-
-
-                        }else if (s.get(i).toString().equalsIgnoreCase("71")) {
-                            seguimientobtnAcceso = false;
-                            seguimientobtn.getBackground().setAlpha(60);
-                           /* seguimientobtn.setClickable(false);
-                            seguimientobtn.setEnabled(false);*/
-
-                        }else if (s.get(i).toString().equalsIgnoreCase("72")) {
-                            preasbuiltbtnAcceso = false;
-                            preasbuiltbtn.getBackground().setAlpha(60);
-                            /*preasbuiltbtn.setClickable(false);
-                            preasbuiltbtn.setEnabled(false);*/
-
-                        }else if (s.get(i).toString().equalsIgnoreCase("73")) {
-                            relevobtnAcceso = false;
-                            relevobtn.getBackground().setAlpha(60);
-                            /*relevobtn.setClickable(false);
-                            relevobtn.setEnabled(false);*/
-
-                        }else if (s.get(i).toString().equalsIgnoreCase("74")) {
-                            seguridadbtnAcceso = false;
-                            seguridadbtn.getBackground().setAlpha(50);
-                            /*seguridadbtn.setClickable(false);
-                            seguridadbtn.setEnabled(false);*/
-
-                        }
-                    }
-                    //Toast.makeText(getApplicationContext(), s.get(1), Toast.LENGTH_LONG).show();
-            }
-        }
-    }
-
-    public boolean isOnline() {
-        ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
-
-        NetworkInfo mWifi = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-
-        NetworkInfo m4G = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-
-        int networkType = m4G.getSubtype();
-
-
-        if (mWifi.isConnected()) {
-            return true;
-        } else if (networkType == TelephonyManager.NETWORK_TYPE_LTE) {
-            return true;
-        }
-
-        return false;
-    }
 
     private class Actualizar extends AsyncTask<String, String, ArrayList<String>> {
         ProgressDialog progressDialog = null;
@@ -827,6 +815,7 @@ public class MainActivity extends ActionBarActivity {
             actividad.finish();
         }
     }
+
 
 
 }
