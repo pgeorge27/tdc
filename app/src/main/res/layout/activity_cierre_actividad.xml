@@ -208,6 +208,20 @@
                 android:layout_marginRight="8dp"
                 android:visibility="gone"/>
 
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="PDH"
+                android:drawableRight="@drawable/ic_rightarrow"
+                android:id="@+id/PDH"
+                android:background="@drawable/custom_button_blue_right"
+                android:textColor="@android:color/white"
+                android:layout_marginTop="6dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="8dp"
+                android:visibility="gone"
+                />
+
             <ToggleButton
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -342,6 +356,7 @@
                 android:layout_marginRight="8dp"
                 android:visibility="gone"
                 />
+
         </LinearLayout>
     </ScrollView>
 

@@ -657,6 +657,7 @@ public class AgendaActivity extends Activity {
         //if (type.equals("Emergencia,3")) return SoapRequestTDC.ACTION_EMERG;
         if (type.startsWith("Emergencia")) return SoapRequestTDC.ACTION_EMERG;
         if (type.equals("Preventivo,10")) return SoapRequestTDC.ACTION_WIMAX; //aqui
+        if (type.equals("Preventivo,11")) return SoapRequestTDC.ACTION_PDH;
         else return "";
     }
 

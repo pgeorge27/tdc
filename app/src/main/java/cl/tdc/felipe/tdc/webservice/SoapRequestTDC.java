@@ -56,6 +56,7 @@ public class SoapRequestTDC {
     public static final String ACTION_FAENA = "checkFaena";
     public static final String ACTION_EMERG = "checkEmergency";
     public static final String ACTION_WIMAX = "checkWimax";
+    public static final String ACTION_PDH = "checkPDH";
     public static final String ACTION_SEND_FAENA = "Faena";
     /*
      * Clase Principal de Conexion SSL a WDSL

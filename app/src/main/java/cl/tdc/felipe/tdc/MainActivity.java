@@ -60,12 +60,14 @@ public class MainActivity extends ActionBarActivity {
     public static PreferencesTDC preferencesTDC;
     private static int REQUEST_SETTINGS_ACTION = 0;
     LocationManager locationManager;
-    public ImageButton agendabtn, averiabtn;
-    public static String proveedor, latitud, longitud;
+    public ImageButton agendabtn, cercanosbtn, averiabtn, seguimientobtn, preasbuiltbtn, relevobtn, seguridadbtn, vigilantebtn;
+    public static String proveedor, latitud, longitud, estado_gps="1";
     private boolean networkon;
 
     FormCierreReg REGCIERRE, IDENREG, TRESGREG, FAENAREG, TRANSPREG, SGREG, DCREG, AIRREG, ACREG, GEREG, EMERGREG;
     MaintenanceReg MAINREG;
+    boolean agendabtnAcceso= true, cercanosbtnAcceso = true, averiabtnAcceso = true, seguimientobtnAcceso = true,
+            preasbuiltbtnAcceso= true, relevobtnAcceso = true, seguridadbtnAcceso = true, vigilantebtnAcceso = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,6 +123,10 @@ public class MainActivity extends ActionBarActivity {
             dialog.setCanceledOnTouchOutside(false);
             dialog.show();
         }
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            estado_gps = "0";
+        }
+
 
 
         TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
@@ -135,12 +141,17 @@ public class MainActivity extends ActionBarActivity {
         Actualizar a = new Actualizar();
         a.execute();
 
-
         averiabtn = (ImageButton) findViewById(R.id.btn_averia);
+        cercanosbtn = (ImageButton) findViewById(R.id.btn_cerca);
+        seguimientobtn = (ImageButton) findViewById(R.id.imageButton2);
+        preasbuiltbtn = (ImageButton) findViewById(R.id.imageButton5);
+        relevobtn = (ImageButton) findViewById(R.id.imageButton6);
+        seguridadbtn = (ImageButton) findViewById(R.id.imageButton7);
+        vigilantebtn = (ImageButton) findViewById(R.id.imageButton15);
 
-        /*ProfileTask profileTask = new ProfileTask(this);
-        profileTask.execute(); //
-*/
+        ProfileTask profileTask = new ProfileTask(this);
+        profileTask.execute();
+
         proveedor = LocationManager.NETWORK_PROVIDER;
         networkon = locationManager.isProviderEnabled(proveedor);
 
@@ -188,36 +199,49 @@ public class MainActivity extends ActionBarActivity {
         pref.newMaintenance("465", "0");
     }
 
+    final String perfilNoAutorizado="Su perfil no esta autorizado para esta opción";
 
     // TODO: AGENDA.
     public void onClick_btn2(View v) {
         //startActivity(new Intent(this,AgendaActivity.class));
-        AgendaTask agendaTask = new AgendaTask(this);
-        agendaTask.execute();
+        if (agendabtnAcceso) {
+            AgendaTask agendaTask = new AgendaTask(this);
+            agendaTask.execute();
+        }else {
+            Toast.makeText(getApplicationContext(), perfilNoAutorizado, Toast.LENGTH_LONG).show();
+        }
     }
 
     //TODO: NOTIFICAR AVERIA
     public void onClick_btn3(View v) {
-        startActivity(new Intent(this, AveriaActivity.class));
+        if (averiabtnAcceso) {
+            startActivity(new Intent(this, AveriaActivity.class));
+        }else {
+            Toast.makeText(getApplicationContext(), perfilNoAutorizado, Toast.LENGTH_LONG).show();
+        }
     }
 
     //TODO:  SITIOS CERCANOS
     public void onClick_btn4(View v) {
-        try {
-            startActivity(new Intent(this, CercanosActivity.class));
-        } catch (Exception e) {
-            AlertDialog.Builder b = new AlertDialog.Builder(this);
-            b.setMessage(e.getMessage() + ":\n" + e.getCause());
-            b.setTitle("Error al cargar Sitios Cercanos");
-            b.setNeutralButton("Cerrar", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    dialogInterface.dismiss();
-                }
-            });
-            AlertDialog dialog = b.create();
-            dialog.setCanceledOnTouchOutside(true);
-            dialog.show();
+        if (cercanosbtnAcceso) {
+            try {
+                startActivity(new Intent(this, CercanosActivity.class));
+            } catch (Exception e) {
+                AlertDialog.Builder b = new AlertDialog.Builder(this);
+                b.setMessage(e.getMessage() + ":\n" + e.getCause());
+                b.setTitle("Error al cargar Sitios Cercanos");
+                b.setNeutralButton("Cerrar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+                AlertDialog dialog = b.create();
+                dialog.setCanceledOnTouchOutside(true);
+                dialog.show();
+            }
+        }else {
+            Toast.makeText(getApplicationContext(), perfilNoAutorizado, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -225,67 +249,87 @@ public class MainActivity extends ActionBarActivity {
     //TODO:  VIGILANTE
     public void onClick_vigilante(View v) {
 
-        //  LocalizacionGPS lgps = new LocalizacionGPS(this);
+        if (vigilantebtnAcceso) {
+            //  LocalizacionGPS lgps = new LocalizacionGPS(this);
+            Location lg = locationManager.getLastKnownLocation(proveedor);
 
-        Location lg = locationManager.getLastKnownLocation(proveedor);
-        Log.e("LLGG", "LG: " + lg);
-        if (lg != null) {
+            Log.e("LLGG", "LG: " + lg);
+            if (lg != null) {
 
-            StringBuilder builder = new StringBuilder();
-            StringBuilder builder2 = new StringBuilder();
+                StringBuilder builder = new StringBuilder();
+                StringBuilder builder2 = new StringBuilder();
 
-            //latitud = builder.append("Latitud: ").append((lg.getLatitude())).toString();
-            latitud = builder.append(lg.getLatitude()).toString();
-            Log.e("LATITUD", "LATITUDDDD" + latitud);
-
-
-            //longitud = builder.append(" Longitud: ").append((lg.getLongitude())).toString();
-            longitud = builder2.append(lg.getLongitude()).toString();
-            Log.e("LONGITUD", "LONGITUDDD" + longitud);
+                //latitud = builder.append("Latitud: ").append((lg.getLatitude())).toString();
+                latitud = builder.append(lg.getLatitude()).toString();
+                Log.e("LATITUD", "LATITUDDDD" + latitud);
 
 
+                //longitud = builder.append(" Longitud: ").append((lg.getLongitude())).toString();
+                longitud = builder2.append(lg.getLongitude()).toString();
+                Log.e("LONGITUD", "LONGITUDDD" + longitud);
+
+
+            }
+
+            SecurityTask securityTask = new SecurityTask(this);
+            securityTask.execute(longitud, latitud, IMEI, estado_gps);
+        }else {
+            Toast.makeText(getApplicationContext(), perfilNoAutorizado, Toast.LENGTH_LONG).show();
         }
-
-        SecurityTask securityTask = new SecurityTask(this);
-        securityTask.execute(longitud, latitud,IMEI);
 
     }
 
     //TODO: SEGUIMIENTO DE OBRAS
     public void onClick_btn5(View v) {
-        startActivity(new Intent(this, Seguimiento.class));
+        if (seguimientobtnAcceso) {
+            startActivity(new Intent(this, Seguimiento.class));
+        }else {
+            Toast.makeText(getApplicationContext(), perfilNoAutorizado, Toast.LENGTH_LONG).show();
+        }
     }
 
     //TODO CHECKLIST SEGURIDAD DIARIO
     public void onClick_btn6(View v) {
-        ChecklistTask c = new ChecklistTask(this);
-        c.execute();
+        if (seguridadbtnAcceso) {
+            ChecklistTask c = new ChecklistTask(this);
+            c.execute();
+        }else {
+            Toast.makeText(getApplicationContext(), perfilNoAutorizado, Toast.LENGTH_LONG).show();
+        }
     }
 
     public void onClick_relevo(View v) {
-        startActivity(new Intent(this, RelevarActivity.class));
+        if (relevobtnAcceso) {
+            startActivity(new Intent(this, RelevarActivity.class));
+        }else {
+            Toast.makeText(getApplicationContext(), perfilNoAutorizado, Toast.LENGTH_LONG).show();
+        }
     }
 
     public void onClick_preasbuilt(View v) {
-        AlertDialog.Builder b = new AlertDialog.Builder(this);
+        if (preasbuiltbtnAcceso) {
+            AlertDialog.Builder b = new AlertDialog.Builder(this);
 
-        b.setItems(new CharSequence[]{"RF", "MW"}, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                PreAsBuilt task = new PreAsBuilt(mContext, i);
-                task.execute();
+            b.setItems(new CharSequence[]{"RF", "MW"}, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    PreAsBuilt task = new PreAsBuilt(mContext, i);
+                    task.execute();
 
-            }
-        });
-        b.setTitle("Seleccione una opción");
-        b.setNegativeButton("Cerrar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        });
+                }
+            });
+            b.setTitle("Seleccione una opción");
+            b.setNegativeButton("Cerrar", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                }
+            });
 
-        b.show();
+            b.show();
+        }else {
+            Toast.makeText(getApplicationContext(), perfilNoAutorizado, Toast.LENGTH_LONG).show();
+        }
     }
 
 
@@ -324,7 +368,7 @@ public class MainActivity extends ActionBarActivity {
         @Override
         protected String doInBackground(String... strings) {
             try {
-                String query = SoapRequest.getsecurity(longitud, latitud, IMEI);
+                String query = SoapRequest.getsecurity(longitud, latitud, IMEI, estado_gps);
 
                 ArrayList<String> parse = XMLParser.getReturnCode2(query);
 
@@ -352,7 +396,7 @@ public class MainActivity extends ActionBarActivity {
         protected void onPostExecute(String s) {
             if (ok) {
 
-                Toast.makeText(MainActivity.this, "Coordenadas enviadas Exitosamente", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "ESTADO GPS: "+ estado_gps, Toast.LENGTH_SHORT).show();
 
             } else {
                 Toast.makeText(tContext, s, Toast.LENGTH_LONG).show();
@@ -387,14 +431,28 @@ public class MainActivity extends ActionBarActivity {
         protected ArrayList<String> doInBackground(String... strings) {
             try {
                 publishProgress("Verificando Perfil...");
-                String query = SoapRequest.profileResource(IMEI);
-                return XMLParser.getReturnCodeProfile(query);
+
+                LocalText localT = new LocalText();
+
+                if (isOnline()){
+                    String query = SoapRequest.profileResource(IMEI);
+                    if (localT.isDisponibleSD() && localT.isAccesoEscrituraSD());
+                    localT.escribirFicheroMemoriaExterna("profileResource", query);
+                }
+
+                String perfiles = localT.leerFicheroMemoriaExterna("profileResource");
+
+
+
+                return XMLParser.getReturnCodeProfile(perfiles);
+                //return XMLParser.getReturnCodeProfile(query);
+
             } catch (IOException e) {
 
-                // LocalText localT = new LocalText();
-                //String mantenimientoLocal = localT.leerFicheroMemoriaExterna("profile-config");
+               /* LocalText localT = new LocalText();
+                String perfiles = localT.leerFicheroMemoriaExterna("profileResource");
 
-               /* if (mantenimientoLocal!=null){
+                if (perfiles!=null){
                     ArrayList<String> nombreArrayList = new ArrayList<String>();
                     nombreArrayList.add("0");
                     nombreArrayList.add("local");
@@ -419,26 +477,84 @@ public class MainActivity extends ActionBarActivity {
             if (progressDialog.isShowing())
                 progressDialog.dismiss();
 
-
-
             if (s == null) {
-                Toast.makeText(tContext, mensaje, Toast.LENGTH_LONG).show();
+                //Toast.makeText(tContext, mensaje, Toast.LENGTH_LONG).show();
+                AlertDialog.Builder b = new AlertDialog.Builder(actividad);
+                b.setMessage("Debe activar el gps");
+                b.setCancelable(false);
+                b.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        actividad.finish();
+                    }
+                });
+                b.show();
             } else {
                 for (int i = 0; i < s.size(); i++){
                     if (s.get(i).toString().equalsIgnoreCase("68")){
-                        agendabtn.setClickable(false);
-                        agendabtn.setEnabled(false);
+                        agendabtnAcceso =false;
+                        agendabtn.getBackground().setAlpha(60);
+                           /*agendabtn.setClickable(false);
+                            agendabtn.setEnabled(false);*/
+
+                    }else if (s.get(i).toString().equalsIgnoreCase("69")) {
+                        cercanosbtnAcceso = false;
+                        cercanosbtn.getBackground().setAlpha(80);
+
 
                     }else if (s.get(i).toString().equalsIgnoreCase("70")){
-                        averiabtn.setClickable(false);
-                        averiabtn.setEnabled(false);
+                        averiabtnAcceso = false;
+                        averiabtn.getBackground().setAlpha(90);
+
+
+                    }else if (s.get(i).toString().equalsIgnoreCase("71")) {
+                        seguimientobtnAcceso = false;
+                        seguimientobtn.getBackground().setAlpha(60);
+                           /* seguimientobtn.setClickable(false);
+                            seguimientobtn.setEnabled(false);*/
+
+                    }else if (s.get(i).toString().equalsIgnoreCase("72")) {
+                        preasbuiltbtnAcceso = false;
+                        preasbuiltbtn.getBackground().setAlpha(60);
+                            /*preasbuiltbtn.setClickable(false);
+                            preasbuiltbtn.setEnabled(false);*/
+
+                    }else if (s.get(i).toString().equalsIgnoreCase("73")) {
+                        relevobtnAcceso = false;
+                        relevobtn.getBackground().setAlpha(60);
+                            /*relevobtn.setClickable(false);
+                            relevobtn.setEnabled(false);*/
+
+                    }else if (s.get(i).toString().equalsIgnoreCase("74")) {
+                        seguridadbtnAcceso = false;
+                        seguridadbtn.getBackground().setAlpha(50);
+                            /*seguridadbtn.setClickable(false);
+                            seguridadbtn.setEnabled(false);*/
 
                     }
                 }
                 //Toast.makeText(getApplicationContext(), s.get(1), Toast.LENGTH_LONG).show();
-
             }
         }
+    }
+
+    public boolean isOnline() {
+        ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo mWifi = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+
+        NetworkInfo m4G = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+
+        int networkType = m4G.getSubtype();
+
+
+        if (mWifi.isConnected()) {
+            return true;
+        } else if (networkType == TelephonyManager.NETWORK_TYPE_LTE) {
+            return true;
+        }
+
+        return false;
     }
 
     private class PreAsBuilt extends AsyncTask<String, String, String> {

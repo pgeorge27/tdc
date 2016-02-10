@@ -999,7 +999,7 @@ public class SoapRequest {
     }
 
 
-    public static String getsecurity(String LATITUDE, String LONGITUDE, String IMEI) throws Exception {
+    public static String getsecurity(String LATITUDE, String LONGITUDE, String IMEI, String ESTADO_GPS) throws Exception {
         final String SOAP_ACTION = "urn:Configurationwsdl#securityCoord";
         String response = null;
         String xml = null;
@@ -1021,8 +1021,9 @@ public class SoapRequest {
                         "<urn:securityCoord soapenv:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" +
                         "<SecurityCoord xsi:type=\"urn:SecurityCoord\">" +
                         "<RequestSecurityCoord xsi:type=\"urn:RequestSecurityCoord\">" +
-                        "<Coordx xsi:type=\"xsd:string\">"+ LATITUDE + "</Coordx>" +
-                        "<Coordy xsi:type=\"xsd:string\">" + LONGITUDE +"</Coordy>" +
+                        "<Coordx xsi:type=\"xsd:string\">"+ LONGITUDE + "</Coordx>" +
+                        "<Coordy xsi:type=\"xsd:string\">" + LATITUDE +"</Coordy>" +
+                        "<StatusGps xsi:type=\"xsd:string\">" + ESTADO_GPS +"</StatusGps>" +
                         "<DateTime xsi:type=\"xsd:string\">"+  formatter.format(fecha) +"</DateTime>" +
                         "<Imei xsi:type=\"xsd:string\">866440026969486</Imei>" +
                         "</RequestSecurityCoord>" +

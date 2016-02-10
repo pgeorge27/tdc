@@ -88,10 +88,10 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
     Context mContext;
     ProgressDialog dialog;
 
-    FormCierreReg REG, IDENREG, TRESGREG, FAENAREG, TRANSPREG, ACREG, SGREG, DCREG, AIRREG, GEREG, EMERGREG,WIMAXREG ;
+    FormCierreReg REG, IDENREG, TRESGREG, FAENAREG, TRANSPREG, ACREG, SGREG, DCREG, AIRREG, GEREG, EMERGREG,WIMAXREG, PDHREG ;
     MaintenanceReg MAINREG;
 
-    Button IDEN, TRESG, AC, DC, SG, AIR, FAENA, TRANSPORTE, GE, RAN, EMERG, WIMAX;
+    Button IDEN, TRESG, AC, DC, SG, AIR, FAENA, TRANSPORTE, GE, RAN, EMERG, WIMAX, PDH;
 
 
     @Override
@@ -119,7 +119,10 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         ACREG = new FormCierreReg(this, "AC");
         EMERGREG = new FormCierreReg(this, "EMERGENCY");
         WIMAXREG = new FormCierreReg(this, "WIMAX");
+        PDHREG = new FormCierreReg(this, "PDH");
         MAINREG = new MaintenanceReg(this);
+
+
 
         TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         IMEI = telephonyManager.getDeviceId();
@@ -139,6 +142,8 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         RAN = (Button) this.findViewById(R.id.RAN);
         EMERG = (Button) this.findViewById(R.id.EMERG);
         WIMAX = (Button) this.findViewById(R.id.WIMAX);
+        PDH = (Button) this.findViewById(R.id.PDH);
+
         IDEN.setOnClickListener(this);
         TRESG.setOnClickListener(this);
         AC.setOnClickListener(this);
@@ -151,6 +156,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         RAN.setOnClickListener(this);
         EMERG.setOnClickListener(this);
         WIMAX.setOnClickListener(this);
+        PDH.setOnClickListener(this);
 
         boolean state = REG.getBoolean("IDEN" + idMain);
         if (state)
@@ -203,7 +209,10 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         if(state){
             WIMAX.setEnabled(false);
         }
-
+        state = REG.getBoolean("PDH"+idMain);
+        if(state){
+            PDH.setEnabled(false);
+        }
         mostrarBotonesAzules(1);
 
     }
@@ -217,6 +226,9 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             }
             if (temp.equalsIgnoreCase("Preventivo,2," + idMain)) {
                 TRESG.setVisibility(View.VISIBLE);
+            }
+            if (temp.equalsIgnoreCase("Preventivo,11," + idMain)) {
+                PDH.setVisibility(View.VISIBLE);
             }
 
             if (num == 1) {
@@ -240,6 +252,9 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
 
                 if (temp.equalsIgnoreCase("Preventivo,2," + idMain)) {
                     TRESG.setVisibility(View.VISIBLE);
+                }
+                if (temp.equalsIgnoreCase("Preventivo,11," + idMain)) {
+                    PDH.setVisibility(View.VISIBLE);
                 }
 
                 if (temp.equalsIgnoreCase("Faena de combustible,3," + idMain)) {
@@ -414,6 +429,11 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             buscar_form task = new buscar_form("WIMAX");
             task.execute();
         }
+        if (view.getId() == R.id.PDH) {
+            Log.e("IDDDDDDDD", "IDDDDDDD:   s" + view);
+            buscar_form task = new buscar_form("PDH");
+            task.execute();
+        }
         if (view.getId() == R.id.RAN) {
             mostrarBotonesAzules(2);
         }
@@ -431,6 +451,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         if (type.equals("GRUPO ELECTROGEN")) return SoapRequestTDC.ACTION_GE;
         if (type.equals("EMERGENCY")) return SoapRequestTDC.ACTION_EMERG;
         if (type.equals("WIMAX")) return SoapRequestTDC.ACTION_WIMAX;
+        if (type.equals("PDH")) return SoapRequestTDC.ACTION_PDH;
         else return "";
     }
 
@@ -460,7 +481,6 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
 
                 //query = SoapRequestTDC.getFormularioCierre(IMEI, idMain, getAction(type));
                 query = new LocalText().leerFicheroMemoriaExterna(idMain + "," + getAction(type));
-
                 ArrayList<String> returnCode = XMLParser.getReturnCode2(query);
 
                 if (returnCode.get(0).equals("0"))
@@ -506,6 +526,8 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                     code = 10;
                 }else if(type.equals("WIMAX")) {
                     code = 11;
+                }else if(type.equals("PDH")) {
+                    code = 12;
                 }else
                     code = -1;
 
@@ -573,6 +595,10 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             if (requestCode == 11) {
                 WIMAX.setEnabled(false);
                 REG.addValue("WIMAX" + idMain, true);
+            }
+            if (requestCode == 12) {
+                PDH.setEnabled(false);
+                REG.addValue("PDH" + idMain, true);
             }
         }
     }
@@ -703,6 +729,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                         ACREG.clearPreferences();
                         EMERGREG.clearPreferences();
                         WIMAXREG.clearPreferences();
+                        PDHREG.clearPreferences();
                         if(AgendaActivity.actividad != null)
                             AgendaActivity.actividad.finish();
                         actividad.finish();
