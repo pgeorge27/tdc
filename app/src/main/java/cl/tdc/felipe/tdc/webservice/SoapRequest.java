@@ -1015,19 +1015,16 @@ public class SoapRequest {
         envelope.implicitTypes = true;
         String longitud = null, latitud = null;
 
-        if (longitud != null) {
+        if (LONGITUDE != null) {
            longitud = LONGITUDE;
-
         }else {
             longitud = "0.0";
         }
-        if (latitud != null) {
+        if (LATITUDE != null) {
             latitud = LATITUDE;
-
         }else {
             latitud = "0.0";
         }
-
 
         String bodyOut =
                 "<soapenv:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:urn=\"urn:Configurationwsdl\">" +
@@ -1040,7 +1037,7 @@ public class SoapRequest {
                         "<Coordy xsi:type=\"xsd:string\">" + latitud +"</Coordy>" +
                         "<StatusGps xsi:type=\"xsd:string\">" + ESTADO_GPS +"</StatusGps>" +
                         "<DateTime xsi:type=\"xsd:string\">"+  formatter.format(fecha) +"</DateTime>" +
-                        "<Imei xsi:type=\"xsd:string\">866440026969486</Imei>" +
+                        "<Imei xsi:type=\"xsd:string\">"+ IMEI +"</Imei>" +
                         "</RequestSecurityCoord>" +
                         "</SecurityCoord>" +
                         "</urn:securityCoord>" +

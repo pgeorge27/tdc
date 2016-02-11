@@ -686,6 +686,7 @@ public class AgendaActivity extends Activity {
                 LocalText localT = new LocalText();
                 if (localT.isDisponibleSD() && localT.isAccesoEscrituraSD())
                     localT.escribirFicheroMemoriaExterna(idMain + "," + getAction(type), query);
+
             } catch (IOException e) {
                 e.printStackTrace();
                 return "Se agotó el tiempo de conexión. Por favor reintente.";

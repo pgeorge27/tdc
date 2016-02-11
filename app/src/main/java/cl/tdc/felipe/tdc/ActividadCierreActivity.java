@@ -230,6 +230,9 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             if (temp.equalsIgnoreCase("Preventivo,11," + idMain)) {
                 PDH.setVisibility(View.VISIBLE);
             }
+            if (temp.equalsIgnoreCase("Preventivo,10," + idMain)) {
+                WIMAX.setVisibility(View.VISIBLE);
+            }
 
             if (num == 1) {
 
@@ -242,8 +245,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
 
             if (temp.equalsIgnoreCase("Preventivo,4," + idMain) || temp.equalsIgnoreCase("Preventivo,5," + idMain)
                     || temp.equalsIgnoreCase("Preventivo,6," + idMain) || temp.equalsIgnoreCase("Preventivo,7," + idMain)
-                    || temp.equalsIgnoreCase("Preventivo,8," + idMain) || temp.equalsIgnoreCase("Preventivo,9," + idMain)
-                    || temp.equalsIgnoreCase("Preventivo,11," + idMain))
+                    || temp.equalsIgnoreCase("Preventivo,8," + idMain) || temp.equalsIgnoreCase("Preventivo,9," + idMain))
                 muestraRan();
 
                 if (temp.equalsIgnoreCase("Preventivo,1," + idMain)) {
@@ -252,6 +254,10 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
 
                 if (temp.equalsIgnoreCase("Preventivo,2," + idMain)) {
                     TRESG.setVisibility(View.VISIBLE);
+                }
+
+                if (temp.equalsIgnoreCase("Preventivo,10," + idMain)) {
+                    WIMAX.setVisibility(View.VISIBLE);
                 }
                 if (temp.equalsIgnoreCase("Preventivo,11," + idMain)) {
                     PDH.setVisibility(View.VISIBLE);
@@ -271,8 +277,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
 
                 if (temp.equalsIgnoreCase("Preventivo,4," + idMain) || temp.equalsIgnoreCase("Preventivo,5," + idMain)
                         || temp.equalsIgnoreCase("Preventivo,6," + idMain) || temp.equalsIgnoreCase("Preventivo,7," + idMain)
-                        || temp.equalsIgnoreCase("Preventivo,8," + idMain) || temp.equalsIgnoreCase("Preventivo,9," + idMain)
-                        || temp.equalsIgnoreCase("Preventivo,11," + idMain))
+                        || temp.equalsIgnoreCase("Preventivo,8," + idMain) || temp.equalsIgnoreCase("Preventivo,9," + idMain))
                     muestraRan();
             }
 
@@ -318,13 +323,6 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                         AC.setVisibility(View.VISIBLE);
                     } else {
                         AC.setVisibility(View.GONE);
-                    }
-                }
-                else if (temp.equalsIgnoreCase("Preventivo,10," + idMain)) {
-                    if (WIMAX.getVisibility() == View.GONE) {
-                        WIMAX.setVisibility(View.VISIBLE);
-                    } else {
-                        WIMAX.setVisibility(View.GONE);
                     }
                 }
             }

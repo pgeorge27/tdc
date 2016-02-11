@@ -250,36 +250,48 @@ public class MainActivity extends ActionBarActivity {
         if ( locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
             estado_gps = "1";
         }
-
         //Si GPS está desactivado
         if ( !locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
             estado_gps = "0";
         }
 
         if (vigilantebtnAcceso) {
-            //  LocalizacionGPS lgps = new LocalizacionGPS(this);
-            Location lg = locationManager.getLastKnownLocation(proveedor);
 
-            Log.e("LLGG", "LG: " + lg);
-            if (lg != null) {
+            AlertDialog.Builder b = new AlertDialog.Builder(this);
+            b.setMessage("¿Desea enviar coordenadas GPS?");
+            b.setPositiveButton("SI", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
 
-                StringBuilder builder = new StringBuilder();
-                StringBuilder builder2 = new StringBuilder();
+                    Location lg = locationManager.getLastKnownLocation(proveedor);
+                    if (lg != null) {
 
-                //latitud = builder.append("Latitud: ").append((lg.getLatitude())).toString();
-                latitud = builder.append(lg.getLatitude()).toString();
-                Log.e("LATITUD", "LATITUDDDD" + latitud);
+                        StringBuilder builder = new StringBuilder();
+                        StringBuilder builder2 = new StringBuilder();
 
+                        //latitud = builder.append("Latitud: ").append((lg.getLatitude())).toString();
+                        latitud = builder.append(lg.getLatitude()).toString();
+                        Log.e("LATITUD", "LATITUD" + latitud);
 
-                //longitud = builder.append(" Longitud: ").append((lg.getLongitude())).toString();
-                longitud = builder2.append(lg.getLongitude()).toString();
-                Log.e("LONGITUD", "LONGITUDDD" + longitud);
+                        //longitud = builder.append(" Longitud: ").append((lg.getLongitude())).toString();
+                        longitud = builder2.append(lg.getLongitude()).toString();
+                        Log.e("LONGITUD", "LONGITUD" + longitud);
 
+                    }
 
-            }
+                    SecurityTask securityTask = new SecurityTask(mContext);
+                    securityTask.execute(longitud, latitud, IMEI, estado_gps);
 
-            SecurityTask securityTask = new SecurityTask(this);
-            securityTask.execute(longitud, latitud, IMEI, estado_gps);
+                }
+            });
+            b.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                }
+            });
+            b.show();
+
         }else {
             Toast.makeText(getApplicationContext(), perfilNoAutorizado, Toast.LENGTH_LONG).show();
         }
