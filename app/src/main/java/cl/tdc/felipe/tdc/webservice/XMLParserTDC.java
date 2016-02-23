@@ -131,7 +131,7 @@ public class XMLParserTDC {
                                                                     QUESTION QV = new QUESTION();
                                                                     Element questionv = (Element) QUESTIONVALUE.item(qv);
 
-                                                                    QV.setIdQuestion(getNodeValue(questionv, "IdQuestion"));
+                                                                    QV.setIdQuestion(getNodeValue(questionv, "IdQuestion")); //532
                                                                     QV.setNameQuestion(getNodeValue(questionv, "NameQuestion"));
                                                                     QV.setIdType(getNodeValue(questionv, "IdType"));
                                                                     QV.setNameType(getNodeValue(questionv, "NameType"));
@@ -142,7 +142,7 @@ public class XMLParserTDC {
                                                                     NodeList VALUESQ = questionv.getElementsByTagName("Values");                          //Listado de nodos Values
                                                                     ArrayList<VALUE> valueqArrayList = new ArrayList<>();
 
-                                                                    if (VALUESQ.getLength() > 0) {                                                         //Extraemos el valor interno
+                                                                    if (VALUESQ.getLength() > 0) {                                               //Extraemos el valor interno
                                                                         VALUESQ = VALUESQ.item(0).getChildNodes();
                                                                         for (int pr = 0; pr < VALUESQ.getLength(); pr++) {
                                                                             VALUE VR = new VALUE();
@@ -151,13 +151,49 @@ public class XMLParserTDC {
                                                                             VR.setNameValue(getNodeValue(valueR, "NameValue"));
                                                                             //Editado por George & Sarah 10-12-2015
 
+                                                                            NodeList QUESTIONSVALUE2 = valueR.getElementsByTagName("Questions");          //Resumen: Form Transporte tiene una pregunta con radio de respuestas
+                                                                            if (QUESTIONSVALUE2.getLength()>0){                                          //uno de los radio tiene preguntas internas (Si responde No) se debe
+                                                                                NodeList QUESTIONVALUE2 = valueR.getElementsByTagName("Question");        //mostrar la pregunta interna.
+                                                                                ArrayList<QUESTION> qvArrayList2 = new ArrayList<>();                    //Por eso: Evaluamos si la respuesta contiene una etiqueta de pregunta
+
+                                                                                if (QUESTIONVALUE2.getLength()>0) {
+                                                                                    for (int qv2 = 0; qv2 < QUESTIONVALUE2.getLength(); qv2++) {
+                                                                                        QUESTION QV2 = new QUESTION();
+                                                                                        Element questionv2 = (Element) QUESTIONVALUE2.item(qv2);
+
+                                                                                        QV2.setIdQuestion(getNodeValue(questionv2, "IdQuestion"));
+                                                                                        QV2.setNameQuestion(getNodeValue(questionv2, "NameQuestion"));
+                                                                                        QV2.setIdType(getNodeValue(questionv2, "IdType"));
+                                                                                        QV2.setNameType(getNodeValue(questionv2, "NameType"));
+                                                                                        QV2.setPhoto(getNodeValue(questionv2, "Photo"));
+                                                                                        QV2.setNumberPhoto(getNodeValue(questionv2, "NumberPhoto"));
+
+                                                                                        NodeList VALUESQ2 = questionv2.getElementsByTagName("Values");
+                                                                                        ArrayList<VALUE> valueqArrayList2 = new ArrayList<>();
+
+                                                                                        if (VALUESQ2.getLength() > 0) {
+                                                                                            VALUESQ2 = VALUESQ2.item(0).getChildNodes();
+                                                                                            for (int pr2 = 0; pr2 < VALUESQ2.getLength(); pr2++) {
+                                                                                                VALUE VR2 = new VALUE();
+                                                                                                Element valueR2 = (Element) VALUESQ2.item(pr2);
+                                                                                                VR2.setIdValue(getNodeValue(valueR2, "IdValue"));
+                                                                                                VR2.setNameValue(getNodeValue(valueR2, "NameValue"));
+                                                                                                valueqArrayList2.add(VR2);
+                                                                                            }
+                                                                                            QV2.setValues(valueqArrayList2);
+                                                                                        }
+                                                                                        qvArrayList2.add(QV2);
+                                                                                    }
+                                                                                    VR.setQuestions(qvArrayList2);
+                                                                                }
+                                                                            }
+
+
                                                                             valueqArrayList.add(VR);                                                      //Agregamos V a la lista de values
                                                                         }
                                                                         QV.setValues(valueqArrayList);                                                    //Agregamos los values a la question
                                                                     }
-
                                                                     qvArrayList.add(QV);
-
                                                                 }
                                                                 V.setQuestions(qvArrayList);                                        //fin Sarah & George
                                                             }

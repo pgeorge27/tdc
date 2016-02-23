@@ -62,6 +62,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
@@ -117,10 +118,15 @@ import android.os.PowerManager;
         public static HashMap<String, ArrayList<SYSTEM>> SYSTEMSMAP = new HashMap<String, ArrayList<SYSTEM>>();
 
         ProgressDialog dialog;
-        public LinearLayout layquest2;
-        public View question2;
+        public LinearLayout layquest2,layquest3;
+        public View question2, question3;
         public boolean agregar = false;
         public boolean agregar2 = false;
+        public boolean agregar3 = false;
+
+        Map<Integer,LinearLayout> ln = new HashMap<Integer,LinearLayout>();
+        Map<Integer,View> vw = new HashMap<Integer,View>();
+        Map<Integer,RadioGroup> rgm = new HashMap<Integer,RadioGroup>();
 
         /**
          * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -675,13 +681,135 @@ import android.os.PowerManager;
                                                 }
                                             }
 
-                                            if (Q.getValues().size()>0 && TITLE.equalsIgnoreCase("transporte")) {         //Este bloque es para sacar la pregunta interna que existe en Transporte 349 y 350
-                                                for (VALUE V : Q.getValues()) {                                           //Iteramos sobre las respuesta, como es radio y sabemos que al pulsar en NO muestra la otro pregunta
-                                                    if (V.getQuestions() != null){                                        //evaluamos la posicion del boton y mostramos y ocultamos
+                                            if (Q.getValues().size() > 0 && TITLE.equalsIgnoreCase("wimax")) {
+                                                itemLayout.addView(layquest);
+                                                itemLayout.addView(question);
+                                                agregar2 = true;
+                                                for (VALUE V : Q.getValues()) {
+                                                    if (V.getQuestions() != null) {
+                                                        int max2 = V.getQuestions().size();
+                                                        //for (QUESTION QES : V.getQuestions()) {
+                                                        for (int ikj = 0; ikj < max2; ikj ++) {
+                                                            QUESTION QES = V.getQuestions().get(0);
+                                                            layquest2 = create_questionLayout();
+                                                            layquest2.addView(QES.getTitle(mContext));
+                                                            layquest2.setVisibility(View.GONE);
+                                                            question2 = QES.generateView(mContext);
+                                                            question2.setVisibility(View.GONE);
+                                                            if (question2 != null) {
+                                                                if (QES.getIdType().equals(Constantes.RADIO)) {
+                                                                    if (pos != -100) {
+                                                                        ((RadioButton) ((RadioGroup) QES.getView()).getChildAt(pos)).setChecked(true);
+                                                                    }
 
+                                                                    RadioGroup group = (RadioGroup) Q.getView();
+
+                                                                    int id;
+                                                                    int max = group.getChildCount();
+
+                                                                    for (int i = 0; i < max; i++){
+                                                                        id = group.getChildAt(i).getId();
+                                                                        ln.put(id, layquest2);
+                                                                        vw.put(id, question2);
+                                                                        rgm.put(id, group);
+                                                                    }
+
+                                                                    group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                                                                        @Override
+                                                                        public void onCheckedChanged(RadioGroup rg, int id) {
+                                                                            RadioButton btn = (RadioButton) rg.findViewById(id);
+                                                                            int position = rg.indexOfChild(btn) + 1;
+
+                                                                            layquest2 = ln.get(id);
+                                                                            question2 = vw.get(id);
+
+                                                                            Log.d("MAP", ln.get(id) + "");
+                                                                            Log.d("MAP", vw.get(id) + "");
+
+                                                                            if (position == 2) {
+                                                                                layquest2.setVisibility(View.GONE);
+                                                                                question2.setVisibility(View.GONE);
+                                                                            } else {
+                                                                                layquest2.setVisibility(View.VISIBLE);
+                                                                                question2.setVisibility(View.VISIBLE);
+                                                                            }
+                                                                        }
+                                                                    });
+                                                                    //agregar = true;
+                                                                    itemLayout.addView(layquest2);
+                                                                    itemLayout.addView(question2);
+                                                                }
+                                                            }
+
+                                                            for (VALUE V2 : QES.getValues()) {
+                                                                if (V2.getQuestions() != null) {
+                                                                    max2 = V2.getQuestions().size();
+                                                                    //for (QUESTION QES2 : V2.getQuestions()) {
+                                                                    for (int ikj2 = 0; ikj2 < max2; ikj2 ++) {
+                                                                        QUESTION QES2 = V2.getQuestions().get(0);
+                                                                        layquest3 = create_questionLayout();
+                                                                        layquest3.addView(QES2.getTitle(mContext));
+                                                                        layquest3.setVisibility(View.GONE);
+                                                                        question3 = QES2.generateView(mContext);
+                                                                        question3.setVisibility(View.GONE);
+
+                                                                        if (question3 != null) {
+                                                                            if (QES2.getIdType().equals(Constantes.RADIO)) {
+                                                                                if (pos != -100) {
+                                                                                    ((RadioButton) ((RadioGroup) QES2.getView()).getChildAt(pos)).setChecked(true);
+                                                                                }
+
+                                                                                RadioGroup group2 = (RadioGroup) QES.getView();
+
+                                                                                int id;
+                                                                                int max = group2.getChildCount();
+
+                                                                                for (int i = 0; i < max; i++){
+                                                                                    id = group2.getChildAt(i).getId();
+                                                                                    ln.put(id, layquest3);
+                                                                                    vw.put(id, question3);
+                                                                                    rgm.put(id, group2);
+                                                                                }
+
+                                                                                group2.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                                                                                    @Override
+                                                                                    public void onCheckedChanged(RadioGroup rg, int id) {
+                                                                                        RadioButton btn = (RadioButton) rg.findViewById(id);
+                                                                                        int position = rg.indexOfChild(btn) + 1;
+
+                                                                                        layquest3 = ln.get(id);
+                                                                                        question3 = vw.get(id);
+
+                                                                                        Log.d("MAP", ln.get(id) + "");
+                                                                                        Log.d("MAP", vw.get(id) + "");
+
+                                                                                        if (position == 2) {
+                                                                                            layquest3.setVisibility(View.GONE);
+                                                                                            question3.setVisibility(View.GONE);
+                                                                                        } else {
+                                                                                            layquest3.setVisibility(View.VISIBLE);
+                                                                                            question3.setVisibility(View.VISIBLE);
+                                                                                        }
+                                                                                    }
+                                                                                });
+                                                                                //agregar = true;
+                                                                                itemLayout.addView(layquest3);
+                                                                                itemLayout.addView(question3);
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+
+                                            if (Q.getValues().size() > 0 && TITLE.equalsIgnoreCase("transporte")) {         //Este bloque es para sacar la pregunta interna que existe en Transporte 349 y 350
+                                                for (VALUE V : Q.getValues()) {                                           //Iteramos sobre las respuesta, como es radio y sabemos que al pulsar en NO muestra la otro pregunta
+                                                    if (V.getQuestions() != null) {                                        //evaluamos la posicion del boton y mostramos y ocultamos
                                                         for (QUESTION QV : V.getQuestions()) {
                                                             layquest2 = create_questionLayout();
-
                                                             layquest2.addView(QV.getTitle(mContext));
                                                             layquest2.setVisibility(View.GONE);
                                                             question2 = QV.generateView(mContext);
@@ -711,18 +839,17 @@ import android.os.PowerManager;
                                                                                 t2.setVisibility(View.VISIBLE);
                                                                                 t2.setText("");
                                                                                 question2.setVisibility(View.VISIBLE);
-                                                                            }else{
+                                                                            } else {
                                                                                 layquest2.setVisibility(View.GONE);
                                                                                 t2.setVisibility(View.GONE);
                                                                                 question2.setVisibility(View.GONE);
                                                                             }
-
                                                                         }
                                                                     });
-
                                                                 }
-
-                                                                agregar = true;
+                                                                itemLayout.addView(layquest2);
+                                                                itemLayout.addView(question2);
+                                                                //agregar = true;
                                                             }
                                                         }
                                                     }
@@ -754,13 +881,6 @@ import android.os.PowerManager;
 
                                                         ArrayList<QUESTION> listadoQ = new ArrayList<>();
 
-                                                        //for (QUESTION set : I.getQuestions()) {
-
-                                                        //QUESTION setAux = new QUESTION();
-                                                        //setAux.setIdQuestion(set.getIdQuestion());
-                                                        //setAux.setNameQuestion(set.getNameQuestion());
-                                                        //setAux.setValues(set.getValues());
-                                                        //setAux.setIdType(set.getIdType());
 
                                                         LinearLayout setLayout = create_setLayout();
 
@@ -813,7 +933,6 @@ import android.os.PowerManager;
                                                         }
 
 
-
                                                         contentSetLayout.addView(Q.getTitle(mContext));
                                                         contentSetLayout.addView(setLayout);
                                                         //}
@@ -848,8 +967,6 @@ import android.os.PowerManager;
                                                         //Q.setQuestions(listadoQ);
                                                     }
 
-
-
                                                     RadioGroup group = (RadioGroup) Q.getView();
 
                                                     group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -866,18 +983,16 @@ import android.os.PowerManager;
                                                             for (int i = 0; i < position; i++) {
                                                                 repeatButtontList.get(i).setVisibility(View.VISIBLE);
                                                             }
-
                                                         }
                                                     });
 
 
                                                     if (pos != -100) {                                                                  //Mostramos los botones activos
                                                         ((RadioButton) ((RadioGroup) Q.getView()).getChildAt(pos)).setChecked(true);
-                                                        for (int i = 0; i < pos+1; i++) {
+                                                        for (int i = 0; i < pos + 1; i++) {
                                                             repeatButtontList.get(i).setVisibility(View.VISIBLE);
                                                         }
                                                     }
-
 
 
                                                     //Q.setQuestions(listaAuxSet);
@@ -887,139 +1002,8 @@ import android.os.PowerManager;
                                                 //I.setQuestions(listaAuxSet);
                                                 itemLayout.addView(repeatLayout);
                                             }
-                                            if (Q.getValues().size()>0 && TITLE.equalsIgnoreCase("wimax")) {         //
-                                              //  if (Q.getValues().size() > 0 && TITLE.equalsIgnoreCase("emergency")) {
 
-                                                itemLayout.addView(layquest);
-                                                itemLayout.addView(question);
-                                                agregar2 = true;
-
-
-                                                /** Generar vista de Emergencia **/
-                                            final ArrayList<View> repeatContentList = new ArrayList<>();
-                                            final ArrayList<Button> repeatButtontList = new ArrayList<>();
-
-                                            final LinearLayout repeatLayout = create_normalVerticalLayout();
-
-                                            ArrayList<QUESTION> listaAuxSet = new ArrayList<>();
-
-                                            if (Q.getIdType().equals(Constantes.RADIO)) {
-
-                                                for (int x = 0; x < Q.getValues().size(); x++) {
-                                                    VALUE value = Q.getValues().get(x);
-
-                                                    Button boton = crear_botonRepeat();
-                                                    boton.setText(value.getNameValue());
-
-                                                    final LinearLayout contentSetLayout = create_normalVerticalLayout();
-
-                                                    for (QUESTION set : value.getQuestions()) {
-
-                                                        QUESTION setAux = new QUESTION();
-                                                        setAux.setIdQuestion(set.getIdQuestion());
-                                                        setAux.setNameQuestion(set.getNameQuestion());
-                                                        setAux.setNameType(set.getNameType());
-                                                        setAux.setFoto(set.getFoto());
-                                                        setAux.setNumberPhoto(set.getNumberPhoto());
-                                                        setAux.setValues(set.getValues());
-                                                        setAux.setIdType(set.getIdType());
-
-                                                        LinearLayout setLayout = create_setLayout();
-
-                                                        LinearLayout questTitle = create_questionLayout();
-
-                                                        questTitle.addView(setAux.getTitle(mContext));
-                                                        questTitle.setGravity(Gravity.CENTER_VERTICAL);
-
-                                                        question2 = setAux.generateView(mContext);
-                                                        if (question2 != null) {
-
-                                                            tag = S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem() + "-" + Q.getIdQuestion() + "-" + Q.getNameQuestion() + "-" + value.getIdValue() + value.getNameValue() + "-" + setAux.getIdQuestion() + setAux.getNameQuestion();
-                                                            Log.d("BUSCANDOEN", "Init: " + tag);
-                                                           /* if (setAux.getIdType().equals(Constantes.CHECK)) {
-                                                                ArrayList<CheckBox> ch = setAux.getCheckBoxes();
-                                                                for (int j = 0; j < ch.size(); j++) {
-                                                                    Boolean check = REG.getBoolean("CHECK" + tag + j);
-                                                                    ch.get(j).setChecked(check);
-                                                                }
-                                                            }*/
-
-                                                            if (setAux.getIdType().equals(Constantes.RADIO)) {
-                                                                int position = REG.getInt("RADIO" + tag);
-                                                                if (position != -100) {
-                                                                    ((RadioButton) ((RadioGroup) setAux.getView()).getChildAt(position)).setChecked(true);
-                                                                }
-                                                            }
-
-                                                            setLayout.addView(questTitle);
-                                                            if (!setAux.getIdType().equals(Constantes.PHOTO))
-                                                                setLayout.addView(question2);
-                                                        }
-                                                        listaAuxSet.add(setAux);
-
-                                                        contentSetLayout.addView(setAux.getTitle(mContext));
-                                                        contentSetLayout.addView(setLayout);
-                                                    }
-                                                    value.setQuestions(listaAuxSet);
-
-                                                    //I.setQuestions(listaAuxSet);
-
-                                                    //Q.setQuestions(listaAuxSet);
-
-
-                                                    boton.setOnClickListener(new View.OnClickListener() {
-                                                        @Override
-                                                        public void onClick(View view) {
-                                                            if (contentSetLayout.getVisibility() == View.GONE) {
-                                                                contentSetLayout.setVisibility(View.VISIBLE);
-                                                                for (View layu : repeatContentList) {
-                                                                    if (!layu.equals(contentSetLayout)) {
-                                                                        layu.setVisibility(View.GONE);
-                                                                    }
-                                                                }
-                                                            } else {
-                                                                contentSetLayout.setVisibility(View.GONE);
-                                                            }
-                                                        }
-                                                    });
-
-                                                    contentSetLayout.setVisibility(View.GONE);
-                                                    repeatContentList.add(contentSetLayout);//para que al mostrar uno se oculten los demas
-                                                    repeatButtontList.add(boton);
-                                                    repeatLayout.addView(boton);
-                                                    repeatLayout.addView(contentSetLayout);
-
-                                                }
-
-                                                RadioGroup group = (RadioGroup) Q.getView();
-
-                                                itemLayout.addView(repeatLayout);
-
-                                                group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                                                    @Override
-                                                    public void onCheckedChanged(RadioGroup rg, int id) {
-                                                        for (View l : repeatContentList) {
-                                                            l.setVisibility(View.GONE);
-                                                        }
-                                                        RadioButton btn = (RadioButton) rg.findViewById(id);
-                                                        int position = rg.indexOfChild(btn);
-                                                        for (Button b : repeatButtontList) {
-                                                            b.setVisibility(View.GONE);
-                                                        }
-                                                        //for (int i = 0; i < position; i++) {
-                                                        repeatButtontList.get(position).setVisibility(View.VISIBLE);
-                                                        //}
-
-                                                    }
-                                                });
-
-                                                if (pos != -100) {
-                                                    repeatButtontList.get(pos).setVisibility(View.VISIBLE);
-                                                }
-
-                                            }
-                                        }
-
+/////////////////////////////////////////////////HASTA AQUI//////////////////////////////////////////////////////////
                                         }
 
                                         if (Q.getIdType().equals(Constantes.NUM)) {
@@ -1070,6 +1054,11 @@ import android.os.PowerManager;
                                             itemLayout.addView(question2);
                                             agregar=false;
                                         }
+                                        if (agregar3) {
+                                            itemLayout.addView(layquest3);
+                                            itemLayout.addView(question3);
+                                            agregar3 = false;
+                                        }
 
                                     /*if (agregar2)
                                     {
@@ -1080,7 +1069,7 @@ import android.os.PowerManager;
 
                                     }
 
-                                }
+                                    }
 
                             }
 
@@ -1539,11 +1528,8 @@ import android.os.PowerManager;
                                 if (I.getIdType().equals(Constantes.PHOTO)) {
                                     ImageButton photo = create_photoButtonItem(I);
                                     itemLayout.addView(photo);
-
                                     String name = REG.getString("PHOTONAME" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem());
-
                                     cargar_fotosI(I,name);
-
                                 }
                                 if (I.getIdType().equals(Constantes.TEXT)) {
                                     String text = REG.getString("TEXT" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem());
@@ -2168,6 +2154,11 @@ import android.os.PowerManager;
                 e.execute();
             }
             //END SG
+            if (TITLE.equalsIgnoreCase("PDH")) {
+                EnviarPdh e = new EnviarPdh();
+                e.execute();
+            }
+
 
         }
 
@@ -2275,7 +2266,7 @@ import android.os.PowerManager;
         private void tomarFoto() {
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             int code = TAKE_PICTURE;
-            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            String timeStamp = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss").format(new Date());
             photoTMP.setDateTime(timeStamp);
             imgName = name + itemTMP.getIdItem() + "_" + timeStamp + ".jpg";
             Uri output = Uri.fromFile(new File(imgName));
@@ -2286,7 +2277,7 @@ import android.os.PowerManager;
         private void tomarFotos() {
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             int code = TAKE_PICTURES;
-            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            String timeStamp = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss").format(new Date());
             photoTMP.setDateTime(timeStamp);
             imgName = name + questionTMP.getIdQuestion() + "_" + timeStamp + ".jpg";
             Uri output = Uri.fromFile(new File(imgName));
@@ -2405,7 +2396,7 @@ import android.os.PowerManager;
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             photoTMP = new PHOTO();
-                            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                            String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
                             photoTMP.setDateTime(timeStamp);
                             photoTMP.setTitlePhoto(titulo.getText().toString());
                             photoTMP.setCoordX(String.valueOf(trackerTDC.gps.getLatitude()));
@@ -3185,6 +3176,72 @@ import android.os.PowerManager;
             }
         }
         //End S G
+
+        private class EnviarPdh extends AsyncTask<String, String, String> {
+
+            boolean ok = false;
+            Button bEnviar = (Button) findViewById(R.id.btnEnviar);
+
+            private EnviarPdh() {
+                dialog = new ProgressDialog(mContext);
+                dialog.setMessage("Enviando formulario...");
+                dialog.setCancelable(false);
+                dialog.setCanceledOnTouchOutside(false);
+            }
+
+            @Override
+            protected void onPreExecute() {
+                dialog.show();
+            }
+
+            @Override
+            protected String doInBackground(String... strings) {
+                try {
+                    TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+                    String response = SoapRequestTDC.sendAnswerPdh(telephonyManager.getDeviceId(), IDMAIN, SYSTEMS);
+                    if (response.equalsIgnoreCase("false")){
+                        return "Debe llenar el formulario.";
+                    }else {
+                        LocalText localT = new LocalText();      //Desde Aqui guardamos el fichero local para posteriormente ser enviado en Cierre ACtividad
+
+                        if (localT.isDisponibleSD() && localT.isAccesoEscrituraSD())
+                            localT.escribirFicheroMemoriaExterna(IDMAIN + ",answerWimax", response);
+
+                        return "Datos exitosamente guardados";
+                    }
+                } catch (Exception e) {
+                    return "Error al enviar la respuesta.";
+
+                }
+                //TODO AGREGAR CATCH GENERAL
+            }
+
+            @Override
+            protected void onPostExecute(final String s) {
+                if (dialog.isShowing()) dialog.dismiss();
+
+
+                AlertDialog.Builder b = new AlertDialog.Builder(actividad);
+                b.setMessage(s);
+                b.setCancelable(false);
+                b.setPositiveButton("SALIR", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                        if (s.equalsIgnoreCase("Datos exitosamente guardados")) {
+                            bEnviar.setEnabled(false);
+                            REG.clearPreferences();
+                            setResult(RESULT_OK);
+                            actividad.finish();
+                        }
+                    }
+                });
+                b.show();
+            }
+        }
+
+        // Matias
+
         public void subir_fotos(String mensaje) {
             AlertDialog.Builder b = new AlertDialog.Builder(actividad);
             b.setMessage(mensaje);

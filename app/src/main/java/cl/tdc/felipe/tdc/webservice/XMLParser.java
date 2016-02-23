@@ -123,7 +123,6 @@ public class XMLParser {
             profileBtn.add(IdProfile);
         }
 
-
         return profileBtn;
         //return cpe.elementAt(1).toString(); // Mostrar elemento 1 del Vector
     }
@@ -172,7 +171,6 @@ public class XMLParser {
         return models;
         //return cpe.elementAt(1).toString(); // Mostrar elemento 1 del Vector
     }
-
 
     public static ArrayList<String> getLocations(String xml) throws ParserConfigurationException,
         SAXException, IOException {

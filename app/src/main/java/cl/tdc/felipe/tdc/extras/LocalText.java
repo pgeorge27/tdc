@@ -157,15 +157,20 @@ public class LocalText {
         }
     }
 
-   /* public boolean deleteWithChildren(String path) {
-        File file = new File(path);
-        if (!file.exists()) {
-            return true;
+    public void deleteWithChildren() {
+        File file = new File(Environment.getExternalStorageDirectory() + "/TDC@");
+        deleteRecursive(file);
+    }
+
+    public void deleteRecursive(File fileOrDirectory) {
+        if (fileOrDirectory.isDirectory())
+        {
+            for (File child : fileOrDirectory.listFiles())
+            {
+                deleteRecursive(child);
+            }
         }
-        if (!file.isDirectory()) {
-            return file.delete();
-        }
-        return this.deleteChildren(file) && file.delete();
+        fileOrDirectory.delete();
     }
 
     private boolean deleteChildren(File dir) {
@@ -181,7 +186,7 @@ public class LocalText {
             }
         }
         return childrenDeleted;
-    }*/
+    }
 
 
 

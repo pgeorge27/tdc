@@ -152,6 +152,8 @@ public class MainActivity extends ActionBarActivity {
 
         proveedor = LocationManager.NETWORK_PROVIDER;
 
+
+
     }
 
     @Override
@@ -892,9 +894,11 @@ public class MainActivity extends ActionBarActivity {
                     builder.setPositiveButton("Descargar e Instalar", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-
                             Update u = new Update(mContext, s.get(1), s.get(2));
                             u.execute();
+                            //para eliminar ficheros y directorio
+                            LocalText l = new LocalText();
+                            l.deleteWithChildren();
                         }
                     });
                     builder.setNegativeButton("Cerrar", new DialogInterface.OnClickListener() {

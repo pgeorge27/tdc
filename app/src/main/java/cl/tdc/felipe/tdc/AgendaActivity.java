@@ -434,10 +434,10 @@ public class AgendaActivity extends Activity {
                             final Boolean terminated;
                             MaintenanceReg registro = new MaintenanceReg(getApplicationContext());
                             registro.newMaintenance(m.getIdMaintenance(), s.getFlag());
-                            if (m.getStatus().compareTo("TERMINATED") == 0)
+                            /*if (m.getStatus().compareTo("TERMINATED") == 0)*/
                                 terminated = true;
-                            else
-                                terminated = false;
+                            /*else
+                                terminated = false;*/
                             View rootView = LayoutInflater.from(tContext).inflate(R.layout.agenda_view, null, false);
                             TextView tAddress = (TextView) rootView.findViewById(R.id.tAddress);
                             TextView tStation = (TextView) rootView.findViewById(R.id.tStation);
@@ -522,11 +522,12 @@ public class AgendaActivity extends Activity {
                                             checkBox.setEnabled(true);
                                             checkBox.setChecked(true);
                                             pProgress.setProgress(pProgress.getMax());
-                                            bComplete.setEnabled(false);
+                                            bComplete.setEnabled(true);
+                                            /*bComplete.setEnabled(false);*/
                                         }
-                                        if (!terminated) {
+                                        /*if (!terminated) {*/
                                             checkBox.setEnabled(true);
-                                        }
+                                        /*}*/
 ////////// AQUI SE HACE EL CAMBIO DE TENERLOS TODOS CHEQUEADOS PARA QUE SOLO LE DE AL BOTON Y PASAR AL DETALLE DE MANTENIMIENTO .............
                                         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                                             @Override

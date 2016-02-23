@@ -127,7 +127,7 @@ public class XMLParserSeguimiento {
             dia.setDescriptionDay(Funciones.getCharacterDataFromElement((Element) e.getElementsByTagName("DescriptionDay").item(0)));
 
             NodeList activities = e.getElementsByTagName("Activity");
-            ArrayList<Actividad> acts = new ArrayList<>();
+              ArrayList<Actividad> acts = new ArrayList<>();
             for(int j = 0; j < activities.getLength(); j++){
                 Actividad actividad = new Actividad();
                 Element element = (Element) activities.item(j);
