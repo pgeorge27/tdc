@@ -234,11 +234,12 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                 WIMAX.setVisibility(View.VISIBLE);
             }
 
-            if (num == 1) {
+            if (num == 1 ) {
 
             if( (temp.equalsIgnoreCase("Emergencia,1," + idMain )) || (temp.equalsIgnoreCase("Emergencia,2," + idMain )) ||
                     (temp.equalsIgnoreCase("Emergencia,3," + idMain ))||(temp.equalsIgnoreCase("Emergencia,4," + idMain ))||
-                    (temp.equalsIgnoreCase("Emergencia,5," + idMain ))||(temp.equalsIgnoreCase("Emergencia,6," + idMain ))) {
+                    (temp.equalsIgnoreCase("Emergencia,5," + idMain ))||(temp.equalsIgnoreCase("Emergencia,6," + idMain )) ||
+                    (temp.startsWith("Emergencia"))) {
                 EMERG.setVisibility(View.VISIBLE);
             }
             //Determinamos si mostramos el boton de RAN o no
@@ -269,7 +270,8 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
 
                 if ((temp.equalsIgnoreCase("Emergencia,1," + idMain)) || (temp.equalsIgnoreCase("Emergencia,2," + idMain)) ||
                         (temp.equalsIgnoreCase("Emergencia,3," + idMain)) || (temp.equalsIgnoreCase("Emergencia,4," + idMain)) ||
-                        (temp.equalsIgnoreCase("Emergencia,5," + idMain)) || (temp.equalsIgnoreCase("Emergencia,6," + idMain))) {
+                        (temp.equalsIgnoreCase("Emergencia,5," + idMain)) || (temp.equalsIgnoreCase("Emergencia,6," + idMain)) ||
+                        (temp.startsWith("Emergencia"))) {
                     EMERG.setVisibility(View.VISIBLE);
                 }
 
