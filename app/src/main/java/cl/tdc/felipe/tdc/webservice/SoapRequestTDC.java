@@ -2353,6 +2353,7 @@ public class SoapRequestTDC {
                                     "<IdAnswer xsi:type=\"xsd:string\">" + I.getAnswer3G() + "</IdAnswer>" +
                                     "<IdType xsi:type=\"xsd:string\">" + I.getIdType() + "</IdType>" +
                                     "<CountPhoto xsi:type=\"xsd:string\">" + countFoto + "</CountPhoto>";
+
                             if (!I.getAnswer3G().equalsIgnoreCase(""))
                                 vacio = true;
 
@@ -2493,15 +2494,14 @@ public class SoapRequestTDC {
         envelope.encodingStyle = SoapSerializationEnvelope.ENC;
         envelope.dotNet = false;
         envelope.implicitTypes = true;
-        boolean bandera = false; //variable creada para impedir que se duplique la respuesta 527
 
         xml =
                 "<soapenv:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:urn=\"urn:Configurationwsdl\">" +
                         "<soapenv:Header/>" +
                         "<soapenv:Body>" +
-                        "<urn:answerWimax11 soapenv:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" +
-                        "<RequestAnswerEmerg xsi:type=\"urn:RequestAnswerEmerg\">" +
-                        "<Request3G xsi:type=\"urn:Request3G\">" +
+                        "<urn:answerWimax soapenv:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" +
+                        "<RequestAnswerDC xsi:type=\"urn:RequestAnswerDC\">" +
+                        "<RequestDC xsi:type=\"urn:RequestDC\">" +
                         "<Header xsi:type=\"urn:Header\">" +
                         "<Date xsi:type=\"xsd:string\">" + formatter.format(fecha) + "</Date>" +
                         "<Platafform xsi:type=\"xsd:string\">MOBILE</Platafform>" +
@@ -2521,45 +2521,62 @@ public class SoapRequestTDC {
                                 "<IdArea xsi:type=\"xsd:string\">" + A.getIdArea() + "</IdArea>" +
                                 "<IdItem xsi:type=\"xsd:string\">" + I.getIdItem() + "</IdItem>";
 
-                        String questionResponse = "";
+                        int countFoto = 0;
+                        String xmlphotos = "";
 
-                       // if (I.getFotos() != null) {
-                            int countFoto = 0;
-                            String xmlphotos = "";
-                        xml += "<SetAnswerQuestion xsi:type=\"urn:SetAnswerQuestion\">";
-                            if (I.getFotos() != null) {
-                                vacio = true;
-                                for (PHOTO p : I.getFotos()) {
-                                    File file = new File(p.getNamePhoto());
-                                    if (file.exists()) {
-                                        vacio = true;
-                                        xmlphotos += "<Photo xsi:type=\"urn:Photo\">" +
+                        vacio = true;
+
+                        if (!I.getAnswer3G().equalsIgnoreCase("") || I.getFotos() != null) {
+                            xml += "<SetAnswerQuestion xsi:type=\"urn:SetAnswerQuestion\">";
+                        }
+
+                        if (I.getFotos() != null) {
+                            for (PHOTO p : I.getFotos()) {
+                                File file = new File(p.getNamePhoto());
+                                if (file.exists()) {
+                                    vacio = true;
+                                    xmlphotos += "<Photo xsi:type=\"urn:Photo\">" +
                                                 "<NamePhoto xsi:type=\"xsd:string\">" + file.getName() + "</NamePhoto>" +
                                                 "<TitlePhoto xsi:type=\"xsd:string\">" + p.getTitlePhoto() + "</TitlePhoto>" +
                                                 "<DateTime xsi:type=\"xsd:string\">" + p.getDateTime() + "</DateTime>" +
                                                 "<CoordX xsi:type=\"xsd:string\">" + p.getCoordX() + "</CoordX>" +
                                                 "<CoordY xsi:type=\"xsd:string\">" + p.getCoordY() + "</CoordY>" +
                                                 "</Photo>";
-                                        countFoto += 1;
-                                    }
+                                    countFoto += 1;
                                 }
                             }
+                        }
 
-                        xml += "<AnswerQuestion xsi:type=\"urn:AnswerQuestion\">" +
-                                    "<IdSet xsi:type=\"xsd:string\" />" +
+                        if (I.getFotos() != null) {
+                            xml += "<AnswerQuestion xsi:type=\"urn:AnswerQuestion\">" +
+                                    "<IdSet xsi:type=\"xsd:string\"></IdSet>" +
                                     "<IdQuestion xsi:type=\"xsd:string\"></IdQuestion>" +
-                                    "<IdAnswer xsi:type=\"xsd:string\">" + I.getAnswer3G() + "</IdAnswer>" +
-                                    "<IdType xsi:type=\"xsd:string\">" +I.getIdType() + "</IdType>" +
+                                    "<IdAnswer xsi:type=\"xsd:string\">PHOTO</IdAnswer>" +
+                                    "<IdType xsi:type=\"xsd:string\">"+I.getIdType()+"</IdType>" +
+                                    "<CountPhoto xsi:type=\"xsd:string\">" + countFoto + "</CountPhoto>";
+                            if (countFoto > 0){
+                                xml += "<SetPhotos xsi:type=\"urn:SetPhotos\">" + xmlphotos + "</SetPhotos>";
+                            }
+                            xml += "</AnswerQuestion>"+
+                                    "</SetAnswerQuestion>";
+                        }
+
+                        if (!I.getAnswer3G().equalsIgnoreCase("")) {
+                            xml += "<AnswerQuestion xsi:type=\"urn:AnswerQuestion\">" +
+                                    "<IdSet xsi:type=\"xsd:string\"></IdSet>" +
+                                    "<IdQuestion xsi:type=\"xsd:string\"></IdQuestion>" +
+                                    "<IdAnswer xsi:type=\"xsd:string\">" + I.getAnswerFaena() + "</IdAnswer>" +
+                                    "<IdType xsi:type=\"xsd:string\">" + I.getIdType() + "</IdType>" +
                                     "<CountPhoto xsi:type=\"xsd:string\">" + countFoto + "</CountPhoto>";
 
-                            if (!I.getAnswerFaena().equalsIgnoreCase(""))
-                                vacio = true;
-                        if (countFoto > 0){
-                        xml +=
-                                    "<SetPhotos xsi:type=\"urn:SetPhotos\">" + xmlphotos + "</SetPhotos>";
+                            if (countFoto > 0){
+                                xml += "<SetPhotos xsi:type=\"urn:SetPhotos\">" + xmlphotos + "</SetPhotos>";
+                            }
+
+                            xml += "</AnswerQuestion>"+
+                                  "</SetAnswerQuestion>";
                         }
-                        xml += "</AnswerQuestion>"+
-                              "</SetAnswerQuestion>";
+
                         if (I.getQuestions() != null) {
                             xml += "<SetAnswerQuestion xsi:type=\"urn:SetAnswerQuestion\">";
                             for (QUESTION Q : I.getQuestions()) {
@@ -2571,22 +2588,63 @@ public class SoapRequestTDC {
 
                                     if (selected != -1) {
                                         vacio = true;
-                                        RadioButton btn = (RadioButton) rg.findViewById(rg.getCheckedRadioButtonId());
-                                        int position = rg.indexOfChild(btn);
-
 
                                         xml += "<AnswerQuestion xsi:type=\"urn:AnswerQuestion\">" +
-                                                "<IdSet xsi:type=\"xsd:string\" />" +
+                                                "<IdSet xsi:type=\"xsd:string\"></IdSet>" +
                                                 "<IdQuestion xsi:type=\"xsd:string\">" + Q.getIdQuestion() + "</IdQuestion>" +
                                                 "<IdAnswer xsi:type=\"xsd:string\">" + Q.getAswer3G() + "</IdAnswer>" +
                                                 "<IdType xsi:type=\"xsd:string\">" + Q.getIdType() + "</IdType>" +
-                                                "<CountPhoto xsi:type=\"xsd:string\">" + countFoto + "</CountPhoto>";
+                                                "<CountPhoto xsi:type=\"xsd:string\">" + countFoto + "</CountPhoto>" +
+                                                "</AnswerQuestion>";
 
-                                        if (!Q.getAswer3G().equalsIgnoreCase(""))
-                                            vacio = true;
+                                        for (VALUE VQ : Q.getValues()) {
+                                            if (VQ.getQuestions() != null) {
+                                                for (QUESTION Q2 : VQ.getQuestions()) {
+                                                    if (Q2.getIdType().equalsIgnoreCase(Constantes.RADIO)) {
+                                                        rg = (RadioGroup) Q2.getView();
+                                                        if (rg!=null) {
+                                                            selected = rg.getCheckedRadioButtonId();
+                                                            if (selected != -1) {
+                                                                vacio = true;
 
+                                                                xml += "<AnswerQuestion xsi:type=\"urn:AnswerQuestion\">" +
+                                                                        "<IdSet xsi:type=\"xsd:string\"></IdSet>" +
+                                                                        "<IdQuestion xsi:type=\"xsd:string\">" + Q2.getIdQuestion() + "</IdQuestion>" +
+                                                                        "<IdAnswer xsi:type=\"xsd:string\">" + Q2.getAswer3G() + "</IdAnswer>" +
+                                                                        "<IdType xsi:type=\"xsd:string\">" + Q2.getIdType() + "</IdType>" +
+                                                                        "<CountPhoto xsi:type=\"xsd:string\">" + countFoto + "</CountPhoto>" +
+                                                                        "</AnswerQuestion>";
+
+                                                                for (VALUE VQ2 : Q2.getValues()) {
+                                                                    if (VQ2.getQuestions() != null) {
+                                                                        for (QUESTION Q22 : VQ2.getQuestions()) {
+                                                                            if (Q22.getIdType().equalsIgnoreCase(Constantes.RADIO)) {
+                                                                                rg = (RadioGroup) Q22.getView();
+                                                                                if (rg!=null) {
+                                                                                    selected = rg.getCheckedRadioButtonId();
+                                                                                    if (selected != -1) {
+                                                                                        vacio = true;
+
+                                                                                        xml += "<AnswerQuestion xsi:type=\"urn:AnswerQuestion\">" +
+                                                                                                "<IdSet xsi:type=\"xsd:string\"></IdSet>" +
+                                                                                                "<IdQuestion xsi:type=\"xsd:string\">" + Q22.getIdQuestion() + "</IdQuestion>" +
+                                                                                                "<IdAnswer xsi:type=\"xsd:string\">" + Q22.getAswer3G() + "</IdAnswer>" +
+                                                                                                "<IdType xsi:type=\"xsd:string\">" + Q22.getIdType() + "</IdType>" +
+                                                                                                "<CountPhoto xsi:type=\"xsd:string\">" + countFoto + "</CountPhoto>" +
+                                                                                                "</AnswerQuestion>";
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
                                     }
-                                    xml += "</AnswerQuestion>";
                                 }
                             }
                             xml+="</SetAnswerQuestion>";

@@ -2104,57 +2104,56 @@ import android.os.PowerManager;
                 EnviarIden e = new EnviarIden();
                 e.execute();
             }
-            if (TITLE.equalsIgnoreCase("3G")) {
+            else if (TITLE.equalsIgnoreCase("3G")) {
                 Enviar3G e = new Enviar3G();
                 e.execute();
-
             }
-            if (TITLE.equalsIgnoreCase("FAENA")) {
+            else if (TITLE.equalsIgnoreCase("FAENA")) {
                 Enviar e = new Enviar();
                 e.execute();
             }
-            //EDITADO POR S Y G
-            if (TITLE.equalsIgnoreCase("TRANSPORTE")) {
+
+            else if (TITLE.equalsIgnoreCase("TRANSPORTE")) {
                 EnviarTransport e = new EnviarTransport();
                 e.execute();
             }
 
-            if (TITLE.equalsIgnoreCase("SYSTEM GROUND")) {
+            else if (TITLE.equalsIgnoreCase("SYSTEM GROUND")) {
                 EnviarSG e = new EnviarSG();
                 e.execute();
             }
 
-            if (TITLE.equalsIgnoreCase("DC")) {
+            else if (TITLE.equalsIgnoreCase("DC")) {
                 EnviarDC e = new EnviarDC();
                 e.execute();
             }
 
-            if (TITLE.equalsIgnoreCase("AIR")) {
+            else if (TITLE.equalsIgnoreCase("AIR")) {
                 EnviarAir e = new EnviarAir();
                 e.execute();
             }
 
-            if (TITLE.equalsIgnoreCase("AC")) {
+            else if (TITLE.equalsIgnoreCase("AC")) {
                 EnviarAC e = new EnviarAC();
                 e.execute();
             }
 
-            if (TITLE.equalsIgnoreCase("GRUPO ELECTROGEN")) {
+            else if (TITLE.equalsIgnoreCase("GRUPO ELECTROGEN")) {
                 EnviarGE e = new EnviarGE();
                 e.execute();
             }
 
-            if (TITLE.equalsIgnoreCase("EMERGENCY")) {
+            else if (TITLE.equalsIgnoreCase("EMERGENCY")) {
                 EnviarEmergency e = new EnviarEmergency();
                 e.execute();
             }
 
-            if (TITLE.equalsIgnoreCase("WIMAX")) {
+            else if (TITLE.equalsIgnoreCase("WIMAX")) {
                 EnviarWimax e = new EnviarWimax();
                 e.execute();
             }
-            //END SG
-            if (TITLE.equalsIgnoreCase("PDH")) {
+
+            else if (TITLE.equalsIgnoreCase("PDH")) {
                 EnviarPdh e = new EnviarPdh();
                 e.execute();
             }

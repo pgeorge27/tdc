@@ -85,7 +85,6 @@ public class LocalText {
         BufferedReader lector=null;
         try
         {
-            //File ruta = Environment.getExternalStorageDirectory();
             File fichero = new File(Environment.getExternalStorageDirectory() + "/TDC@", nombreArchi+".txt");
             flujo= new InputStreamReader(new FileInputStream(fichero));
             lector= new BufferedReader(flujo);
