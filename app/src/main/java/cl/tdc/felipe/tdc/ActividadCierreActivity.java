@@ -235,13 +235,11 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             }
 
             if (num == 1 ) {
-
-            if( (temp.equalsIgnoreCase("Emergencia,1," + idMain )) || (temp.equalsIgnoreCase("Emergencia,2," + idMain )) ||
-                    (temp.equalsIgnoreCase("Emergencia,3," + idMain ))||(temp.equalsIgnoreCase("Emergencia,4," + idMain ))||
-                    (temp.equalsIgnoreCase("Emergencia,5," + idMain ))||(temp.equalsIgnoreCase("Emergencia,6," + idMain )) ||
-                    (temp.startsWith("Emergencia"))) {
-                EMERG.setVisibility(View.VISIBLE);
-            }
+                if (temp.startsWith("Emergencia") && temp.endsWith(idMain)){
+                    EMERG.setVisibility(View.VISIBLE);
+                }else{
+                    EMERG.setVisibility(View.GONE);
+                }
             //Determinamos si mostramos el boton de RAN o no
 
             if (temp.equalsIgnoreCase("Preventivo,4," + idMain) || temp.equalsIgnoreCase("Preventivo,5," + idMain)
@@ -268,12 +266,12 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                     FAENA.setVisibility(View.VISIBLE);
                 }
 
-                if ((temp.equalsIgnoreCase("Emergencia,1," + idMain)) || (temp.equalsIgnoreCase("Emergencia,2," + idMain)) ||
+                /*if ((temp.equalsIgnoreCase("Emergencia,1," + idMain)) || (temp.equalsIgnoreCase("Emergencia,2," + idMain)) ||
                         (temp.equalsIgnoreCase("Emergencia,3," + idMain)) || (temp.equalsIgnoreCase("Emergencia,4," + idMain)) ||
                         (temp.equalsIgnoreCase("Emergencia,5," + idMain)) || (temp.equalsIgnoreCase("Emergencia,6," + idMain)) ||
                         (temp.startsWith("Emergencia"))) {
                     EMERG.setVisibility(View.VISIBLE);
-                }
+                }*/
 
                 //Determinamos si mostramos el boton de RAN o no
 
