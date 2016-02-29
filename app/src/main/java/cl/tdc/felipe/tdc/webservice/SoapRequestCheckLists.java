@@ -34,7 +34,8 @@ public class SoapRequestCheckLists {
         Date fecha = new Date();
 
         HttpClient httpClient = new DefaultHttpClient();
-        HttpPost httpPost = new HttpPost(dummy.URL_GET_DAILYACTIVITIES);
+        //HttpPost httpPost = new HttpPost(dummy.URL_GET_DAILYACTIVITIES);
+        HttpPost httpPost = new HttpPost(dummy.URL_TDC);
 
         SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
         envelope.encodingStyle = SoapSerializationEnvelope.ENC;
@@ -70,7 +71,7 @@ public class SoapRequestCheckLists {
 
         StringEntity se = new StringEntity(xml, HTTP.UTF_8);
         se.setContentType("text/xml");
-        httpPost.addHeader("", dummy.URL_GET_DAILYACTIVITIES);
+        httpPost.addHeader("", dummy.URL_TDC);
 
         httpPost.setEntity(se);
         HttpResponse httpResponse = httpClient.execute(httpPost);

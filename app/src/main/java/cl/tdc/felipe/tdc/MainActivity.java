@@ -37,6 +37,7 @@ import cl.tdc.felipe.tdc.daemon.PositionTrackerTDC;
 import cl.tdc.felipe.tdc.daemon.WifiTrackerTDC;
 import cl.tdc.felipe.tdc.extras.Funciones;
 import cl.tdc.felipe.tdc.extras.LocalText;
+import cl.tdc.felipe.tdc.objects.FormularioCierre.SYSTEM;
 import cl.tdc.felipe.tdc.objects.PreAsBuilt.Informacion;
 import cl.tdc.felipe.tdc.preferences.FormCierreReg;
 import cl.tdc.felipe.tdc.preferences.MaintenanceReg;
@@ -63,6 +64,7 @@ public class MainActivity extends ActionBarActivity {
     public ImageButton agendabtn, cercanosbtn, averiabtn, seguimientobtn, preasbuiltbtn, relevobtn, seguridadbtn, vigilantebtn;
     public static String proveedor, latitud, longitud;
     public String estado_gps="1";
+    ArrayList<SYSTEM> systems;
 
     FormCierreReg REGCIERRE, IDENREG, TRESGREG, FAENAREG, TRANSPREG, SGREG, DCREG, AIRREG, ACREG, GEREG, EMERGREG;
     MaintenanceReg MAINREG;
@@ -883,6 +885,7 @@ public class MainActivity extends ActionBarActivity {
                 if (s.get(0).equals("")) {
                     Toast.makeText(mContext, "No se encontró actualización", Toast.LENGTH_SHORT).show();
                 } else if (version.compareTo(s.get(0)) < 0) {
+              //  } else if (version.compareTo("1.0") < 0) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(actividad);
                     builder.setMessage("Versión Instalada: "
                             + version

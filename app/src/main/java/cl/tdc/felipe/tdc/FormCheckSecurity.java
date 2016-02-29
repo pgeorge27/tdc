@@ -192,6 +192,7 @@ public class FormCheckSecurity extends Activity {
         LinearLayout contenido = (LinearLayout) this.findViewById(R.id.contenido);
         final List<LinearLayout> subcontenidos = new ArrayList<>();
 
+
         for(Modulo modulo : form){
             LinearLayout lModulotitle = new LinearLayout(this);
             lModulotitle.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));

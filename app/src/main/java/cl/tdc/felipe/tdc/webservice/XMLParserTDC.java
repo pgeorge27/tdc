@@ -187,8 +187,6 @@ public class XMLParserTDC {
                                                                                     VR.setQuestions(qvArrayList2);
                                                                                 }
                                                                             }
-
-
                                                                             valueqArrayList.add(VR);                                                      //Agregamos V a la lista de values
                                                                         }
                                                                         QV.setValues(valueqArrayList);                                                    //Agregamos los values a la question

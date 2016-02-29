@@ -88,10 +88,10 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
     Context mContext;
     ProgressDialog dialog;
 
-    FormCierreReg REG, IDENREG, TRESGREG, FAENAREG, TRANSPREG, ACREG, SGREG, DCREG, AIRREG, GEREG, EMERGREG,WIMAXREG, PDHREG ;
+    FormCierreReg REG, IDENREG, TRESGREG, FAENAREG, TRANSPREG, ACREG, SGREG, DCREG, AIRREG, GEREG, EMERGREG,WIMAXREG, PDHREG, AGREGAREG ;
     MaintenanceReg MAINREG;
 
-    Button IDEN, TRESG, AC, DC, SG, AIR, FAENA, TRANSPORTE, GE, RAN, EMERG, WIMAX, PDH;
+    Button IDEN, TRESG, AC, DC, SG, AIR, FAENA, TRANSPORTE, GE, RAN, EMERG, WIMAX, PDH, AGREGADOR;
 
 
     @Override
@@ -120,6 +120,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         EMERGREG = new FormCierreReg(this, "EMERGENCY");
         WIMAXREG = new FormCierreReg(this, "WIMAX");
         PDHREG = new FormCierreReg(this, "PDH");
+        AGREGAREG = new FormCierreReg(this, "AGREGADOR");
         MAINREG = new MaintenanceReg(this);
 
 
@@ -143,6 +144,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         EMERG = (Button) this.findViewById(R.id.EMERG);
         WIMAX = (Button) this.findViewById(R.id.WIMAX);
         PDH = (Button) this.findViewById(R.id.PDH);
+        AGREGADOR = (Button) this.findViewById(R.id.AGREGA);
 
         IDEN.setOnClickListener(this);
         TRESG.setOnClickListener(this);
@@ -157,6 +159,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         EMERG.setOnClickListener(this);
         WIMAX.setOnClickListener(this);
         PDH.setOnClickListener(this);
+        AGREGADOR.setOnClickListener(this);
 
         boolean state = REG.getBoolean("IDEN" + idMain);
         if (state)
@@ -209,9 +212,15 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         if(state){
             WIMAX.setEnabled(false);
         }
+
         state = REG.getBoolean("PDH"+idMain);
         if(state){
             PDH.setEnabled(false);
+        }
+
+        state = REG.getBoolean("AGREGADOR"+idMain);
+        if(state){
+            AGREGADOR.setEnabled(false);
         }
         mostrarBotonesAzules(1);
 
@@ -227,6 +236,9 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             if (temp.equalsIgnoreCase("Preventivo,2," + idMain)) {
                 TRESG.setVisibility(View.VISIBLE);
             }
+            if (temp.equalsIgnoreCase("Preventivo,8," + idMain)) {
+                GE.setVisibility(View.VISIBLE);
+            }
             if (temp.equalsIgnoreCase("Preventivo,11," + idMain)) {
                 PDH.setVisibility(View.VISIBLE);
             }
@@ -234,10 +246,14 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                 WIMAX.setVisibility(View.VISIBLE);
             }
 
+            if (temp.equalsIgnoreCase("Preventivo,12," + idMain)) {
+                AGREGADOR.setVisibility(View.VISIBLE);
+            }
+
             if (num == 1 ) {
                 if (temp.startsWith("Emergencia") && temp.endsWith(idMain)){
                     EMERG.setVisibility(View.VISIBLE);
-                }else{
+                }else if (!temp.startsWith("Emergencia") && temp.endsWith(idMain)){
                     EMERG.setVisibility(View.GONE);
                 }
             //Determinamos si mostramos el boton de RAN o no
@@ -279,6 +295,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                         || temp.equalsIgnoreCase("Preventivo,6," + idMain) || temp.equalsIgnoreCase("Preventivo,7," + idMain)
                         || temp.equalsIgnoreCase("Preventivo,8," + idMain) || temp.equalsIgnoreCase("Preventivo,9," + idMain))
                     muestraRan();
+
             }
 
             //Al pulsar sobre RAN
@@ -309,13 +326,6 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                         TRANSPORTE.setVisibility(View.VISIBLE);
                     } else {
                         TRANSPORTE.setVisibility(View.GONE);
-                    }
-                }
-                else if (temp.equalsIgnoreCase("Preventivo,8," + idMain)) {
-                    if (GE.getVisibility() == View.GONE) {
-                        GE.setVisibility(View.VISIBLE);
-                    } else {
-                        GE.setVisibility(View.GONE);
                     }
                 }
                 else if (temp.equalsIgnoreCase("Preventivo,9," + idMain)) {
@@ -427,9 +437,12 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             buscar_form task = new buscar_form("WIMAX");
             task.execute();
         }
-        if (view.getId() == R.id.PDH) {
-            Log.e("IDDDDDDDD", "IDDDDDDD:   s" + view);
+        if (view.getId() == R.id.PDH) { //MATIAS
             buscar_form task = new buscar_form("PDH");
+            task.execute();
+        }
+        if (view.getId() == R.id.AGREGA) {
+            buscar_form task = new buscar_form("AGREGADOR");
             task.execute();
         }
         if (view.getId() == R.id.RAN) {
@@ -450,6 +463,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         if (type.equals("EMERGENCY")) return SoapRequestTDC.ACTION_EMERG;
         if (type.equals("WIMAX")) return SoapRequestTDC.ACTION_WIMAX;
         if (type.equals("PDH")) return SoapRequestTDC.ACTION_PDH;
+        if (type.equals("AGREGADOR")) return SoapRequestTDC.ACTION_AGREGADOR; //CAMBIAR
         else return "";
     }
 
@@ -527,6 +541,8 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                     code = 11;
                 }else if(type.equals("PDH")) {
                     code = 12;
+                }else if(type.equals("AGREGADOR")) {
+                    code = 13;
                 }else
                     code = -1;
 
@@ -598,6 +614,10 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             if (requestCode == 12) {
                 PDH.setEnabled(false);
                 REG.addValue("PDH" + idMain, true);
+            }
+            if (requestCode == 13) {
+                AGREGADOR.setEnabled(false);
+                REG.addValue("AGREGADOR" + idMain, true);
             }
         }
     }
@@ -729,6 +749,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                         EMERGREG.clearPreferences();
                         WIMAXREG.clearPreferences();
                         PDHREG.clearPreferences();
+                        AGREGAREG.clearPreferences();
                         if(AgendaActivity.actividad != null)
                             AgendaActivity.actividad.finish();
                         actividad.finish();
@@ -935,6 +956,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             UploadImage up = new UploadImage(p, mensaje);
             Log.e("UploadImage","UploadImage aquii:: " + up );
             up.execute(dummy.URL_UPLOAD_IMG_MAINTENANCE);
+
         }
 
     }

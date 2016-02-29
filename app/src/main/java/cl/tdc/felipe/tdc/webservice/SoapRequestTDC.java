@@ -57,6 +57,7 @@ public class SoapRequestTDC {
     public static final String ACTION_EMERG = "checkEmergency";
     public static final String ACTION_WIMAX = "checkWimax";
     public static final String ACTION_PDH = "checkPdh";
+    public static final String ACTION_AGREGADOR = "checkAgregator";
     public static final String ACTION_SEND_FAENA = "Faena";
     /*
      * Clase Principal de Conexion SSL a WDSL
@@ -2672,8 +2673,6 @@ public class SoapRequestTDC {
     }
 
 
-
-
 //Matias
 public static String sendAnswerPdh(String IMEI, String ID_MAINTENANCE, ArrayList<SYSTEM> SYSTEMS) throws IOException {
     final String SOAP_ACTION = "urn:Configurationwsdl#answerPdh";
@@ -2760,7 +2759,7 @@ public static String sendAnswerPdh(String IMEI, String ID_MAINTENANCE, ArrayList
                                 "<IdAnswer xsi:type=\"xsd:string\">" + I.getAnswerFaena() + "</IdAnswer>" +
                                 "<IdType xsi:type=\"xsd:string\">" + I.getIdType() + "</IdType>" +
                                 "<CountPhoto xsi:type=\"xsd:string\">" + countFoto + "</CountPhoto>";
-                        if (!I.getAnswer().equalsIgnoreCase(""))
+                        if (!I.getAnswerFaena().equalsIgnoreCase(""))
                             vacio = true;
                         xml += "<SetPhotos xsi:type=\"urn:SetPhotos\">" +
                                 xmlphotos +
@@ -2875,7 +2874,7 @@ public static String sendAnswerPdh(String IMEI, String ID_MAINTENANCE, ArrayList
             "</soapenv:Body>" +
             "</soapenv:Envelope>";
     //return xml;
-    if (vacio){
+    if (vacio ){
         return xml;
     }
     else{

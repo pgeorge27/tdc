@@ -1734,20 +1734,7 @@ import android.os.PowerManager;
                         //modifique aqui
                         if (I.getIdType().equals(Constantes.PHOTO)) {
                             ArrayList<PHOTO> fotos = I.getFotos();
-                            //PHOTO p = I.getPhoto();
 
-                          /*  if (p != null) {
-                                File tmp = new File(p.getNamePhoto());
-                                if (tmp.exists()) {
-                                    REG.addValue("PHOTONAME" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem(), p.getNamePhoto());
-                                    REG.addValue("PHOTOTITLE" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem(), p.getTitlePhoto());
-                                    REG.addValue("PHOTODATE" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem(), p.getDateTime());
-                                    REG.addValue("PHOTOCOORDX" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem(), p.getCoordX());
-                                    REG.addValue("PHOTOCOORDY" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem(), p.getCoordY());
-                                }
-                            }*/
-
-                            //ArrayList<PHOTO> fotos = Q.getFotos();
                             if (fotos != null) {
                                 for (int as = 0; as < fotos.size(); as++) {
                                     PHOTO f = fotos.get(as);
@@ -3204,7 +3191,7 @@ import android.os.PowerManager;
                         LocalText localT = new LocalText();      //Desde Aqui guardamos el fichero local para posteriormente ser enviado en Cierre ACtividad
 
                         if (localT.isDisponibleSD() && localT.isAccesoEscrituraSD())
-                            localT.escribirFicheroMemoriaExterna(IDMAIN + ",answerWimax", response);
+                            localT.escribirFicheroMemoriaExterna(IDMAIN + ",answerPdh", response);
 
                         return "Datos exitosamente guardados";
                     }
@@ -3241,7 +3228,7 @@ import android.os.PowerManager;
 
         // Matias
 
-        public void subir_fotos(String mensaje) {
+       /* public void subir_fotos(String mensaje) {
             AlertDialog.Builder b = new AlertDialog.Builder(actividad);
             b.setMessage(mensaje);
             b.setCancelable(false);
@@ -3364,7 +3351,7 @@ import android.os.PowerManager;
                 });
                 b.show();
             }
-        }
+        }*/
 
         //TODO UPLOAD PHOTOS
         private class UploadImage extends AsyncTask<String, String, String> {
