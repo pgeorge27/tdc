@@ -455,10 +455,10 @@ import android.os.PowerManager;
 
             if (fotos.size() > 0) Q.setFotos(fotos);
         }
-        private void cargar_fotosI(ITEM I, String tag) {
+        private void cargar_fotosI(ITEM I, String name, String tag) {
             int as = 0;
             ArrayList<PHOTO> fotos = new ArrayList<>();
-            String name;
+
             while (!(name = REG.getString("PHOTONAME" + tag + as)).equals("")) {
                 File tmp = new File(name);
                 if (tmp.exists()) {
@@ -1526,10 +1526,12 @@ import android.os.PowerManager;
                                     I.getEditText().setText(hora);
                                 }
                                 if (I.getIdType().equals(Constantes.PHOTO)) {
+                                    String tagI = S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem();
+
                                     ImageButton photo = create_photoButtonItem(I);
                                     itemLayout.addView(photo);
                                     String name = REG.getString("PHOTONAME" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem());
-                                    cargar_fotosI(I,name);
+                                    cargar_fotosI(I,name,tagI);
                                 }
                                 if (I.getIdType().equals(Constantes.TEXT)) {
                                     String text = REG.getString("TEXT" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem());
@@ -1739,11 +1741,14 @@ import android.os.PowerManager;
                                 for (int as = 0; as < fotos.size(); as++) {
                                     PHOTO f = fotos.get(as);
                                     Log.d("GUARDANDO", "foto: " + f.getTitlePhoto());
-                                    REG.addValue("PHOTONAME" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem(), f.getNamePhoto());
-                                    REG.addValue("PHOTOTITLE" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem(), f.getTitlePhoto());
-                                    REG.addValue("PHOTODATE" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem(), f.getDateTime());
-                                    REG.addValue("PHOTOCOORDX" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem(), f.getCoordX());
-                                    REG.addValue("PHOTOCOORDY" + S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem(), f.getCoordY());
+                                    //String tag = S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem() + "-" + Q.getIdQuestion() + "-" + Q.getNameQuestion();
+                                    //String preId = S.getIdSystem() + "-" + A.getIdArea() + "-" + I.getIdItem();
+                                   // REG.addValue("PHOTONAME" + preId + as, f.getNamePhoto());
+                                    REG.addValue("PHOTONAME" + preId + as, f.getNamePhoto());
+                                    REG.addValue("PHOTOTITLE" + preId + as, f.getTitlePhoto());
+                                    REG.addValue("PHOTODATE" + preId + as, f.getDateTime());
+                                    REG.addValue("PHOTOCOORDX" + preId + as,f.getCoordX());
+                                    REG.addValue("PHOTOCOORDY" + preId + as, f.getCoordY());
                                 }
                             }
 
@@ -2144,6 +2149,14 @@ import android.os.PowerManager;
                 EnviarPdh e = new EnviarPdh();
                 e.execute();
             }
+            else if (TITLE.equalsIgnoreCase("AGREGADOR")) {
+                EnviarAgregator e = new EnviarAgregator();
+                e.execute();
+            }
+            else if (TITLE.equalsIgnoreCase("SEMESTRAL")) {
+                EnviarSemestral e = new EnviarSemestral();
+                e.execute();
+            }
 
 
         }
@@ -2252,9 +2265,10 @@ import android.os.PowerManager;
         private void tomarFoto() {
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             int code = TAKE_PICTURE;
-            String timeStamp = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss").format(new Date());
+            String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+            String timeStamp1 = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss").format(new Date());
             photoTMP.setDateTime(timeStamp);
-            imgName = name + itemTMP.getIdItem() + "_" + timeStamp + ".jpg";
+            imgName = name + itemTMP.getIdItem() + "_" + timeStamp1 + ".jpg";
             Uri output = Uri.fromFile(new File(imgName));
             intent.putExtra(MediaStore.EXTRA_OUTPUT, output);
             startActivityForResult(intent, code);
@@ -2263,9 +2277,10 @@ import android.os.PowerManager;
         private void tomarFotos() {
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             int code = TAKE_PICTURES;
-            String timeStamp = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss").format(new Date());
+            String timeStamp1 = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss").format(new Date());
+            String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
             photoTMP.setDateTime(timeStamp);
-            imgName = name + questionTMP.getIdQuestion() + "_" + timeStamp + ".jpg";
+            imgName = name + questionTMP.getIdQuestion() + "_" + timeStamp1 + ".jpg";
             Uri output = Uri.fromFile(new File(imgName));
             intent.putExtra(MediaStore.EXTRA_OUTPUT, output);
             startActivityForResult(intent, code);
@@ -2404,6 +2419,7 @@ import android.os.PowerManager;
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             photoTMP = null;
+                            itemTMP = null;
                             dialogInterface.dismiss();
                         }
                     });
@@ -3128,6 +3144,132 @@ import android.os.PowerManager;
 
                         if (localT.isDisponibleSD() && localT.isAccesoEscrituraSD())
                             localT.escribirFicheroMemoriaExterna(IDMAIN + ",answerWimax", response);
+
+                        return "Datos exitosamente guardados";
+                    }
+                } catch (Exception e) {
+                    return "Error al enviar la respuesta.";
+
+                }
+                //TODO AGREGAR CATCH GENERAL
+            }
+
+            @Override
+            protected void onPostExecute(final String s) {
+                if (dialog.isShowing()) dialog.dismiss();
+
+
+                AlertDialog.Builder b = new AlertDialog.Builder(actividad);
+                b.setMessage(s);
+                b.setCancelable(false);
+                b.setPositiveButton("SALIR", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                        if (s.equalsIgnoreCase("Datos exitosamente guardados")) {
+                            bEnviar.setEnabled(false);
+                            REG.clearPreferences();
+                            setResult(RESULT_OK);
+                            actividad.finish();
+                        }
+                    }
+                });
+                b.show();
+            }
+        }
+
+        private class EnviarAgregator extends AsyncTask<String, String, String> {
+
+            boolean ok = false;
+            Button bEnviar = (Button) findViewById(R.id.btnEnviar);
+
+            private EnviarAgregator() {
+                dialog = new ProgressDialog(mContext);
+                dialog.setMessage("Enviando formulario...");
+                dialog.setCancelable(false);
+                dialog.setCanceledOnTouchOutside(false);
+            }
+
+            @Override
+            protected void onPreExecute() {
+                dialog.show();
+            }
+
+            @Override
+            protected String doInBackground(String... strings) {
+                try {
+                    TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+                    String response = SoapRequestTDC.sendAnswerAgregator(telephonyManager.getDeviceId(), IDMAIN, SYSTEMS);
+                    if (response.equalsIgnoreCase("false")){
+                        return "Debe llenar el formulario.";
+                    }else {
+                        LocalText localT = new LocalText();      //Desde Aqui guardamos el fichero local para posteriormente ser enviado en Cierre ACtividad
+
+                        if (localT.isDisponibleSD() && localT.isAccesoEscrituraSD())
+                            localT.escribirFicheroMemoriaExterna(IDMAIN + ",answerAgregator", response);
+
+                        return "Datos exitosamente guardados";
+                    }
+                } catch (Exception e) {
+                    return "Error al enviar la respuesta.";
+
+                }
+                //TODO AGREGAR CATCH GENERAL
+            }
+
+            @Override
+            protected void onPostExecute(final String s) {
+                if (dialog.isShowing()) dialog.dismiss();
+
+
+                AlertDialog.Builder b = new AlertDialog.Builder(actividad);
+                b.setMessage(s);
+                b.setCancelable(false);
+                b.setPositiveButton("SALIR", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                        if (s.equalsIgnoreCase("Datos exitosamente guardados")) {
+                            bEnviar.setEnabled(false);
+                            REG.clearPreferences();
+                            setResult(RESULT_OK);
+                            actividad.finish();
+                        }
+                    }
+                });
+                b.show();
+            }
+        }
+
+        private class EnviarSemestral extends AsyncTask<String, String, String> {
+
+            boolean ok = false;
+            Button bEnviar = (Button) findViewById(R.id.btnEnviar);
+
+            private EnviarSemestral() {
+                dialog = new ProgressDialog(mContext);
+                dialog.setMessage("Enviando formulario...");
+                dialog.setCancelable(false);
+                dialog.setCanceledOnTouchOutside(false);
+            }
+
+            @Override
+            protected void onPreExecute() {
+                dialog.show();
+            }
+
+            @Override
+            protected String doInBackground(String... strings) {
+                try {
+                    TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+                    String response = SoapRequestTDC.sendAnswerSemestral(telephonyManager.getDeviceId(), IDMAIN, SYSTEMS);
+                    if (response.equalsIgnoreCase("false")){
+                        return "Debe llenar el formulario.";
+                    }else {
+                        LocalText localT = new LocalText();      //Desde Aqui guardamos el fichero local para posteriormente ser enviado en Cierre ACtividad
+
+                        if (localT.isDisponibleSD() && localT.isAccesoEscrituraSD())
+                            localT.escribirFicheroMemoriaExterna(IDMAIN + ",answerSemestral", response);
 
                         return "Datos exitosamente guardados";
                     }

@@ -94,12 +94,13 @@ public class AgendaActivity extends Activity {
 
     public static ArrayList<String> idsActivities = new ArrayList<>();
     public static ArrayList<String> idsActivities2 = new ArrayList<>();
+    public static String idActivitiePeriodo;
     public static Set<String> hs = new HashSet<>();
 
     private String name;
     private String query;
     private String queryT;
-    private String idMain;
+    private String idMain, periodo;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -512,7 +513,10 @@ public class AgendaActivity extends Activity {
 
                                         idsActivities.add(a.getIdActivity());
                                         idsActivities2.add(m.getType() + "," + a.getIdActivity() + "," + m.getIdMaintenance());//Usado para determinar que botones mostrar en ActividadCierreActivity
+                                        idActivitiePeriodo = m.getPeriodo();//Usado para determinar que botones mostrar en ActividadCierreActivity
                                         idMain = m.getIdMaintenance();
+                                        periodo = m.getPeriodo();
+
 
                                         crearFicherosLocal task = new crearFicherosLocal(m.getType() + "," + a.getIdActivity(),idMain); //creamos cada  archivo check localmente
                                         task.execute();
@@ -664,6 +668,8 @@ public class AgendaActivity extends Activity {
         if (type.equals("Preventivo,10")) return SoapRequestTDC.ACTION_WIMAX; //aqui
         if (type.equals("Preventivo,11")) return SoapRequestTDC.ACTION_PDH;
         if (type.equals("Preventivo,12")) return SoapRequestTDC.ACTION_AGREGADOR;
+        if (type.equals("Preventivo,13")) return SoapRequestTDC.ACTION_SEMESTRAL;
+        if (type.equals("Preventivo G/E,8")) return SoapRequestTDC.ACTION_GE;
         else return "";
     }
 

@@ -15,6 +15,7 @@ public class Maintenance {
     String status;
     String idMaintenance;
     String type;
+    String periodo;
     ArrayList<MainSystem> systemList;
 
     public Maintenance() {
@@ -74,6 +75,14 @@ public class Maintenance {
 
     public void setIdMaintenance(String idMaintenance) {
         this.idMaintenance = idMaintenance;
+    }
+
+    public String getPeriodo() {
+        return periodo;
+    }
+
+    public void setPeriodo(String periodo) {
+        this.periodo = periodo;
     }
 
     public String getType() {
