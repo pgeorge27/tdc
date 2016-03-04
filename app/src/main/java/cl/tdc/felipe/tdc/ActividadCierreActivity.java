@@ -512,8 +512,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             try {
 
                 //query = SoapRequestTDC.getFormularioCierre(IMEI, idMain, getAction(type));
-
-                query = new LocalText().leerFicheroMemoriaExterna(idMain + "," + getAction(type));
+                 query = new LocalText().leerFicheroMemoriaExterna(idMain + "," + getAction(type));
                 ArrayList<String> returnCode = XMLParser.getReturnCode2(query);
 
                 if (returnCode.get(0).equals("0"))
@@ -1001,7 +1000,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         FileOutputStream fOut;
         try {
             fOut = new FileOutputStream(file);
-            out.compress(Bitmap.CompressFormat.JPEG, 60, fOut);
+            out.compress(Bitmap.CompressFormat.JPEG, 50, fOut); //60
             fOut.flush();
             fOut.close();
             b.recycle();
