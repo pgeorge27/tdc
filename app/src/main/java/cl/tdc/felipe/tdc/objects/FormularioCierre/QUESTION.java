@@ -340,8 +340,8 @@ public class QUESTION {
 
             view = new LinearLayout(ctx);
             ((LinearLayout)view).setOrientation(LinearLayout.HORIZONTAL);
-            ((LinearLayout)view).addView(take);
-            ((LinearLayout)view).addView(show);
+            //((LinearLayout)view).addView(take);
+            //((LinearLayout)view).addView(show);
         }
 
         return view;

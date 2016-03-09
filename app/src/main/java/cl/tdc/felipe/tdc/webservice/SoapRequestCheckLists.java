@@ -51,7 +51,7 @@ public class SoapRequestCheckLists {
         xml = "<soapenv:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:urn=\"urn:Configurationwsdl\">" +
                 "<soapenv:Header/>" +
                 "<soapenv:Body>" +
-                "<urn:request soapenv:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" +
+                "<urn:checkSecurity soapenv:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" +
                 "<System xsi:type=\"urn:System\">" +
                 "<Request xsi:type=\"urn:Request\">" +
                 "<Form_Detail xsi:type=\"urn:Form_Detail\">" +
@@ -71,7 +71,7 @@ public class SoapRequestCheckLists {
                 "</Form_Header>" +
                 "</Request>" +
                 "</System>" +
-                "</urn:request>" +
+                "</urn:checkSecurity>" +
                 "</soapenv:Body>" +
                 "</soapenv:Envelope>";
 
