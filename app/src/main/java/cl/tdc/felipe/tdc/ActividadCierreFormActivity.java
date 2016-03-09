@@ -427,6 +427,7 @@ import android.os.PowerManager;
 
             return photo;
         }
+
         private LinearLayout create_normalVerticalLayout() {
             LinearLayout l = new LinearLayout(mContext);
             l.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -455,6 +456,7 @@ import android.os.PowerManager;
 
             if (fotos.size() > 0) Q.setFotos(fotos);
         }
+
         private void cargar_fotosI(ITEM I, String name, String tag) {
             int as = 0;
             ArrayList<PHOTO> fotos = new ArrayList<>();
@@ -2157,8 +2159,6 @@ import android.os.PowerManager;
                 EnviarSemestral e = new EnviarSemestral();
                 e.execute();
             }
-
-
         }
 
         public Bitmap redimencionarImagen(Bitmap b)
@@ -2261,7 +2261,6 @@ import android.os.PowerManager;
 
         }
 
-
         private void tomarFoto() {
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             int code = TAKE_PICTURE;
@@ -2291,7 +2290,6 @@ import android.os.PowerManager;
             intent.setType("image/*");
             startActivityForResult(Intent.createChooser(intent, "Seleccione"), SELECT_FILE);
         }
-
 
         @Override
         protected void onActivityResult(int requestCode, int resultCode, Intent data) {

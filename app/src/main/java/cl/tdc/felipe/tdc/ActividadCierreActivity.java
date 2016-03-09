@@ -93,6 +93,8 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
 
     Button IDEN, TRESG, AC, DC, SG, AIR, FAENA, TRANSPORTE, GE, RAN, EMERG, WIMAX, PDH, AGREGADOR, SEMESTRAL;
 
+    String log;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -867,56 +869,82 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
 
     public void subir_fotos(String mensaje, String form) {
         ArrayList<PHOTO> p = new ArrayList<>();
-        Log.e("FORm","trae esto:" + form);
+
+        Log.d("LOG",form);
 
         if (form.equalsIgnoreCase("emerg"))
             form = "Emergency";
 
+        log += " Iniciamos con el formulario: " + form;
+
         for (SYSTEM S : ActividadCierreFormActivity.SYSTEMSMAP.get(idMain+","+form.toUpperCase())) {
+            log += " \n Obteniendo: " + idMain+","+form.toUpperCase() + " de SYSTEMSMAP";
             for (AREA A : S.getAreas()) {
+                log += " \nAREA A: " + S.getAreas();
                 for (ITEM I : A.getItems()) {
+                    log += " \nITEM I: " + A.getItems();
                     if (I.getIdType().equals(Constantes.PHOTO)) {
                         if (I.getPhoto() != null) {
+                            log += " \nI.getPhoto() != null: " + I.getPhoto();
                             p.add(I.getPhoto());
                         }
                         if (I.getFotos() != null) {
+                            log += " \nI.getPhotos() != null: ";
                             for (PHOTO P : I.getFotos()) {
+                                log += " \nPHOTO P : I.getFotos(): " + P;
                                 p.add(P);
                             }
                         }
                     }
                     if (I.getQuestions() != null) {
+                        log += " \nI.getQuestions() != null ";
                         for (QUESTION Q : I.getQuestions()) {
+                            log += " \nQUESTION Q : I.getQuestions()";
                             if (Q.getFoto() != null) {
+                                log += " \nQ.getFoto() != null " + Q.getFoto();
                                 p.add(Q.getFoto());
                             }
 
                             if (Q.getFotos() != null) {
+                                log += " \nQ.getFotos() != null ";
                                 for (PHOTO P : Q.getFotos()) {
+                                    log += " \nPHOTO P : Q.getFotos() " + P;
                                     p.add(P);
                                 }
                             }
                             if (Q.getQuestions() != null){
+                                log += " \nQ.getQuestions() != null ";
                                 for (QUESTION QQ : Q.getQuestions()){
+                                    log += " \nQUESTION QQ : Q.getQuestions() ";
                                     if (QQ.getFoto() != null) {
+                                        log += " \nQQ.getFoto() != null" + QQ.getFoto();
                                         p.add(QQ.getFoto());
                                     }
                                     if (QQ.getFotos() != null) {
+                                        log += " \nQQ.getFotos() != null ";
                                         for (PHOTO P : QQ.getFotos()) {
+                                            log += " \nPHOTO P : QQ.getFotos() " + P;
                                             p.add(P);
                                         }
                                     }
                                 }
                             }
                             if (Q.getValues() != null){
+                                log += " \nQ.getValues() != null ";
                                 for (VALUE V : Q.getValues()) {
+                                    log += " \nVALUE V : Q.getValues() ";
                                     if (V.getQuestions() != null) {
+                                        log += " \nV.getQuestions() != null ";
                                         for (QUESTION QQ : V.getQuestions()) {
+                                            log += " \nQUESTION QQ : V.getQuestions() ";
                                             if (QQ.getFoto() != null) {
+                                                log += " \nQQ.getFoto() != null " + QQ.getFoto();
                                                 p.add(QQ.getFoto());
                                             }
                                             if (QQ.getFotos() != null) {
+                                                log += " \nQQ.getFotos() != null ";
                                                 for (PHOTO P : QQ.getFotos()) {
+                                                    log += " \nPHOTO P : QQ.getFotos() " + P;
                                                     p.add(P);
                                                 }
                                             }
@@ -927,17 +955,27 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                         }
                     }
                     if (I.getSetlistArrayList() != null && I.getValues() != null) {
+                        log += " \nI.getSetlistArrayList() != null && I.getValues() != null ";
                         if (I.getIdType().equals(Constantes.TABLE)) {
+                            log += " \nI.getIdType().equals(Constantes.TABLE) ";
                             for (CheckBox c : I.getCheckBoxes()) {
+                                log += " \nCheckBox c : I.getCheckBoxes() ";
                                 if (c.isChecked()) {
+                                    log += " \nc.isChecked() ";
                                     for (SET Set : I.getSetlistArrayList().get(I.getCheckBoxes().indexOf(c))) {
+                                        log += " \nSET Set : I.getSetlistArrayList().get(I.getCheckBoxes().indexOf(c)) ";
                                         if (Set.getQuestions() != null) {
+                                            log += " \nSet.getQuestions() != null ";
                                             for (QUESTION Q : Set.getQuestions()) {
+                                                log += " \nQUESTION Q : Set.getQuestions() ";
                                                 if (Q.getFoto() != null) {
+                                                    log += " \nQ.getFoto() != null " + Q.getFoto();
                                                     p.add(Q.getFoto());
                                                 }
                                                 if (Q.getFotos() != null) {
+                                                    log += " \nQ.getFotos() != null ";
                                                     for (PHOTO P : Q.getFotos()) {
+                                                        log += " \nPHOTO P : Q.getFotos() " + P;
                                                         p.add(P);
                                                     }
                                                 }
@@ -948,19 +986,31 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                             }
                         }
                         if (I.getIdType().equals(Constantes.RADIO)) {
+                            log += " \nI.getIdType().equals(Constantes.RADIO) ";
                             RadioGroup rg = (RadioGroup) I.getView();
+                            log += " \nRadioGroup rg = (RadioGroup) I.getView() ";
                             if (rg.getCheckedRadioButtonId() != -1) {
+                                log += " \nrg.getCheckedRadioButtonId() != -1 ";
                                 RadioButton rb = (RadioButton) rg.findViewById(rg.getCheckedRadioButtonId());
+                                log += " \nRadioButton rb = (RadioButton) rg.findViewById(rg.getCheckedRadioButtonId()) ";
                                 int n = rg.indexOfChild(rb) + 1;
+                                log += " \nint n = rg.indexOfChild(rb) + 1 =  " + n;
                                 for (int i = 0; i < n; i++) {
+                                    log += " \nint i = 0; i < n; i++ ";
                                     for (SET Set : I.getSetlistArrayList().get(i)) {
+                                        log += " \nSET Set : I.getSetlistArrayList().get(i) ";
                                         if (Set.getQuestions() != null) {
+                                            log += " \nSet.getQuestions() != null ";
                                             for (QUESTION Q : Set.getQuestions()) {
+                                                log += " \nQUESTION Q : Set.getQuestions() ";
                                                 if (Q.getFoto() != null) {
+                                                    log += " \nQ.getFoto() != null " + Q.getFoto();
                                                     p.add(Q.getFoto());
                                                 }
                                                 if (Q.getFotos() != null) {
+                                                    log += " \nQ.getFotos() != null ";
                                                     for (PHOTO P : Q.getFotos()) {
+                                                        log += " \nPHOTO P : Q.getFotos() " + P;
                                                         p.add(P);
                                                     }
                                                 }
@@ -973,28 +1023,35 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                     }
                 }
             }
+            log += " \nEliminamos " + idMain+","+form.toUpperCase();
             ActividadCierreFormActivity.SYSTEMSMAP.remove(idMain+","+form.toUpperCase());
         }
         if (p.size() > 0) {
+            log += " \nP tiene valor de " + p.size();
             for (int i = 0; i < p.size(); i++){
+                log += " \nRedimencionamos imagen " + p.get(i).getNamePhoto();
                 redimencionarImagen(p.get(i).getNamePhoto());
             }
+            log += " \nSubiremos imagenes ";
             UploadImage up = new UploadImage(p, mensaje);
             Log.e("UploadImage","UploadImage aquii:: " + up );
             up.execute(dummy.URL_UPLOAD_IMG_MAINTENANCE);
-
         }
 
     }
 
     private void redimencionarImagen(String dir) {
         //File dir=Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+        log += " \n Entramos en el metodo redimencionarImagen la ruta es " + dir;
         Bitmap b = BitmapFactory.decodeFile(dir);
         Bitmap out = Bitmap.createScaledBitmap(b, b.getHeight() / 2, b.getWidth()/2, false);
 
         String[] textos = dir.split("/");
         String nombreImagen = textos[textos.length-1];
         String rutaImagen  = dir.replace(nombreImagen, "");
+
+        log += " \n Nombre de la imagen:  " + nombreImagen;
+        log += " \n Ruta de la imagen:  " + rutaImagen;
 
         File file = new File(rutaImagen, nombreImagen);
         FileOutputStream fOut;
@@ -1005,18 +1062,25 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             fOut.close();
             b.recycle();
             out.recycle();
-        } catch (Exception e) {}
+        } catch (Exception e) {
+            log += " \n Error en el proceso de crear nuevo archivo de imagen:  " + e;
+        }
     }
 
-    //TODO UPLOAD PHOTOS
     private class UploadImage extends AsyncTask<String, String, String> {
 
         ArrayList<PHOTO> allPhotos;
         String mensaje;
 
         public UploadImage(ArrayList<PHOTO> ps, String msj) {
+            for (PHOTO p: ps) {
+                log += " \n Foto recibida en el metodo UploadImage: " + p.getNamePhoto();
+            }
             this.allPhotos = ps;
             this.mensaje = msj;
+            for (PHOTO p: allPhotos) {
+                log += " \n Foto asignada a la variable allPhotos: " + p.getNamePhoto();
+            }
         }
 
         @Override
@@ -1030,13 +1094,15 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         @Override
         protected String doInBackground(String... params) {
             String response = "";
+            log += " \n Dentro del metodo doInBackground ";
 
             DateFormat timestamp_name = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
-
+            log += " \n Valor de la variable timestamp_name: " + timestamp_name;
             for (PHOTO p : allPhotos) {
+                log += " \n iteramos sobre la variable allPhotos ";
                 try {
                     String fileName = p.getNamePhoto();
-
+                    log += " \n El archivo es: " + fileName;
                     Log.i("ENVIANDO", fileName);
                     HttpURLConnection conn;
                     DataOutputStream dos;
@@ -1047,13 +1113,17 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
 
                     File done = new File(fileName);
 
-                    if (!done.isFile())
+                    if (!done.isFile()) {
+                        log += " \n El archivo: " + done + " no existe";
                         Log.e("DownloadManager", "no existe");
-                    else {
+                    } else {
+                        log += " \n FileInputStream: " + done;
                         FileInputStream fileInputStream = new FileInputStream(done);
                         URL url = new URL(params[0]);
+                        log += " \n url: " + url;
 
                         conn = (HttpURLConnection) url.openConnection();
+                        log += " \n Abrimos coneccion con url.openConnection() ";
                         conn.setDoInput(true);
                         conn.setDoOutput(true);
                         conn.setUseCaches(false);
@@ -1090,8 +1160,9 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                         String serverResponseMessage = conn.getResponseMessage();
 
                         Log.i("UploadManager", "HTTP response is: " + serverResponseMessage + ": " + serverResponseCode);
-
+                        log += " \n UploadManage HTTP response is: " + serverResponseMessage + ": " + serverResponseCode;
                         fileInputStream.close();
+                        log += " \n fileInputStream.close() ";
                         dos.flush();
                         dos.close();
 
@@ -1108,27 +1179,28 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                         response = stringBuilder.toString();
 
                         Log.d("IMAGENES", p.getNamePhoto() + "   \n" + response);
+                        log += "IMAGENES " + p.getNamePhoto() + "   \n" + response;
                     }
 
                 } catch (Exception e) {
                     Log.d("TAG", "Error: " + e.getMessage());
+                    log += "Error --- " + e.getMessage();
                     response = "ERROR";
                 }
             }
-
+            log += "Response: " + response;
             return response;
         }
 
         @Override
         protected void onPostExecute(String s) {
+            local.escribirFicheroMemoriaExterna("LogSubirFoto",log);
             REG.clearPreferences();
             setResult(RESULT_OK);
             super.onPostExecute(s);
         }
 
     }
-
-
 
     protected void onDestroy(){
         super.onDestroy();
