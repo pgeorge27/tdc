@@ -875,24 +875,24 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         if (form.equalsIgnoreCase("emerg"))
             form = "Emergency";
 
-        log += " Iniciamos con el formulario: " + form;
+        log = " Iniciamos con el formulario: " + form;
 
         for (SYSTEM S : ActividadCierreFormActivity.SYSTEMSMAP.get(idMain+","+form.toUpperCase())) {
             log += " \n Obteniendo: " + idMain+","+form.toUpperCase() + " de SYSTEMSMAP";
             for (AREA A : S.getAreas()) {
-                log += " \nAREA A: " + S.getAreas();
+                log += " \nAREA A: " + A;
                 for (ITEM I : A.getItems()) {
-                    log += " \nITEM I: " + A.getItems();
+                    log += " \nITEM I: " + I;
                     if (I.getIdType().equals(Constantes.PHOTO)) {
                         if (I.getPhoto() != null) {
-                            log += " \nI.getPhoto() != null: " + I.getPhoto();
                             p.add(I.getPhoto());
+                            log += " \nI.getPhoto() != null: " + p;
                         }
                         if (I.getFotos() != null) {
                             log += " \nI.getPhotos() != null: ";
                             for (PHOTO P : I.getFotos()) {
-                                log += " \nPHOTO P : I.getFotos(): " + P;
                                 p.add(P);
+                                log += " \nPHOTO P : I.getFotos(): " + P;
                             }
                         }
                     }
@@ -901,7 +901,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                         for (QUESTION Q : I.getQuestions()) {
                             log += " \nQUESTION Q : I.getQuestions()";
                             if (Q.getFoto() != null) {
-                                log += " \nQ.getFoto() != null " + Q.getFoto();
+                                log += " \nQ.getFoto() != null " + p;
                                 p.add(Q.getFoto());
                             }
 
@@ -917,7 +917,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                                 for (QUESTION QQ : Q.getQuestions()){
                                     log += " \nQUESTION QQ : Q.getQuestions() ";
                                     if (QQ.getFoto() != null) {
-                                        log += " \nQQ.getFoto() != null" + QQ.getFoto();
+                                        log += " \nQQ.getFoto() != null" + p;
                                         p.add(QQ.getFoto());
                                     }
                                     if (QQ.getFotos() != null) {
@@ -963,7 +963,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                                 if (c.isChecked()) {
                                     log += " \nc.isChecked() ";
                                     for (SET Set : I.getSetlistArrayList().get(I.getCheckBoxes().indexOf(c))) {
-                                        log += " \nSET Set : I.getSetlistArrayList().get(I.getCheckBoxes().indexOf(c)) ";
+                                        log += " \nSET Set : I.getSetlistArrayList().get(I.getCheckBoxes().indexOf(c)) " + Set;
                                         if (Set.getQuestions() != null) {
                                             log += " \nSet.getQuestions() != null ";
                                             for (QUESTION Q : Set.getQuestions()) {
@@ -1029,7 +1029,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         if (p.size() > 0) {
             log += " \nP tiene valor de " + p.size();
             for (int i = 0; i < p.size(); i++){
-                log += " \nRedimencionamos imagen " + p.get(i).getNamePhoto();
+               // log += " \nRedimencionamos imagen " + p.get(i).getNamePhoto();
                 redimencionarImagen(p.get(i).getNamePhoto());
             }
             log += " \nSubiremos imagenes ";
@@ -1097,7 +1097,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             log += " \n Dentro del metodo doInBackground ";
 
             DateFormat timestamp_name = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
-            log += " \n Valor de la variable timestamp_name: " + timestamp_name;
+           // log += " \n Valor de la variable timestamp_name: " + timestamp_name;
             for (PHOTO p : allPhotos) {
                 log += " \n iteramos sobre la variable allPhotos ";
                 try {
