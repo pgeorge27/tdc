@@ -27,6 +27,7 @@ public class dummy {
     public static final String URL_UPLOAD_IMG_WORKTRACKING = "http://" + IP + "/telrad/uploadWorkTracking.php";
     public static final String URL_UPLOAD_IMG_SECURITY = "http://" + IP + "/telrad/uploadTag.php";
     public static final String URL_UPLOAD_IMG_MAINTENANCE = "http://" + IP + "/telrad/uploadToServer.php";
+    public static final String URL_UPLOAD_TO_TAG = "http://" + IP + "/telrad/uploadToServerTag.php";
 
     /** AVERIA**/
     public static final String URL_DEPTO = "http://" + IP + "/tdc/ServiceFailure/department.php";

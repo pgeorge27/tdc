@@ -13,6 +13,7 @@ import org.apache.http.util.EntityUtils;
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -21,6 +22,11 @@ import java.util.Date;
 import cl.tdc.felipe.tdc.objects.ControSeguridadDiario.Elemento;
 import cl.tdc.felipe.tdc.objects.ControSeguridadDiario.Modulo;
 import cl.tdc.felipe.tdc.objects.ControSeguridadDiario.SubModulo;
+import cl.tdc.felipe.tdc.objects.FormularioCierre.AREA;
+import cl.tdc.felipe.tdc.objects.FormularioCierre.ITEM;
+import cl.tdc.felipe.tdc.objects.FormularioCierre.PHOTO;
+import cl.tdc.felipe.tdc.objects.FormularioCierre.QUESTION;
+import cl.tdc.felipe.tdc.objects.FormularioCierre.SYSTEM;
 import cl.tdc.felipe.tdc.objects.MaintChecklist.Section;
 
 
@@ -132,7 +138,7 @@ public class SoapRequestCheckLists {
         return response;
     }
 
-    public static String sendDailyActivities(String IMEI, ArrayList<Modulo> form) throws Exception {
+    /*public static String sendDailyActivities(String IMEI, ArrayList<Modulo> form) throws Exception {
         String response = null;
         String xml = null;
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -207,8 +213,113 @@ public class SoapRequestCheckLists {
         HttpEntity resEntity = httpResponse.getEntity();
         response = EntityUtils.toString(resEntity);
         return response;
-    }
+    }*/
 
+    public static String sendDailyActivities(String IMEI, String ID_MAINTENANCE, ArrayList<SYSTEM> SYSTEMS, Date fecha_global ) throws Exception {
+        String response = null;
+        String xml = null;
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date fecha = fecha_global;
+        boolean vacio= false;
+
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpPost httpPost = new HttpPost(dummy.URL_SEND_DAILYACTIVITIES);
+
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+        envelope.encodingStyle = SoapSerializationEnvelope.ENC;
+        envelope.dotNet = false;
+        envelope.implicitTypes = true;
+
+        xml =
+                "<soapenv:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:urn=\"urn:Configurationwsdl\">" +
+                        "<soapenv:Header/>" +
+                        "<soapenv:Body>" +
+                        "<urn:answerSecurity soapenv:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" +
+                        "<RequestAnswerFaena xsi:type=\"urn:RequestAnswerFaena\">" +
+                        "<RequestFaena xsi:type=\"urn:RequestFaena\">" +
+                        "<Header xsi:type=\"urn:Header\">" +
+                        "<Date xsi:type=\"xsd:string\">" + formatter.format(fecha) + "</Date>" +
+                        "<Code xsi:type=\"xsd:string\">0</Code>" +
+                        "<Platafform xsi:type=\"xsd:string\">MOBILE</Platafform>" +
+                        "<Imei xsi:type=\"xsd:string\">" + IMEI + "</Imei>" +
+                        "<Maintenance xsi:type=\"xsd:string\">" + ID_MAINTENANCE + "</Maintenance>" +
+                        "</Header>" +
+                        "<!--Optional:-->";
+
+        for (SYSTEM S : SYSTEMS) {
+            xml += "<SystemsRptaUni xsi:type=\"urn:SystemsRptaUni\">";
+            for (AREA A : S.getAreas()) {
+                String idArea = A.getIdArea();
+                for (ITEM I : A.getItems()) {
+                    String idItem = I.getIdItem();
+
+                    int countFoto = 0;
+                    String xmlphotos = "";
+                    if (I.getIdItem() != null) {
+
+                        for (QUESTION Q : I.getQuestions()) {
+
+                            if (Q.getFotos() != null) {
+                                for (PHOTO p : Q.getFotos()) {
+                                    File file = new File(p.getNamePhoto());
+                                    if (file.exists()) {
+                                        vacio = true;
+                                        xmlphotos += "<Photo xsi:type=\"urn:Photo\">" +
+                                                "<NamePhoto xsi:type=\"xsd:string\">" + file.getName() + "</NamePhoto>" +
+                                                "<TitlePhoto xsi:type=\"xsd:string\">" + p.getTitlePhoto() + "</TitlePhoto>" +
+                                                "<DateTime xsi:type=\"xsd:string\">" + p.getDateTime() + "</DateTime>" +
+                                                "<CoordX xsi:type=\"xsd:string\">" + p.getCoordX() + "</CoordX>" +
+                                                "<CoordY xsi:type=\"xsd:string\">" + p.getCoordY() + "</CoordY>" +
+                                                "</Photo>";
+
+                                        countFoto += 1;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if (I.getQuestions() != null) {
+                        for (int i = 0; i < I.getQuestions().size(); i++) {
+                            QUESTION Q = I.getQuestions().get(i);
+
+                            xml += "<SetRptaItemUni xsi:type=\"urn:SetRptaItemUni\">" +
+                                    "<IdArea xsi:type=\"xsd:string\">" + idArea + "</IdArea>" +
+                                    "<IdItem xsi:type=\"xsd:string\">" + idItem + "</IdItem>" +
+                                    "<IdSet xsi:type=\"xsd:string\"></IdSet>" +
+                                    "<IdQuestion xsi:type=\"xsd:string\">" + Q.getIdQuestion() + "</IdQuestion>" +
+                                    "<Answer xsi:type=\"xsd:string\">" + Q.getAswer3G() + "</Answer>" +
+                                    "<AnswerAux xsi:type=\"xsd:string\"></AnswerAux>" +
+                                    "<CountPhoto xsi:type=\"xsd:string\">" + countFoto + "</CountPhoto>" +
+                                    "<SetPhotos xsi:type=\"urn:SetPhotos\">" + xmlphotos + "</SetPhotos>"+
+                                    "</SetRptaItemUni>";
+                        }
+                    }
+
+                }
+            }
+            xml += "</SystemsRptaUni>";
+        }
+
+        xml += "</RequestFaena>" +
+                "</RequestAnswerFaena>" +
+                "</urn:answerSecurity>" +
+                "</soapenv:Body>" +
+                "</soapenv:Envelope>";
+        if (vacio == true){
+
+            response = xml;
+            //return xml;
+        }
+        else{
+
+            //return "false";
+            response = "false";
+        }
+
+        return response;
+
+    }
     public static String sendMainChecklist(String ID, ArrayList<cl.tdc.felipe.tdc.objects.MaintChecklist.Modulo> form) throws Exception {
         String response = null;
         String xml = null;

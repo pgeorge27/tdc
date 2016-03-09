@@ -57,6 +57,9 @@ public class QUESTION {
     ArrayList<Button> buttons;
     ArrayList<EditText> editTexts;
 
+    Bitmap firma;
+    String FileName;
+
     public QUESTION() {
     }
 
@@ -469,5 +472,21 @@ public class QUESTION {
 
     public void setQuestions(ArrayList<QUESTION> questions) {
         this.questions = questions;
+    }
+
+    public void setFirma(Bitmap firma) {
+        this.firma = firma;
+    }
+
+    public void setFileName(String fileName) {
+        FileName = fileName;
+    }
+
+    public Bitmap getFirma() {
+        return firma;
+    }
+
+    public String getFileName() {
+        return FileName;
     }
 }
