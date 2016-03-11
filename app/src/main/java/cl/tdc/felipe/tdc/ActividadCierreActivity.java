@@ -791,6 +791,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                     }
                 });
             }
+
            // local.eliminarFicheroMant(); //para borrar fichero
              b.show();//ok
         }
@@ -815,9 +816,11 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         protected String doInBackground(String... strings) {
             String resp = "";                                                                       //Leeremos todos los archivos para enviar y cerrar el mantenimiento
             System.out.println("El valor es " + idMain);
+            log +="\n El valor es " + idMain;
             if (local.itemAnsw.size() > 0) {
                 for (int j = 0; j < local.itemAnsw.size(); j++) {
                     System.out.println("Enviaremos " + local.itemAnsw.get(j));
+                    log +="Enviaremos " + local.itemAnsw.get(j);
                     if (local.itemAnsw.get(j).contains(",")) {                                      //Verificamos que tenga coma, el archivo tiene por nombre IDMAIN,Nombre.txt
                         String[] parts = local.itemAnsw.get(j).split(",");                          //separamos el archivo antes y despues de la coma
                         String nombreArch = parts[1];                                               // nombre del archivo despues de la coma
@@ -826,15 +829,19 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                             String[] nombre = nombreArch.split("\\.");                              //separamos antes y despues del punto
                             String accion = nombre[0];                                              //nombre del archivo antes del punto = a la accion
                             System.out.println("La Accion seria: " + accion);
+                            log +="La Accion seria: " + accion;
                             String[] nomArch = local.itemAnsw.get(j).split("\\.");                  //separamos el nombre del archivo antes y despues del punto
                             String nomArchSinTxt = nomArch[0];                                      //Extraemos el nombre sin la extension .txt
+                            log +="\n leerFicheroMemoriaExterna(" +nomArchSinTxt +")";
                             xml = local.leerFicheroMemoriaExterna(nomArchSinTxt);                   //leemos el archivo del tlf
                             System.out.println("antes: " + xml);
                             String subS = accion.substring(6);
                             String check = idMain + ",check" + subS;
+                            log +="check=" + check;
                             preg = local.leerFicheroMemoriaExterna(check);                          //leemos el archivo del tlf
                             try {                                                                   //Enviamos la petioncion al servidor SOAP (ESTO SE REALIZABA POR CADA CHECK ANTERIORMENTE AL PULSAR SOBRE ENVIAR)
                                 String response = SoapRequestTDC.sendAll(xml, accion);
+                                log +="\n response = SoapRequestTDC.sendAll(xml, accion)::" +response ;
                                 //aqui
                                 cerrarMant = true;
                                 resp = "Datos exitosamente ingresados!";
@@ -842,7 +849,9 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
 
                             } catch (IOException e) {
                                 return "Se agotó el tiempo de conexión.";
+
                             }  catch (Exception e) {
+                                log += "Exception e" + e;
                                 return "Error al enviar la respuesta.";
                             }
                         } else {
@@ -855,7 +864,9 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             }  else {
                 cerrarMant=false;
             }
+            log += "return resp" + resp;
             return resp;
+
         }
 
         @Override
@@ -864,6 +875,8 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                 Cierre t = new Cierre();
                 t.execute();
             }
+            log += "" + s;
+            local.escribirFicheroMemoriaExterna("LogSubirXml"+ idMain ,log);
         }
     }
 
@@ -872,79 +885,88 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
 
         Log.d("LOG",form);
 
-        if (form.equalsIgnoreCase("emerg"))
+        if (form.equalsIgnoreCase("emerg")){
             form = "Emergency";
+        } else      if (form.equalsIgnoreCase("ge")){
+            form = "Grupo Electrogen"; //STATIONARY AND PORTABLE POWER GENERATOR / FUEL SYSTEM / FUEL OPERATIONS
+        } else if (form.equalsIgnoreCase("agregator")){
+            form = "Agregador";
+        }else if (form.equalsIgnoreCase("transport")){
+            form = "Transporte";
+        } else if (form.equalsIgnoreCase("system")) {
+            form = "System Ground";
+        }
 
         log = " Iniciamos con el formulario: " + form;
 
         for (SYSTEM S : ActividadCierreFormActivity.SYSTEMSMAP.get(idMain+","+form.toUpperCase())) {
-            log += " \n Obteniendo: " + idMain+","+form.toUpperCase() + " de SYSTEMSMAP";
+                log += " \n Obteniendo SYSTEM: " + idMain+","+form + " de SYSTEMSMAP";
             for (AREA A : S.getAreas()) {
-                log += " \nAREA A: " + A;
+                //    log += " \nAREA A: " + A;
                 for (ITEM I : A.getItems()) {
-                    log += " \nITEM I: " + I;
+                    //        log += " \nITEM I: " + I;
                     if (I.getIdType().equals(Constantes.PHOTO)) {
                         if (I.getPhoto() != null) {
                             p.add(I.getPhoto());
-                            log += " \nI.getPhoto() != null: " + p;
+                            //        log += " \nI.getPhoto() != null: " + p;
                         }
                         if (I.getFotos() != null) {
-                            log += " \nI.getPhotos() != null: ";
+                            //    log += " \nI.getPhotos() != null: ";
                             for (PHOTO P : I.getFotos()) {
                                 p.add(P);
-                                log += " \nPHOTO P : I.getFotos(): " + P;
+                                //    log += " \nPHOTO P : I.getFotos(): " + P;
                             }
                         }
                     }
                     if (I.getQuestions() != null) {
-                        log += " \nI.getQuestions() != null ";
+                        //    log += " \nI.getQuestions() != null ";
                         for (QUESTION Q : I.getQuestions()) {
-                            log += " \nQUESTION Q : I.getQuestions()";
+                            //        log += " \nQUESTION Q : I.getQuestions()";
                             if (Q.getFoto() != null) {
-                                log += " \nQ.getFoto() != null " + p;
+                                //           log += " \nQ.getFoto() != null " + p;
                                 p.add(Q.getFoto());
                             }
 
                             if (Q.getFotos() != null) {
-                                log += " \nQ.getFotos() != null ";
+                                //    log += " \nQ.getFotos() != null ";
                                 for (PHOTO P : Q.getFotos()) {
-                                    log += " \nPHOTO P : Q.getFotos() " + P;
+                                    //   log += " \nPHOTO P : Q.getFotos() " + P;
                                     p.add(P);
                                 }
                             }
                             if (Q.getQuestions() != null){
-                                log += " \nQ.getQuestions() != null ";
+                                //    log += " \nQ.getQuestions() != null ";
                                 for (QUESTION QQ : Q.getQuestions()){
-                                    log += " \nQUESTION QQ : Q.getQuestions() ";
+                                    //        log += " \nQUESTION QQ : Q.getQuestions() ";
                                     if (QQ.getFoto() != null) {
-                                        log += " \nQQ.getFoto() != null" + p;
+                                        //        log += " \nQQ.getFoto() != null" + p;
                                         p.add(QQ.getFoto());
                                     }
                                     if (QQ.getFotos() != null) {
-                                        log += " \nQQ.getFotos() != null ";
+                                        //    log += " \nQQ.getFotos() != null ";
                                         for (PHOTO P : QQ.getFotos()) {
-                                            log += " \nPHOTO P : QQ.getFotos() " + P;
+                                            //    log += " \nPHOTO P : QQ.getFotos() " + P;
                                             p.add(P);
                                         }
                                     }
                                 }
                             }
                             if (Q.getValues() != null){
-                                log += " \nQ.getValues() != null ";
+                                //   log += " \nQ.getValues() != null ";
                                 for (VALUE V : Q.getValues()) {
-                                    log += " \nVALUE V : Q.getValues() ";
+                                    //     log += " \nVALUE V : Q.getValues() ";
                                     if (V.getQuestions() != null) {
-                                        log += " \nV.getQuestions() != null ";
+                                        //      log += " \nV.getQuestions() != null ";
                                         for (QUESTION QQ : V.getQuestions()) {
-                                            log += " \nQUESTION QQ : V.getQuestions() ";
+                                            //    log += " \nQUESTION QQ : V.getQuestions() ";
                                             if (QQ.getFoto() != null) {
-                                                log += " \nQQ.getFoto() != null " + QQ.getFoto();
+                                                //    log += " \nQQ.getFoto() != null " + QQ.getFoto();
                                                 p.add(QQ.getFoto());
                                             }
                                             if (QQ.getFotos() != null) {
-                                                log += " \nQQ.getFotos() != null ";
+                                                //    log += " \nQQ.getFotos() != null ";
                                                 for (PHOTO P : QQ.getFotos()) {
-                                                    log += " \nPHOTO P : QQ.getFotos() " + P;
+                                                    //        log += " \nPHOTO P : QQ.getFotos() " + P;
                                                     p.add(P);
                                                 }
                                             }
@@ -955,27 +977,27 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                         }
                     }
                     if (I.getSetlistArrayList() != null && I.getValues() != null) {
-                        log += " \nI.getSetlistArrayList() != null && I.getValues() != null ";
+                        //log += " \nI.getSetlistArrayList() != null && I.getValues() != null ";
                         if (I.getIdType().equals(Constantes.TABLE)) {
-                            log += " \nI.getIdType().equals(Constantes.TABLE) ";
+                          //  log += " \nI.getIdType().equals(Constantes.TABLE) ";
                             for (CheckBox c : I.getCheckBoxes()) {
-                                log += " \nCheckBox c : I.getCheckBoxes() ";
+                            //    log += " \nCheckBox c : I.getCheckBoxes() ";
                                 if (c.isChecked()) {
-                                    log += " \nc.isChecked() ";
+                              //      log += " \nc.isChecked() ";
                                     for (SET Set : I.getSetlistArrayList().get(I.getCheckBoxes().indexOf(c))) {
-                                        log += " \nSET Set : I.getSetlistArrayList().get(I.getCheckBoxes().indexOf(c)) " + Set;
+                                //        log += " \nSET Set : I.getSetlistArrayList().get(I.getCheckBoxes().indexOf(c)) " + Set;
                                         if (Set.getQuestions() != null) {
-                                            log += " \nSet.getQuestions() != null ";
+                                    //        log += " \nSet.getQuestions() != null ";
                                             for (QUESTION Q : Set.getQuestions()) {
-                                                log += " \nQUESTION Q : Set.getQuestions() ";
+                                                //        log += " \nQUESTION Q : Set.getQuestions() ";
                                                 if (Q.getFoto() != null) {
-                                                    log += " \nQ.getFoto() != null " + Q.getFoto();
+                                                    //        log += " \nQ.getFoto() != null " + Q.getFoto();
                                                     p.add(Q.getFoto());
                                                 }
                                                 if (Q.getFotos() != null) {
-                                                    log += " \nQ.getFotos() != null ";
+                                                    //    log += " \nQ.getFotos() != null ";
                                                     for (PHOTO P : Q.getFotos()) {
-                                                        log += " \nPHOTO P : Q.getFotos() " + P;
+                                                        //    log += " \nPHOTO P : Q.getFotos() " + P;
                                                         p.add(P);
                                                     }
                                                 }
@@ -986,31 +1008,31 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                             }
                         }
                         if (I.getIdType().equals(Constantes.RADIO)) {
-                            log += " \nI.getIdType().equals(Constantes.RADIO) ";
+                            //    log += " \nI.getIdType().equals(Constantes.RADIO) ";
                             RadioGroup rg = (RadioGroup) I.getView();
-                            log += " \nRadioGroup rg = (RadioGroup) I.getView() ";
+                            // log += " \nRadioGroup rg = (RadioGroup) I.getView() ";
                             if (rg.getCheckedRadioButtonId() != -1) {
-                                log += " \nrg.getCheckedRadioButtonId() != -1 ";
+                                //    log += " \nrg.getCheckedRadioButtonId() != -1 ";
                                 RadioButton rb = (RadioButton) rg.findViewById(rg.getCheckedRadioButtonId());
-                                log += " \nRadioButton rb = (RadioButton) rg.findViewById(rg.getCheckedRadioButtonId()) ";
+                                //   log += " \nRadioButton rb = (RadioButton) rg.findViewById(rg.getCheckedRadioButtonId()) ";
                                 int n = rg.indexOfChild(rb) + 1;
-                                log += " \nint n = rg.indexOfChild(rb) + 1 =  " + n;
+                                //  log += " \nint n = rg.indexOfChild(rb) + 1 =  " + n;
                                 for (int i = 0; i < n; i++) {
-                                    log += " \nint i = 0; i < n; i++ ";
+                                    //   log += " \nint i = 0; i < n; i++ ";
                                     for (SET Set : I.getSetlistArrayList().get(i)) {
-                                        log += " \nSET Set : I.getSetlistArrayList().get(i) ";
+                                        //    log += " \nSET Set : I.getSetlistArrayList().get(i) ";
                                         if (Set.getQuestions() != null) {
-                                            log += " \nSet.getQuestions() != null ";
+                                            //   log += " \nSet.getQuestions() != null ";
                                             for (QUESTION Q : Set.getQuestions()) {
-                                                log += " \nQUESTION Q : Set.getQuestions() ";
+                                                //    log += " \nQUESTION Q : Set.getQuestions() ";
                                                 if (Q.getFoto() != null) {
-                                                    log += " \nQ.getFoto() != null " + Q.getFoto();
+                                                    //        log += " \nQ.getFoto() != null " + Q.getFoto();
                                                     p.add(Q.getFoto());
                                                 }
                                                 if (Q.getFotos() != null) {
-                                                    log += " \nQ.getFotos() != null ";
+                                                    //       log += " \nQ.getFotos() != null ";
                                                     for (PHOTO P : Q.getFotos()) {
-                                                        log += " \nPHOTO P : Q.getFotos() " + P;
+                                                        //       log += " \nPHOTO P : Q.getFotos() " + P;
                                                         p.add(P);
                                                     }
                                                 }
@@ -1029,7 +1051,6 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         if (p.size() > 0) {
             log += " \nP tiene valor de " + p.size();
             for (int i = 0; i < p.size(); i++){
-               // log += " \nRedimencionamos imagen " + p.get(i).getNamePhoto();
                 redimencionarImagen(p.get(i).getNamePhoto());
             }
             log += " \nSubiremos imagenes ";
@@ -1119,7 +1140,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                     } else {
                         log += " \n FileInputStream: " + done;
                         FileInputStream fileInputStream = new FileInputStream(done);
-                        URL url = new URL(params[0]);
+                        URL url = new URL(dummy.URL_UPLOAD_IMG_MAINTENANCE);
                         log += " \n url: " + url;
 
                         conn = (HttpURLConnection) url.openConnection();
@@ -1194,7 +1215,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
 
         @Override
         protected void onPostExecute(String s) {
-            local.escribirFicheroMemoriaExterna("LogSubirFoto",log);
+            local.escribirFicheroMemoriaExterna("LogSubirFoto"+ idMain ,log);
             REG.clearPreferences();
             setResult(RESULT_OK);
             super.onPostExecute(s);

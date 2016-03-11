@@ -197,6 +197,8 @@ import android.os.PowerManager;
             PAGETITLE = (TextView) this.findViewById(R.id.header_actual);
             PAGETITLE.setText(TITLE);
 
+
+
             name = Environment.getExternalStorageDirectory() + "/TDC@/" + TITLE + "/";
             File dir = new File(name);
             if (!dir.exists())
@@ -3020,7 +3022,7 @@ import android.os.PowerManager;
                     }
 
                 } catch (Exception e) {
-                    return "Error al enviar la respuesta.";
+                    return "Error al enviar la respuesta."; //aqui tambien entra
 
                 }
                 //TODO AGREGAR CATCH GENERAL
@@ -3030,8 +3032,7 @@ import android.os.PowerManager;
             protected void onPostExecute(final String s) {
                 if (dialog.isShowing()) dialog.dismiss();
 
-
-                AlertDialog.Builder b = new AlertDialog.Builder(mContext);
+                AlertDialog.Builder b = new AlertDialog.Builder(actividad);
                 b.setMessage(s);
                 b.setCancelable(false);
                 b.setPositiveButton("SALIR", new DialogInterface.OnClickListener() {

@@ -268,8 +268,9 @@ public class FormCheckSecurity extends Activity {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         int code = TAKE_PICTURES;
         String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+        String timeStamp1 = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss").format(new Date());
         photoTMP.setDateTime(timeStamp);
-        imgName = name + questionTMP.getIdQuestion() + "_" + timeStamp + ".jpg";
+        imgName = name + questionTMP.getIdQuestion() + "_" + timeStamp1 + ".jpg";
         Uri output = Uri.fromFile(new File(imgName));
         intent.putExtra(MediaStore.EXTRA_OUTPUT, output);
         startActivityForResult(intent, code);
@@ -385,7 +386,7 @@ public class FormCheckSecurity extends Activity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         photoTMP = new PHOTO();
-                        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                        String timeStamp = new SimpleDateFormat("yyyyMMdd HHmmss").format(new Date());
                         photoTMP.setDateTime(timeStamp);
                         photoTMP.setTitlePhoto(titulo.getText().toString());
                         photoTMP.setCoordX(String.valueOf(trackerTDC.gps.getLatitude()));

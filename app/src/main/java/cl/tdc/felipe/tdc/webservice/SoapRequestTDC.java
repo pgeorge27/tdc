@@ -1155,9 +1155,9 @@ public class SoapRequestTDC {
                 "</soapenv:Body>" +
                 "</soapenv:Envelope>";
 
-        StringEntity se = new StringEntity(xml, HTTP.UTF_8);
+       /* StringEntity se = new StringEntity(xml, HTTP.UTF_8);
         se.setContentType("text/xml");
-        httpPost.addHeader(SOAP_ACTION, dummy.URL_TDC);
+        httpPost.addHeader(SOAP_ACTION, dummy.URL_TDC);*/
 
 
         if (vacio){
@@ -2484,7 +2484,7 @@ public class SoapRequestTDC {
                 "<soapenv:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:urn=\"urn:Configurationwsdl\">" +
                         "<soapenv:Header/>" +
                         "<soapenv:Body>" +
-                        "<urn:answerAgregator1 soapenv:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" +
+                        "<urn:answerAgregator soapenv:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" +
                         "<RequestAnswerDC xsi:type=\"urn:RequestAnswerDC\">" +
                         "<RequestDC xsi:type=\"urn:RequestDC\">" +
                         "<Header xsi:type=\"urn:Header\">" +
@@ -2995,6 +2995,7 @@ public static String sendAnswerPdh(String IMEI, String ID_MAINTENANCE, ArrayList
     }
     // return "false";
 }
+
     public static String sendAll(String xml, String action)throws IOException {
         final String SOAP_ACTION = "urn:Configurationwsdl#" + action;
         String response = null;
