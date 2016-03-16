@@ -851,8 +851,11 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                                 return "Se agotó el tiempo de conexión.";
 
                             }  catch (Exception e) {
+                                //error de foto
                                 log += "Exception e" + e;
+                                cerrarMant=false;
                                 return "Error al enviar la respuesta.";
+
                             }
                         } else {
                             resp = "String " + nombreArch + " No contiene limitador . ";
@@ -874,6 +877,10 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             if(cerrarMant){
                 Cierre t = new Cierre();
                 t.execute();
+            }
+            else {
+                EnviarMantOff env = new EnviarMantOff();
+                env.execute();
             }
             log += "" + s;
             local.escribirFicheroMemoriaExterna("LogSubirXml"+ idMain ,log);
@@ -1106,10 +1113,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
 
         @Override
         protected void onPreExecute() {
-            /*dialog = new ProgressDialog(mContext);
-            dialog.setMessage("Subiendo imagenes...");
-            dialog.setCancelable(false);
-            dialog.show();*/
+
         }
 
         @Override
@@ -1182,7 +1186,9 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
 
                         Log.i("UploadManager", "HTTP response is: " + serverResponseMessage + ": " + serverResponseCode);
                         log += " \n UploadManage HTTP response is: " + serverResponseMessage + ": " + serverResponseCode;
+
                         fileInputStream.close();
+
                         log += " \n fileInputStream.close() ";
                         dos.flush();
                         dos.close();
@@ -1206,6 +1212,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                 } catch (Exception e) {
                     Log.d("TAG", "Error: " + e.getMessage());
                     log += "Error --- " + e.getMessage();
+                    //error de conec
                     response = "ERROR";
                 }
             }

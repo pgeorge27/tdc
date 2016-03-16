@@ -1230,7 +1230,6 @@ import android.os.PowerManager;
                                         c.setChecked(check);
                                     }
 
-
                                 }
 
                                 if (I.getIdType().equals(Constantes.RADIO)) {
@@ -1621,10 +1620,8 @@ import android.os.PowerManager;
                                                                 }
                                                             }
                                                         }
-
                                                     }
                                                 }
-
                                             }
                                         }
 
@@ -1715,9 +1712,7 @@ import android.os.PowerManager;
                                         }
                                     }
                                 }
-
                             }
-
                         }
 
                         if (I.getIdType().equals(Constantes.CHECK)) {
@@ -1788,8 +1783,6 @@ import android.os.PowerManager;
                                                     REG.addValue("PHOTOCOORDX" + tagid + as, f.getCoordX());
                                                     REG.addValue("PHOTOCOORDY" + tagid + as, f.getCoordY());
                                                     //REG.addValue("PHOTOBMP" + tagid + as, Funciones.encodeTobase64(f.getBitmap()));
-
-
                                                 }
                                             }
                                         }
@@ -1864,10 +1857,7 @@ import android.os.PowerManager;
                                                     REG.addValue("CHECK" + tagid + j, false);
                                                 }
                                             }
-
                                         }
-
-
                                     }
                                 }
                             }

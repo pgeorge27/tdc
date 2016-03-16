@@ -165,7 +165,7 @@ public class SoapRequest {
     }
 
 
-    public static String sendPosition(String LONGITUDE, String LATITUDE, String DATE, String IMEI, String ID, String FLAG) throws Exception {
+    public static String sendPosition(String LONGITUDE, String LATITUDE, String DATE, String IMEI, String ID, String FLAG, String Estado, String Version) throws Exception {
         final String SOAP_ACTION = "urn:Configurationwsdl#Tracking";
         String response = null;
         String xml = null;
@@ -210,6 +210,14 @@ public class SoapRequest {
                         "<Parameter xsi:type=\"urn:Parameter\">" +
                         "<Name xsi:type=\"xsd:string\">MAINTENANCE</Name>" +
                         "<Value xsi:type=\"xsd:string\">" + ID + "</Value>" +
+                        "</Parameter>" +
+                        "<Parameter xsi:type=\"urn:Parameter\">" +
+                        "<Name xsi:type=\"xsd:string\">VERSION</Name>" +
+                        "<Value xsi:type=\"xsd:string\">" + Version + "</Value>" +
+                        "</Parameter>" +
+                        "<Parameter xsi:type=\"urn:Parameter\">" +
+                        "<Name xsi:type=\"xsd:string\">GPS</Name>" +
+                        "<Value xsi:type=\"xsd:string\">" + Estado + "</Value>" +
                         "</Parameter>" +
                         "</Parameters>" +
                         "<HeaderPlan xsi:type=\"urn:HeaderPlan\">" +

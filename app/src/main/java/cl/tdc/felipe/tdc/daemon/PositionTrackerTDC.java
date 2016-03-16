@@ -3,8 +3,11 @@ package cl.tdc.felipe.tdc.daemon;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Binder;
@@ -27,6 +30,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import cl.tdc.felipe.tdc.MainActivity;
+import cl.tdc.felipe.tdc.Manifest;
+import cl.tdc.felipe.tdc.R;
 import cl.tdc.felipe.tdc.extras.Funciones;
 import cl.tdc.felipe.tdc.preferences.MaintenanceReg;
 import cl.tdc.felipe.tdc.webservice.SoapRequest;
@@ -41,6 +46,10 @@ public class PositionTrackerTDC extends Service {
     public String LATITUDE;
     public String LONGITUDE;
     public Geocoder geocoder;
+    LocationManager locationManager;
+    public String estado_gps="";
+    String version;
+
 
     Timer mTimer;
     public MyLocationListener gps;
@@ -51,6 +60,16 @@ public class PositionTrackerTDC extends Service {
         super.onCreate();
         gps = new MyLocationListener(this);
         geocoder = new Geocoder(this);
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        //Si GPS está activado
+        if ( locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+            estado_gps = "1";
+        }
+        //Si GPS está desactivado
+        if ( !locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+            estado_gps = "0";
+        }
+        version = getString(R.string.version);
 
         /**
          * Timer: Cada MIN_PERIOD segundos revisa las redes wifi que capta.
@@ -96,7 +115,7 @@ public class PositionTrackerTDC extends Service {
                                         String[] datas = m.getMaintenance().split(";");
                                         TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
                                         String prueba = telephonyManager.getDeviceId();
-                                        String query = SoapRequest.sendPosition(longitude, latitude, "", telephonyManager.getDeviceId(), datas[0], datas[1]);
+                                        String query = SoapRequest.sendPosition(longitude, latitude, "", telephonyManager.getDeviceId(), datas[0], datas[1], estado_gps, version);
                                         Log.i(TAG, "ENVIADO\n" + query);
                                         ArrayList<String> result = XMLParser.getNotification(query);
                                         //Funciones.showNotify(getApplicationContext(), result.get(0), "");
@@ -123,7 +142,7 @@ public class PositionTrackerTDC extends Service {
                                                     Log.i(TAG, "PENDIENTE: " + line);
                                                     String[] pendents = line.split(";");
                                                     TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-                                                    String query = SoapRequest.sendPosition(pendents[0], pendents[1], pendents[2], telephonyManager.getDeviceId(), "-1", "-1");
+                                                    String query = SoapRequest.sendPosition(pendents[0], pendents[1], pendents[2], telephonyManager.getDeviceId(), "-1", "-1", estado_gps, version);
 
                                                     Log.i(TAG, "ENVIADO\n" + query);
                                                 } catch (Exception e) {

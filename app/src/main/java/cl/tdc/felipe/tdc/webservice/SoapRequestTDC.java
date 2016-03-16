@@ -2352,6 +2352,7 @@ public class SoapRequestTDC {
                             }
                             xml += "</AnswerQuestion>"+
                                     "</SetAnswerQuestion>";
+
                         }
 
                         if (!I.getAnswer3G().equalsIgnoreCase("")) {
@@ -2379,7 +2380,7 @@ public class SoapRequestTDC {
                                     RadioGroup rg = (RadioGroup) Q.getView();
                                     int selected = rg.getCheckedRadioButtonId();
 
-                                    if (selected != -1) {
+                                    //if (selected != -1) {
                                         vacio = true;
 
                                         xml += "<AnswerQuestion xsi:type=\"urn:AnswerQuestion\">" +
@@ -2395,9 +2396,9 @@ public class SoapRequestTDC {
                                                 for (QUESTION Q2 : VQ.getQuestions()) {
                                                     if (Q2.getIdType().equalsIgnoreCase(Constantes.RADIO)) {
                                                         rg = (RadioGroup) Q2.getView();
-                                                        if (rg!=null) {
+                                                        if (rg != null) {
                                                             selected = rg.getCheckedRadioButtonId();
-                                                            if (selected != -1) {
+                                                            //if (selected != -1) {
                                                                 vacio = true;
 
                                                                 xml += "<AnswerQuestion xsi:type=\"urn:AnswerQuestion\">" +
@@ -2413,9 +2414,9 @@ public class SoapRequestTDC {
                                                                         for (QUESTION Q22 : VQ2.getQuestions()) {
                                                                             if (Q22.getIdType().equalsIgnoreCase(Constantes.RADIO)) {
                                                                                 rg = (RadioGroup) Q22.getView();
-                                                                                if (rg!=null) {
+                                                                                if (rg != null) {
                                                                                     selected = rg.getCheckedRadioButtonId();
-                                                                                    if (selected != -1) {
+                                                                                   // if (selected != -1 || selected == 1) {
                                                                                         vacio = true;
 
                                                                                         xml += "<AnswerQuestion xsi:type=\"urn:AnswerQuestion\">" +
@@ -2425,22 +2426,26 @@ public class SoapRequestTDC {
                                                                                                 "<IdType xsi:type=\"xsd:string\">" + Q22.getIdType() + "</IdType>" +
                                                                                                 "<CountPhoto xsi:type=\"xsd:string\">" + countFoto + "</CountPhoto>" +
                                                                                                 "</AnswerQuestion>";
-                                                                                    }
+                                                                                    //}
                                                                                 }
                                                                             }
                                                                         }
                                                                     }
-                                                                }
+                                                             //   }
                                                             }
                                                         }
                                                     }
                                                 }
                                             }
-                                        }
+                                     //   }
                                     }
+
                                 }
+
                             }
-                            xml+="</SetAnswerQuestion>";
+
+
+                            xml += "</SetAnswerQuestion>";
                         }
                         xml += "</RptaItemDC>";
                     }

@@ -61,7 +61,7 @@ public class MainActivity extends ActionBarActivity {
     public static PreferencesTDC preferencesTDC;
     private static int REQUEST_SETTINGS_ACTION = 0;
     LocationManager locationManager;
-    public ImageButton agendabtn, cercanosbtn, averiabtn, seguimientobtn, preasbuiltbtn, relevobtn, seguridadbtn, vigilantebtn;
+    public Button agendabtn, cercanosbtn, averiabtn, seguimientobtn, preasbuiltbtn, relevobtn, seguridadbtn, vigilantebtn;
     public static String proveedor, latitud, longitud;
     public String estado_gps="1";
     ArrayList<SYSTEM> systems;
@@ -101,7 +101,7 @@ public class MainActivity extends ActionBarActivity {
                 Log.e("TDC", "fallo en crear carpeta TDC@");
             }
 
-        agendabtn = (ImageButton) findViewById(R.id.btn_agenda);
+        agendabtn = (Button) findViewById(R.id.btn_agenda);
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
@@ -141,13 +141,13 @@ public class MainActivity extends ActionBarActivity {
         Actualizar a = new Actualizar();
         a.execute();
 
-        averiabtn = (ImageButton) findViewById(R.id.btn_averia);
-        cercanosbtn = (ImageButton) findViewById(R.id.btn_cerca);
-        seguimientobtn = (ImageButton) findViewById(R.id.imageButton2);
-        preasbuiltbtn = (ImageButton) findViewById(R.id.imageButton5);
-        relevobtn = (ImageButton) findViewById(R.id.imageButton6);
-        seguridadbtn = (ImageButton) findViewById(R.id.imageButton7);
-        vigilantebtn = (ImageButton) findViewById(R.id.imageButton15);
+        averiabtn = (Button) findViewById(R.id.btn_averia);
+        cercanosbtn = (Button) findViewById(R.id.btn_cerca);
+        seguimientobtn = (Button) findViewById(R.id.imageButton2);
+        preasbuiltbtn = (Button) findViewById(R.id.imageButton5);
+        relevobtn = (Button) findViewById(R.id.imageButton6);
+        seguridadbtn = (Button) findViewById(R.id.imageButton7);
+        vigilantebtn = (Button) findViewById(R.id.imageButton15);
 
         ProfileTask profileTask = new ProfileTask(this);
         profileTask.execute();
@@ -527,47 +527,50 @@ public class MainActivity extends ActionBarActivity {
                 for (int i = 0; i < s.size(); i++){
                     if (s.get(i).toString().equalsIgnoreCase("68")){
                         agendabtnAcceso =false;
-                        agendabtn.getBackground().setAlpha(60);
+                        agendabtn.setVisibility(View.GONE);
                            /*agendabtn.setClickable(false);
                             agendabtn.setEnabled(false);*/
 
                     }else if (s.get(i).toString().equalsIgnoreCase("69")) {
                         cercanosbtnAcceso = false;
-                        cercanosbtn.getBackground().setAlpha(80);
+                        cercanosbtn.setVisibility(View.GONE);
 
 
                     }else if (s.get(i).toString().equalsIgnoreCase("70")){
                         averiabtnAcceso = false;
-                        averiabtn.getBackground().setAlpha(90);
+                        averiabtn.setVisibility(View.GONE);
 
 
                     }else if (s.get(i).toString().equalsIgnoreCase("71")) {
                         seguimientobtnAcceso = false;
-                        seguimientobtn.getBackground().setAlpha(60);
-                           /* seguimientobtn.setClickable(false);
+                        seguimientobtn.setVisibility(View.GONE);
+                         /*seguimientobtn.getBackground().setAlpha(60);
+                           seguimientobtn.setClickable(false);
                             seguimientobtn.setEnabled(false);*/
 
                     }else if (s.get(i).toString().equalsIgnoreCase("72")) {
                         preasbuiltbtnAcceso = false;
+                        preasbuiltbtn.setVisibility(View.GONE);
+                            /*
                         preasbuiltbtn.getBackground().setAlpha(60);
-                            /*preasbuiltbtn.setClickable(false);
+                        preasbuiltbtn.setClickable(false);
                             preasbuiltbtn.setEnabled(false);*/
 
                     }else if (s.get(i).toString().equalsIgnoreCase("73")) {
                         relevobtnAcceso = false;
-                        relevobtn.getBackground().setAlpha(60);
+                        relevobtn.setVisibility(View.GONE);
                             /*relevobtn.setClickable(false);
                             relevobtn.setEnabled(false);*/
 
                     }else if (s.get(i).toString().equalsIgnoreCase("74")) {
                         seguridadbtnAcceso = false;
-                        seguridadbtn.getBackground().setAlpha(50);
+                        seguridadbtn.setVisibility(View.GONE);
                             /*seguridadbtn.setClickable(false);
                             seguridadbtn.setEnabled(false);*/
 
                     }else if (s.get(i).toString().equalsIgnoreCase("75")) {
                         vigilantebtnAcceso = false;
-                        vigilantebtn.getBackground().setAlpha(50);
+                        vigilantebtn.setVisibility(View.GONE);
 
                     }
                 }
