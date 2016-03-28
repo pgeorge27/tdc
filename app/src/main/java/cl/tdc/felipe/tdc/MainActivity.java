@@ -514,7 +514,7 @@ public class MainActivity extends ActionBarActivity {
             if (s == null) {
                 //Toast.makeText(tContext, mensaje, Toast.LENGTH_LONG).show();
                 AlertDialog.Builder b = new AlertDialog.Builder(actividad);
-                b.setMessage("Debe activar el gps");
+                b.setMessage("Debe activar el Wifi o Data Móvil");
                 b.setCancelable(false);
                 b.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
@@ -528,33 +528,32 @@ public class MainActivity extends ActionBarActivity {
                     if (s.get(i).toString().equalsIgnoreCase("68")){
                         agendabtnAcceso =false;
                         agendabtn.setVisibility(View.GONE);
-                           /*agendabtn.setClickable(false);
-                            agendabtn.setEnabled(false);*/
+                          /* agendabtn.setClickable(false);
+                            agendabtn.setVisibility(View.GONE);*/
 
                     }else if (s.get(i).toString().equalsIgnoreCase("69")) {
                         cercanosbtnAcceso = false;
                         cercanosbtn.setVisibility(View.GONE);
+                      //  cercanosbtn.setVisibility(View.GONE);
 
 
                     }else if (s.get(i).toString().equalsIgnoreCase("70")){
                         averiabtnAcceso = false;
+                        // averiabtn.setVisibility(View.GONE);
                         averiabtn.setVisibility(View.GONE);
 
 
                     }else if (s.get(i).toString().equalsIgnoreCase("71")) {
                         seguimientobtnAcceso = false;
                         seguimientobtn.setVisibility(View.GONE);
-                         /*seguimientobtn.getBackground().setAlpha(60);
-                           seguimientobtn.setClickable(false);
-                            seguimientobtn.setEnabled(false);*/
+                         /*   seguimientobtn.setClickable(false);
+                            seguimientobtn.setVisibility(View.GONE);*/
 
                     }else if (s.get(i).toString().equalsIgnoreCase("72")) {
                         preasbuiltbtnAcceso = false;
                         preasbuiltbtn.setVisibility(View.GONE);
-                            /*
-                        preasbuiltbtn.getBackground().setAlpha(60);
-                        preasbuiltbtn.setClickable(false);
-                            preasbuiltbtn.setEnabled(false);*/
+                          /*  preasbuiltbtn.setClickable(false);
+                            preasbuiltbtn.setVisibility(View.GONE);*/
 
                     }else if (s.get(i).toString().equalsIgnoreCase("73")) {
                         relevobtnAcceso = false;
@@ -579,6 +578,7 @@ public class MainActivity extends ActionBarActivity {
         }
     }
 
+
     public boolean isOnline() {
         ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
 
@@ -591,8 +591,43 @@ public class MainActivity extends ActionBarActivity {
 
         if (mWifi.isConnected()) {
             return true;
-        } else if (networkType == TelephonyManager.NETWORK_TYPE_LTE) {
+        } else if (networkType == TelephonyManager.NETWORK_TYPE_LTE ) {
             return true;
+        } else if (networkType == TelephonyManager.NETWORK_TYPE_UMTS || networkType == TelephonyManager.NETWORK_TYPE_HSPAP ){
+            return true;
+       /* else if(m4G.getType() == ConnectivityManager.TYPE_MOBILE) {
+            switch (m4G.getSubtype()) {
+
+                case TelephonyManager.NETWORK_TYPE_UMTS:
+                    return true; // ~ 400-7000 kbps
+                case TelephonyManager.NETWORK_TYPE_EVDO_0:
+                    return true; // ~ 400-1000 kbps
+                case TelephonyManager.NETWORK_TYPE_EVDO_A:
+                    return true; // ~ 600-1400 kbps
+                case TelephonyManager.NETWORK_TYPE_GPRS:
+                    return false; // ~ 100 kbps
+                case TelephonyManager.NETWORK_TYPE_HSDPA:
+                    return true; // ~ 2-14 Mbps
+                case TelephonyManager.NETWORK_TYPE_HSPA:
+                    return true; // ~ 700-1700 kbps
+                case TelephonyManager.NETWORK_TYPE_HSUPA:
+                    return true; // ~ 1-23 Mbps
+
+                case TelephonyManager.NETWORK_TYPE_EHRPD: // API level 11
+                    return true; // ~ 1-2 Mbps
+                case TelephonyManager.NETWORK_TYPE_EVDO_B: // API level 9
+                    return true; // ~ 5 Mbps
+                case TelephonyManager.NETWORK_TYPE_HSPAP: // API level 13
+                    return true; // ~ 10-20 Mbps
+                case TelephonyManager.NETWORK_TYPE_IDEN: // API level 8
+                    return false; // ~25 kbps
+                case TelephonyManager.NETWORK_TYPE_LTE: // API level 11
+                    return true; // ~ 10+ Mbps
+                // Unknown
+                case TelephonyManager.NETWORK_TYPE_UNKNOWN:
+                default:
+                    return false;
+            }*/
         }
 
         return false;

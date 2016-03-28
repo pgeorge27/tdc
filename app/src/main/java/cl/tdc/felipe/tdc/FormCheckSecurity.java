@@ -248,7 +248,7 @@ public class FormCheckSecurity extends Activity {
         LinearLayout setLayout = new LinearLayout(mContext);
         setLayout.setLayoutParams(questionLayoutParam);
         setLayout.setOrientation(LinearLayout.VERTICAL);
-        setLayout.setBackgroundResource(R.drawable.fondo_general);
+        //setLayout.setBackgroundResource(R.drawable.fondo_general);
         setLayout.setPadding(10, 10, 10, 10);
         return setLayout;
     }

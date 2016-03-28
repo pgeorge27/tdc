@@ -27,9 +27,9 @@
             android:orientation="vertical">
 
             <ImageView
-                android:layout_width="wrap_content"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:src="@drawable/logo_tdc"
+                android:src="@drawable/logo_tdc_blanco"
                 android:layout_marginLeft="8dp"/>
 
             <TextView
@@ -107,9 +107,9 @@
                     android:layout_width="fill_parent"
                     android:text="Agenda"
                     android:onClick="onClick_btn2"
-                    android:textColor="#FFFFFF"
+                    android:textColor="#3F51B5"
                     android:textStyle="bold"
-                    android:background="#FF5722">
+                    android:background="#C5CAE9">
                 </Button>
 
                 <Button
@@ -119,9 +119,9 @@
                     android:layout_width="fill_parent"
                     android:text="Seguimiento de Obras"
                     android:onClick="onClick_btn5"
-                    android:textColor="#FFFFFF"
+                    android:textColor="#3F51B5"
                     android:textStyle="bold"
-                    android:background="#558B2F"
+                    android:background="#C5CAE9"
                     android:layout_marginTop="4dp">
                 </Button>
 
@@ -131,9 +131,9 @@
                     android:layout_width="fill_parent"
                     android:text="Notificar Avería"
                     android:onClick="onClick_btn3"
-                    android:textColor="#FFFFFF"
+                    android:textColor="#3F51B5"
                     android:textStyle="bold"
-                    android:background="#0277BD"
+                    android:background="#C5CAE9"
                     android:layout_marginTop="4dp">
                 </Button>
 
@@ -143,9 +143,9 @@
                     android:layout_width="match_parent"
                     android:text="Sitios Cercanos"
                     android:onClick="onClick_btn4"
-                    android:textColor="#FFFFFF"
+                    android:textColor="#3F51B5"
                     android:textStyle="bold"
-                    android:background="#FFA726"
+                    android:background="#C5CAE9"
                     android:layout_marginTop="4dp">
                 </Button>
 
@@ -155,9 +155,9 @@
                     android:layout_width="match_parent"
                     android:text="PreAsBuilt"
                     android:onClick="onClick_preasbuilt"
-                    android:textColor="#FFFFFF"
+                    android:textColor="#3F51B5"
                     android:textStyle="bold"
-                    android:background="#00BFA5"
+                    android:background="#C5CAE9"
                     android:layout_marginTop="4dp">
                 </Button>
 
@@ -167,9 +167,9 @@
                     android:layout_width="match_parent"
                     android:text="Revelamiento de Capacidades"
                     android:onClick="onClick_relevo"
-                    android:textColor="#FFFFFF"
+                    android:textColor="#3F51B5"
                     android:textStyle="bold"
-                    android:background="#AD1457"
+                    android:background="#C5CAE9"
                     android:layout_marginTop="4dp">
                 </Button>
 
@@ -179,9 +179,9 @@
                     android:layout_width="match_parent"
                     android:text="Checklist de Seguridad"
                     android:onClick="onClick_btn6"
-                    android:textColor="#FFFFFF"
+                    android:textColor="#3F51B5"
                     android:textStyle="bold"
-                    android:background="#FFCC80"
+                    android:background="#C5CAE9"
                     android:layout_marginTop="4dp">
                 </Button>
 
@@ -191,9 +191,9 @@
                     android:layout_width="match_parent"
                     android:text="Vigilante"
                     android:onClick="onClick_vigilante"
-                    android:textColor="#FFFFFF"
+                    android:textColor="#3F51B5"
                     android:textStyle="bold"
-                    android:background="#795548"
+                    android:background="#C5CAE9"
                     android:layout_marginTop="4dp"
                     >
                 </Button>

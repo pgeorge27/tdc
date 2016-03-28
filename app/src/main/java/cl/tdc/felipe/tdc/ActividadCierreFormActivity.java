@@ -2355,8 +2355,7 @@ import android.os.PowerManager;
                 if (requestCode == SELECT_FILE) {
                     Uri selectedImageUri = data.getData();
                     String[] projection = { MediaStore.MediaColumns.DATA };
-                    CursorLoader cursorLoader = new CursorLoader(this,selectedImageUri, projection, null, null,
-                            null);
+                    CursorLoader cursorLoader = new CursorLoader(this,selectedImageUri, projection, null, null, null);
                     Cursor cursor =cursorLoader.loadInBackground();
                     int column_index = cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA);
                     cursor.moveToFirst();
@@ -2374,8 +2373,9 @@ import android.os.PowerManager;
                     options.inJustDecodeBounds = false;
                     bm = BitmapFactory.decodeFile(selectedImagePath, options);
                     Log.e("selectedImagePath", "Valor que trae  bm = BitmapFactory.decodeFile(selectedImagePath, options) " + bm);
-
-
+                  //  String datoN = selectedImagePath;
+                   // String[] nomArch = local.itemAnsw.get(j).split("\\.");                  //separamos el nombre del archivo antes y despues del punto
+                  //  String nomArchSinPng = nomArch[0];
                     AlertDialog.Builder b = new AlertDialog.Builder(actividad);
                     final EditText titulo = new EditText(this);
 
@@ -2387,11 +2387,13 @@ import android.os.PowerManager;
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             photoTMP = new PHOTO();
+
                             String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
                             photoTMP.setDateTime(timeStamp);
                             photoTMP.setTitlePhoto(titulo.getText().toString());
                             photoTMP.setCoordX(String.valueOf(trackerTDC.gps.getLatitude()));
                             photoTMP.setCoordY(String.valueOf(trackerTDC.gps.getLongitude()));
+                            //imgName = name + questionTMP.getIdQuestion() + "_" + timeStamp1 + ".jpg";
                             photoTMP.setNamePhoto(selectedImagePath);
                             photoTMP.setBitmap(bm);
                             dialogInterface.dismiss();

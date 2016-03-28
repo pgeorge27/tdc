@@ -1,56 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:layout_height="match_parent"
     android:background="#FF0272B5">
 
     <!-- header -->
     <LinearLayout
-        android:id="@+id/averia_header"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:id="@+id/main_header"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:background="@drawable/fondo_general"
-        android:orientation="horizontal"
-        android:layout_gravity="center_horizontal">
+        android:layout_gravity="center_vertical"
+        android:background="#3F51B5"
+        android:gravity="fill_vertical"
+        android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:orientation="vertical"
             android:layout_weight="2"
-            android:gravity="center_vertical|center_horizontal">
+            android:gravity="center_vertical|center_horizontal"
+            android:orientation="vertical">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/logo_tdc" />
+                android:src="@drawable/logo_tdc"
+                android:layout_marginLeft="8dp"/>
+
             <TextView
-                android:layout_gravity="center_horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="0dp"
                 android:layout_marginTop="5dp"
-                android:textSize="16sp"
-                android:textStyle="bold"
                 android:text="TDC@"
+                android:textSize="18sp"
+                android:textStyle="bold"
                 android:visibility="gone" />
         </LinearLayout>
 
         <LinearLayout
-            android:layout_marginRight="10dp"
-            android:layout_marginLeft="5dp"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:layout_width="5dp"
+            android:layout_height="50dp"
             android:layout_gravity="center_vertical"
-            android:layout_weight="5">
+            android:layout_marginLeft="35dp"
+            android:layout_marginRight="5dp"
+            android:layout_weight="5"
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -58,28 +58,37 @@
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="0dp"
                 android:layout_marginTop="5dp"
-                android:text="@string/app_title" />
+                android:text="@string/app_title"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"/>
 
             <TextView
-                android:id="@+id/header_actual"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
+                android:layout_marginRight="0dp"
+                android:layout_marginTop="5dp"
                 android:text="Notificar Avería"
-                android:textColor="#ffff7644" />
+                android:textColor="#FFFFFF"
+                android:textSize="12sp"/>
+
+
         </LinearLayout>
     </LinearLayout>
-
     <!-- end header -->
 
+    <!-- Body -->
     <ScrollView
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="455dp"
         android:id="@+id/averia_content"
         android:layout_below="@+id/averia_header"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginRight="0dp"
         android:layout_above="@+id/averia_footer"
         android:background="@drawable/fondo_general">
 
@@ -256,7 +265,9 @@
             android:paddingBottom="10dp" />
         </LinearLayout>
     </ScrollView>
+    <!-- End Body -->
 
+    <!-- Footer -->
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="64dp"
@@ -265,7 +276,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="0dp">
 
         <ImageButton
             android:layout_width="58dp"
@@ -327,5 +338,6 @@
             android:layout_toEndOf="@+id/imageButton3"
             android:layout_marginLeft="5dp" />
     </RelativeLayout>
+    <!-- End Footer -->
 
 </RelativeLayout>

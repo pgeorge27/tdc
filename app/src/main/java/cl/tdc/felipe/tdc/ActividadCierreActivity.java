@@ -70,6 +70,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.PowerManager;
 
+import com.getbase.floatingactionbutton.FloatingActionButton;
+
 public class ActividadCierreActivity extends Activity implements View.OnClickListener {
 
     protected PowerManager.WakeLock wakelock;
@@ -661,7 +663,11 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
 
         if (mWifi.isConnected()) {
             return true;
-        } else if (networkType == TelephonyManager.NETWORK_TYPE_LTE) {
+        } else if (networkType == TelephonyManager.NETWORK_TYPE_LTE || (networkType ==TelephonyManager.NETWORK_TYPE_UMTS) || (networkType == TelephonyManager.NETWORK_TYPE_EVDO_0)
+                || (networkType == TelephonyManager.NETWORK_TYPE_EVDO_A)|| (networkType ==  TelephonyManager.NETWORK_TYPE_HSDPA) || (networkType == TelephonyManager.NETWORK_TYPE_HSUPA)
+                || (networkType == TelephonyManager.NETWORK_TYPE_HSPA) || (networkType ==  TelephonyManager.NETWORK_TYPE_EVDO_B) //api<9 : replace by 14
+                || (networkType == TelephonyManager.NETWORK_TYPE_EHRPD)  //api<11 : replace by 12
+                || (networkType ==  TelephonyManager.NETWORK_TYPE_HSPAP)) {
             return true;
         }
 
@@ -669,7 +675,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
     }
 
     public void enviar(View v) {
-        final Button btn_Enviar = (Button) findViewById(R.id.button2);
+        final FloatingActionButton btn_Enviar = (FloatingActionButton) findViewById(R.id.button2);
         if (isOnline()) {
 
             local.listarFicheros(idMain);
@@ -708,7 +714,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             }
         } else {
             btn_Enviar.setEnabled(true);
-            Toast.makeText(ActividadCierreActivity.this, "Verifique si tiene plan de data móvil 4G o Wifi", Toast.LENGTH_LONG).show();
+            Toast.makeText(ActividadCierreActivity.this, "Verifique si tiene plan de data móvil o Wifi", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -853,7 +859,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                             }  catch (Exception e) {
                                 //error de foto
                                 log += "Exception e" + e;
-                                cerrarMant=false;
+                               // cerrarMant=false;
                                 return "Error al enviar la respuesta.";
 
                             }
