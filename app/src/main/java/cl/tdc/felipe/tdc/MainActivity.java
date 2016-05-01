@@ -66,7 +66,7 @@ public class MainActivity extends ActionBarActivity {
     public String estado_gps="1";
     ArrayList<SYSTEM> systems;
 
-    FormCierreReg REGCIERRE, IDENREG, TRESGREG, FAENAREG, TRANSPREG, SGREG, DCREG, AIRREG, ACREG, GEREG, EMERGREG;
+    FormCierreReg REGCIERRE, IDENREG, TRESGREG, FAENAREG, TRANSPREG, SGREG, DCREG, AIRREG, ACREG, GEREG, EMERGREG, INSPECCIONREG;
     MaintenanceReg MAINREG;
     boolean agendabtnAcceso= true, cercanosbtnAcceso = true, averiabtnAcceso = true, seguimientobtnAcceso = true,
             preasbuiltbtnAcceso= true, relevobtnAcceso = true, seguridadbtnAcceso = true, vigilantebtnAcceso = true;
@@ -92,6 +92,7 @@ public class MainActivity extends ActionBarActivity {
         GEREG = new FormCierreReg(this, "GE");
         ACREG = new FormCierreReg(this, "AC");
         EMERGREG = new FormCierreReg(this, "EMERGENCY");
+        INSPECCIONREG = new FormCierreReg(this, "INSPECCION");
         MAINREG = new MaintenanceReg(this);
 
 
@@ -514,12 +515,13 @@ public class MainActivity extends ActionBarActivity {
             if (s == null) {
                 //Toast.makeText(tContext, mensaje, Toast.LENGTH_LONG).show();
                 AlertDialog.Builder b = new AlertDialog.Builder(actividad);
-                b.setMessage("Debe activar el Wifi o Data Móvil");
+                b.setMessage("Data Móvil y wifi desactivados");
                 b.setCancelable(false);
                 b.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        actividad.finish();
+                       // actividad.finish();
+                        dialogInterface.dismiss();
                     }
                 });
                 b.show();
@@ -583,9 +585,7 @@ public class MainActivity extends ActionBarActivity {
         ConnectivityManager cm = (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo mWifi = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-
         NetworkInfo m4G = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-
         int networkType = m4G.getSubtype();
 
 
@@ -593,13 +593,15 @@ public class MainActivity extends ActionBarActivity {
             return true;
         } else if (networkType == TelephonyManager.NETWORK_TYPE_LTE ) {
             return true;
-        } else if (networkType == TelephonyManager.NETWORK_TYPE_UMTS || networkType == TelephonyManager.NETWORK_TYPE_HSPAP ){
-            return true;
-       /* else if(m4G.getType() == ConnectivityManager.TYPE_MOBILE) {
+       /*  } else if (networkType == TelephonyManager.NETWORK_TYPE_UMTS || networkType == TelephonyManager.NETWORK_TYPE_HSPAP ){
+            return true;*/
+        } else if(m4G.getType() == ConnectivityManager.TYPE_MOBILE) {
             switch (m4G.getSubtype()) {
 
                 case TelephonyManager.NETWORK_TYPE_UMTS:
                     return true; // ~ 400-7000 kbps
+                case TelephonyManager.NETWORK_TYPE_EDGE:
+                    return true; // ~ 50-100 kbps
                 case TelephonyManager.NETWORK_TYPE_EVDO_0:
                     return true; // ~ 400-1000 kbps
                 case TelephonyManager.NETWORK_TYPE_EVDO_A:
@@ -627,7 +629,7 @@ public class MainActivity extends ActionBarActivity {
                 case TelephonyManager.NETWORK_TYPE_UNKNOWN:
                 default:
                     return false;
-            }*/
+            }
         }
 
         return false;

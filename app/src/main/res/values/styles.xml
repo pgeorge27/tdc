@@ -10,7 +10,7 @@
         <item name="android:textColor">#FFFFFF</item>
     </style>
 
-    <style name="temaTdc" parent="Theme.AppCompat.Light.NoActionBar" >
+    <style name="TemaTDC" parent="Theme.AppCompat.Light.NoActionBar" >
         <item name="colorPrimaryDark">@color/primary_dark_material_light_1</item>
     </style>
 

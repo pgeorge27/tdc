@@ -666,7 +666,9 @@ public class FormCheckSecurity extends Activity {
                                 verFirma.setBackgroundResource(R.drawable.custom_button_rounded_green);
 
                                 firmar.setText("Firmar");
+                                firmar.setTextColor(Color.parseColor("#FFFFFF"));
                                 verFirma.setText("Ver Firma");
+                                verFirma.setTextColor(Color.parseColor("#FFFFFF"));
                                 verFirma.setEnabled(false);
                                 //FIN CREAR BOTON FIRMAR
 

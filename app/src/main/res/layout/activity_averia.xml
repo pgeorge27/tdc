@@ -25,9 +25,9 @@
             android:orientation="vertical">
 
             <ImageView
-                android:layout_width="wrap_content"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:src="@drawable/logo_tdc"
+                android:src="@drawable/logo_tdc_blanco"
                 android:layout_marginLeft="8dp"/>
 
             <TextView

@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="temaTdc" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="android:navigationBarColor">@color/black</item>
+    </style>
+
+    <style name="TemaTDC" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimaryDark">@color/primary_dark_material_light_1</item>
         <item name="android:navigationBarColor">@color/black</item>
     </style>

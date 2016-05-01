@@ -60,6 +60,8 @@ public class SoapRequestTDC {
     public static final String ACTION_AGREGADOR = "checkAgregator";
     public static final String ACTION_SEMESTRAL = "checkSemestral";
     public static final String ACTION_SEND_FAENA = "Faena";
+    public static final String ACTION_INSPECCION = "checkInspection";
+    public static final String ACTION_ANUAL = "checkAnual";
     /*
      * Clase Principal de Conexion SSL a WDSL
 	 */
@@ -259,7 +261,6 @@ public class SoapRequestTDC {
                                         }
                                     }
                                 }
-
 
                                 xml += "<AnswerQuestion xsi:type=\"urn:AnswerQuestion\">" +
                                         "<IdQuestion xsi:type=\"xsd:string\">" + Q.getIdQuestion() + "</IdQuestion>" +
@@ -2999,6 +3000,432 @@ public static String sendAnswerPdh(String IMEI, String ID_MAINTENANCE, ArrayList
         return "false";
     }
     // return "false";
+}
+
+public static String sendAnswerInspeccion(String IMEI, String ID_MAINTENANCE, ArrayList<SYSTEM> SYSTEMS) throws IOException {
+    final String SOAP_ACTION = "urn:Configurationwsdl#answerPdh";
+    String response = null;
+    String xml = null;
+    DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    Date fecha = new Date();
+    boolean vacio= false;
+
+    HttpClient httpClient = new DefaultHttpClient();
+    HttpPost httpPost = new HttpPost(dummy.URL_TDC);
+
+    SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+    envelope.encodingStyle = SoapSerializationEnvelope.ENC;
+    envelope.dotNet = false;
+    envelope.implicitTypes = true;
+
+    xml =
+            "<soapenv:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:urn=\"urn:Configurationwsdl\">" +
+                    "<soapenv:Header/>" +
+                    "<soapenv:Body>" +
+                    "<urn:answerInspection soapenv:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" +
+                    "<RequestAnswer3G xsi:type=\"urn:RequestAnswer3G\">" +
+                    "<Request3G xsi:type=\"urn:Request3G\">" +
+                    "<Header xsi:type=\"urn:Header\">" +
+                    "<Date xsi:type=\"xsd:string\">" + formatter.format(fecha) + "</Date>" +
+                    "<Platafform xsi:type=\"xsd:string\">MOBILE</Platafform>" +
+                    "<Imei xsi:type=\"xsd:string\">" + IMEI + "</Imei>" +
+                    "<Maintenance xsi:type=\"xsd:string\">" + ID_MAINTENANCE + "</Maintenance>" +
+                    "</Header>" +
+                    "<!--Optional:-->";
+    for (SYSTEM S : SYSTEMS) {
+        xml += "<SystemsRpta xsi:type=\"urn:SystemsRpta\">" +
+                "<IdSystems xsi:type=\"xsd:string\">" + S.getIdSystem() + "</IdSystems>";
+        if (S.getAreas() != null) {
+            xml += "<SetRptaItem xsi:type=\"urn:SetRptaItem\">";
+            for (AREA A : S.getAreas()) {
+
+                for (ITEM I : A.getItems()) {
+                    xml += "<RptaItem xsi:type=\"urn:RptaItem\">" +
+                            "<IdItem xsi:type=\"xsd:string\">" + I.getIdItem() + "</IdItem>";
+
+                    String itemResponse = "";
+                    String questionResponse = "";
+
+                    if (I.getQuestions() != null) {
+                        //xml += "<SetAnswerQuestion xsi:type=\"urn:SetAnswerQuestion\">";
+                        for (QUESTION Q : I.getQuestions()) {
+                            int countFoto = 0;
+                            String xmlphotos = "";
+                            if (Q.getFoto() != null) {
+                                countFoto += 1;
+                                PHOTO photo = Q.getFoto();
+                                File file = new File(photo.getNamePhoto());
+                                if (file.exists()) {
+                                    vacio =true;
+                                    xmlphotos += "<Photo xsi:type=\"urn:Photo\">" +
+                                            "<NamePhoto xsi:type=\"xsd:string\">" + file.getName() + "</NamePhoto>" +
+                                            "<TitlePhoto xsi:type=\"xsd:string\">" + photo.getTitlePhoto() + "</TitlePhoto>" +
+                                            "<DateTime xsi:type=\"xsd:string\">" + photo.getDateTime() + "</DateTime>" +
+                                            "<CoordX xsi:type=\"xsd:string\">" + photo.getCoordX() + "</CoordX>" +
+                                            "<CoordY xsi:type=\"xsd:string\">" + photo.getCoordY() + "</CoordY>" +
+                                            "</Photo>";
+                                }
+                            }
+
+                            if (Q.getFotos() != null) {
+                                for (PHOTO p : Q.getFotos()) {
+                                    File file = new File(p.getNamePhoto());
+                                    if (file.exists()) {
+                                        vacio = true;
+                                        xmlphotos += "<Photo xsi:type=\"urn:Photo\">" +
+                                                "<NamePhoto xsi:type=\"xsd:string\">" + file.getName() + "</NamePhoto>" +
+                                                "<TitlePhoto xsi:type=\"xsd:string\">" + p.getTitlePhoto() + "</TitlePhoto>" +
+                                                "<DateTime xsi:type=\"xsd:string\">" + p.getDateTime() + "</DateTime>" +
+                                                "<CoordX xsi:type=\"xsd:string\">" + p.getCoordX() + "</CoordX>" +
+                                                "<CoordY xsi:type=\"xsd:string\">" + p.getCoordY() + "</CoordY>" +
+                                                "</Photo>";
+                                        countFoto += 1;
+                                    }
+                                }
+                            }
+
+                            questionResponse += "<AnswerQuestion xsi:type=\"urn:AnswerQuestion\">" +
+                                    //Acá falta un tag 'IdSet'
+                                    "<IdSet xsi:type=\"xsd:string\"></IdSet>" +
+                                    "<IdQuestion xsi:type=\"xsd:string\">" + Q.getIdQuestion() + "</IdQuestion>" +
+                                    "<IdAnswer xsi:type=\"xsd:string\">" + Q.getAswer3G() + "</IdAnswer>" +
+                                    "<IdType xsi:type=\"xsd:string\">" + Q.getIdType() + "</IdType>" +
+                                    "<CountPhoto xsi:type=\"xsd:string\">" + countFoto + "</CountPhoto>";
+
+                            if (!Q.getAswer3G().equalsIgnoreCase(""))
+                                vacio = true;
+                            questionResponse+= "<SetPhotos xsi:type=\"urn:SetPhotos\">" + xmlphotos + "</SetPhotos>" +
+                                    "</AnswerQuestion>";
+                        }
+                    }
+
+                    if (!questionResponse.equals("") || !itemResponse.equals("")) {
+
+                        xml += "<SetAnswerQuestion xsi:type=\"urn:SetAnswerQuestion\">" +
+                                itemResponse +
+                                questionResponse +
+                                "</SetAnswerQuestion>";
+                    }
+
+                    if (I.getSetArrayList() != null && I.getValues() != null) {
+
+                        if (I.getIdType().equals(Constantes.RADIO)) {
+                            xml += "<SetAnswerSet xsi:type=\"urn:SetAnswerSet\">";
+                            String answerXML = "";
+
+                            RadioGroup rg = (RadioGroup) I.getView();
+                            int selected = rg.getCheckedRadioButtonId();
+
+                            if (selected != -1) {
+                                vacio=true;
+                                RadioButton btn = (RadioButton) rg.findViewById(rg.getCheckedRadioButtonId());
+                                int position = rg.indexOfChild(btn) + 1;
+
+                                xml += "<CountAnswerSet xsi:type=\"xsd:string\">" + position + "</CountAnswerSet>";
+                                for (int i = 0; i < position; i++) {
+                                    answerXML += "<SetAnswer xsi:type=\"urn:SetAnswer\">";
+                                    answerXML += "<IdValue xsi:type=\"xsd:string\">" + I.getValues().get(i).getNameValue() + "</IdValue>";
+                                    if (I.getSetArrayList() != null) {
+                                        answerXML += "<SetAnswerQuestion xsi:type=\"urn:SetAnswerQuestion\">";
+
+                                        ArrayList<SET> repeat = I.getSetlistArrayList().get(i);
+                                        for (SET set : repeat) {
+                                            if (set.getQuestions() != null) {
+                                                for (QUESTION Q : set.getQuestions()) {
+                                                    int countFoto = 0;
+                                                    String xmlphotos = "";
+                                                    if (Q.getFoto() != null) {
+                                                        countFoto += 1;
+                                                        PHOTO photo = Q.getFoto();
+                                                        File file = new File(photo.getNamePhoto());
+                                                        if (file.exists()) {
+                                                            vacio = true;
+                                                            xmlphotos += "<Photo xsi:type=\"urn:Photo\">" +
+                                                                    "<NamePhoto xsi:type=\"xsd:string\">" + file.getName() + "</NamePhoto>" +
+                                                                    "<TitlePhoto xsi:type=\"xsd:string\">" + photo.getTitlePhoto() + "</TitlePhoto>" +
+                                                                    "<DateTime xsi:type=\"xsd:string\">" + photo.getDateTime() + "</DateTime>" +
+                                                                    "<CoordX xsi:type=\"xsd:string\">" + photo.getCoordX() + "</CoordX>" +
+                                                                    "<CoordY xsi:type=\"xsd:string\">" + photo.getCoordY() + "</CoordY>" +
+                                                                    "</Photo>";
+                                                        }
+                                                    }
+                                                    if (Q.getFotos() != null) {
+                                                        for (PHOTO p : Q.getFotos()) {
+                                                            File file = new File(p.getNamePhoto());
+                                                            if (file.exists()) {
+                                                                vacio= true;
+                                                                xmlphotos += "<Photo xsi:type=\"urn:Photo\">" +
+                                                                        "<NamePhoto xsi:type=\"xsd:string\">" + file.getName() + "</NamePhoto>" +
+                                                                        "<TitlePhoto xsi:type=\"xsd:string\">" + p.getTitlePhoto() + "</TitlePhoto>" +
+                                                                        "<DateTime xsi:type=\"xsd:string\">" + p.getDateTime() + "</DateTime>" +
+                                                                        "<CoordX xsi:type=\"xsd:string\">" + p.getCoordX() + "</CoordX>" +
+                                                                        "<CoordY xsi:type=\"xsd:string\">" + p.getCoordY() + "</CoordY>" +
+                                                                        "</Photo>";
+                                                                countFoto += 1;
+                                                            }
+                                                        }
+                                                    }
+                                                    answerXML += "<AnswerQuestion xsi:type=\"urn:AnswerQuestion\">" +
+                                                            "<IdSet xsi:type=\"xsd:string\">" + set.getIdSet() + "</IdSet>" +
+                                                            "<IdQuestion xsi:type=\"xsd:string\">" + Q.getIdQuestion() + "</IdQuestion>" +
+                                                            "<IdAnswer xsi:type=\"xsd:string\">" + Q.getAswer3G() + "</IdAnswer>" +
+                                                            "<IdType xsi:type=\"xsd:string\">" + Q.getIdType() + "</IdType>" +
+                                                            "<CountPhoto xsi:type=\"xsd:string\">" + countFoto + "</CountPhoto>";
+                                                    if (!Q.getAswer3G().equalsIgnoreCase(""))
+                                                        vacio = true;
+                                                    answerXML += "<SetPhotos xsi:type=\"urn:SetPhotos\">" +
+                                                            xmlphotos +
+                                                            "</SetPhotos>";
+                                                    answerXML += "</AnswerQuestion>";
+                                                }
+
+                                            }
+
+                                        }
+                                    }
+                                    answerXML += "</SetAnswerQuestion>";
+                                    answerXML += "</SetAnswer>";
+
+                                }
+
+                            }
+                            xml += answerXML;
+                            xml += "</SetAnswerSet>";
+                        }
+
+                    }
+                    xml += "</RptaItem>";
+                }
+
+
+            }
+            xml += "</SetRptaItem>";
+        }
+        xml += "</SystemsRpta>";
+    }
+
+    xml += "</Request3G>" +
+            "</RequestAnswer3G>" +
+            "</urn:answerInspection>" +
+            "</soapenv:Body>" +
+            "</soapenv:Envelope>";
+    //return xml;
+    if (vacio ){
+        return xml;
+    }
+    else{
+        return "false";
+    }
+    // return "false";
+}
+
+
+public static String sendAnswerAnual(String IMEI, String ID_MAINTENANCE, ArrayList<SYSTEM> SYSTEMS) throws IOException {
+    final String SOAP_ACTION = "urn:Configurationwsdl#answerAnual";
+    String response = null;
+    String xml = null;
+    DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    Date fecha = new Date();
+    boolean vacio = false;
+
+    HttpClient httpClient = new DefaultHttpClient();
+    HttpPost httpPost = new HttpPost(dummy.URL_TDC);
+
+    SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+    envelope.encodingStyle = SoapSerializationEnvelope.ENC;
+    envelope.dotNet = false;
+    envelope.implicitTypes = true;
+
+    xml =
+            "<soapenv:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:urn=\"urn:Configurationwsdl\">" +
+                    "<soapenv:Header/>" +
+                    "<soapenv:Body>" +
+                    "<urn:answerAnual soapenv:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" +
+                    "<RequestAnswerDC xsi:type=\"urn:RequestAnswerDC\">" +
+                    "<RequestDC xsi:type=\"urn:RequestDC\">" +
+                    "<Header xsi:type=\"urn:Header\">" +
+                    "<Date xsi:type=\"xsd:string\">" + formatter.format(fecha) + "</Date>" +
+                    "<Platafform xsi:type=\"xsd:string\">MOBILE</Platafform>" +
+                    "<Imei xsi:type=\"xsd:string\">" + IMEI + "</Imei>" +
+                    "<Maintenance xsi:type=\"xsd:string\">" + ID_MAINTENANCE + "</Maintenance>" +
+                    "</Header>" +
+                    "<!--Optional:-->";
+    for (SYSTEM S : SYSTEMS) {
+        xml += "<SystemsRptaDC xsi:type=\"urn:SystemsRptaDC\">" +
+                "<IdSystems xsi:type=\"xsd:string\">" + S.getIdSystem() + "</IdSystems>";
+        if (S.getAreas() != null) {
+            xml += "<SetRptaItemDC xsi:type=\"urn:SetRptaItemDC\">";
+            for (AREA A : S.getAreas()) {
+
+                for (ITEM I : A.getItems()) {
+                    xml += "<RptaItemDC xsi:type=\"urn:RptaItemDC\">" +
+                            "<IdArea xsi:type=\"xsd:string\">" + A.getIdArea() + "</IdArea>" +
+                            "<IdItem xsi:type=\"xsd:string\">" + I.getIdItem() + "</IdItem>";
+                    if (I.getQuestions() != null) {
+                        xml += "<SetAnswerQuestion xsi:type=\"urn:SetAnswerQuestion\">";
+                        for (QUESTION Q : I.getQuestions()) {
+                            int countFoto = 0;
+                            String xmlphotos = "";
+                            if (Q.getFoto() != null) {
+                                countFoto += 1;
+                                PHOTO photo = Q.getFoto();
+                                File file = new File(photo.getNamePhoto());
+                                if (file.exists()) {
+                                    vacio=true;
+                                    xmlphotos += "<Photo xsi:type=\"urn:Photo\">" +
+                                            "<NamePhoto xsi:type=\"xsd:string\">" + file.getName() + "</NamePhoto>" +
+                                            "<TitlePhoto xsi:type=\"xsd:string\">" + photo.getTitlePhoto() + "</TitlePhoto>" +
+                                            "<DateTime xsi:type=\"xsd:string\">" + photo.getDateTime() + "</DateTime>" +
+                                            "<CoordX xsi:type=\"xsd:string\">" + photo.getCoordX() + "</CoordX>" +
+                                            "<CoordY xsi:type=\"xsd:string\">" + photo.getCoordY() + "</CoordY>" +
+                                            "</Photo>";
+                                }
+                            }
+
+                            if (Q.getFotos() != null) {
+                                for (PHOTO p : Q.getFotos()) {
+                                    File file = new File(p.getNamePhoto());
+                                    if (file.exists()) {
+                                        vacio=true;
+                                        xmlphotos += "<Photo xsi:type=\"urn:Photo\">" +
+                                                "<NamePhoto xsi:type=\"xsd:string\">" + file.getName() + "</NamePhoto>" +
+                                                "<TitlePhoto xsi:type=\"xsd:string\">" + p.getTitlePhoto()  + "</TitlePhoto>" +
+                                                "<DateTime xsi:type=\"xsd:string\">" + p.getDateTime() + "</DateTime>" +
+                                                "<CoordX xsi:type=\"xsd:string\">" + p.getCoordX() + "</CoordX>" +
+                                                "<CoordY xsi:type=\"xsd:string\">" + p.getCoordY() + "</CoordY>" +
+                                                "</Photo>";
+                                        countFoto += 1;
+                                    }
+                                }
+                            }
+
+                            if(Q.getNameType().equals("DATE")){
+
+                                xml += "<AnswerQuestion xsi:type=\"urn:AnswerQuestion\">" +
+                                        "<IdSet xsi:type=\"xsd:string\">" + "1" + "</IdSet>" +
+                                        "<IdQuestion xsi:type=\"xsd:string\">" + Q.getIdQuestion() + "</IdQuestion>" +
+                                        "<IdAnswer xsi:type=\"xsd:string\">" + Q.getAswer3G() + "</IdAnswer>" +
+                                        "<IdType xsi:type=\"xsd:string\">" + Q.getIdType() + "</IdType>" +
+                                        "<CountPhoto xsi:type=\"xsd:string\">" + countFoto + "</CountPhoto>";
+                                if (!Q.getAswerIDEN().equalsIgnoreCase(""))
+                                    vacio=true;
+
+                            }else{
+                                xml += "<AnswerQuestion xsi:type=\"urn:AnswerQuestion\">" +
+                                        "<IdSet xsi:type=\"xsd:string\">" + "1" + "</IdSet>" +
+                                        "<IdQuestion xsi:type=\"xsd:string\">" + Q.getIdQuestion() + "</IdQuestion>" +
+                                        "<IdAnswer xsi:type=\"xsd:string\">" + Q.getAswerIDEN() + "</IdAnswer>" +
+                                        "<IdType xsi:type=\"xsd:string\">" + Q.getIdType() + "</IdType>" +
+                                        "<CountPhoto xsi:type=\"xsd:string\">" + countFoto + "</CountPhoto>";
+                                if (!Q.getAswerIDEN().equalsIgnoreCase(""))
+                                    vacio=true;
+                            }
+
+                            xml += "<SetPhotos xsi:type=\"urn:SetPhotos\">" +
+                                    xmlphotos +
+                                    "</SetPhotos>";
+                            xml += "</AnswerQuestion>";
+                        }
+                        xml += "</SetAnswerQuestion>";
+                    }
+
+                    if (I.getSetArrayList() != null && I.getValues() != null) {
+                        xml += "<SetAnswerSet xsi:type=\"urn:SetAnswerSet\">";
+
+                        String answerXML = "";
+                        int count = 0;
+                        for (CheckBox checkBox : I.getCheckBoxes()) {
+                            if (checkBox.isChecked()) {
+                                vacio=true;
+                                count += 1;
+                                int posChecked = I.getCheckBoxes().indexOf(checkBox);
+                                answerXML += "<SetAnswer xsi:type=\"urn:SetAnswer\">" +
+                                        "<IdValue xsi:type=\"xsd:string\">" + I.getValues().get(posChecked).getNameValue() + "</IdValue>" +
+                                        "<SetAnswerQuestion xsi:type=\"urn:SetAnswerQuestion\">";
+
+                                ArrayList<SET> repeat = I.getSetlistArrayList().get(posChecked);
+                                for (SET set : repeat) {
+                                    //answerXML += "<SetAnswerQuestion xsi:type=\"urn:SetAnswerQuestion\">";
+                                    if (set.getQuestions() != null) {
+                                        for (QUESTION Q : set.getQuestions()) {
+                                            int countFoto = 0;
+                                            String xmlphotos = "";
+                                            if (Q.getFoto() != null) {
+                                                countFoto += 1;
+                                                PHOTO photo = Q.getFoto();
+                                                File file = new File(photo.getNamePhoto());
+                                                if (file.exists()) {
+                                                    vacio=true;
+                                                    xmlphotos += "<Photo xsi:type=\"urn:Photo\">" +
+                                                            "<NamePhoto xsi:type=\"xsd:string\">" + file.getName() + "</NamePhoto>" +
+                                                            "<TitlePhoto xsi:type=\"xsd:string\">" + photo.getTitlePhoto() + "</TitlePhoto>" +
+                                                            "<DateTime xsi:type=\"xsd:string\">" + photo.getDateTime() + "</DateTime>" +
+                                                            "<CoordX xsi:type=\"xsd:string\">" + photo.getCoordX() + "</CoordX>" +
+                                                            "<CoordY xsi:type=\"xsd:string\">" + photo.getCoordY() + "</CoordY>" +
+                                                            "</Photo>";
+                                                }
+                                            }
+                                            if (Q.getFotos() != null) {
+                                                for (PHOTO p : Q.getFotos()) {
+                                                    File file = new File(p.getNamePhoto());
+                                                    if (file.exists()) {
+                                                        vacio=true;
+                                                        xmlphotos += "<Photo xsi:type=\"urn:Photo\">" +
+                                                                "<NamePhoto xsi:type=\"xsd:string\">" + file.getName() + "</NamePhoto>" +
+                                                                "<TitlePhoto xsi:type=\"xsd:string\">" + p.getTitlePhoto()  + "</TitlePhoto>" +
+                                                                "<DateTime xsi:type=\"xsd:string\">" + p.getDateTime() + "</DateTime>" +
+                                                                "<CoordX xsi:type=\"xsd:string\">" + p.getCoordX() + "</CoordX>" +
+                                                                "<CoordY xsi:type=\"xsd:string\">" + p.getCoordY() + "</CoordY>" +
+                                                                "</Photo>";
+                                                        countFoto += 1;
+                                                    }
+                                                }
+                                            }
+                                            answerXML += "<AnswerQuestion xsi:type=\"urn:AnswerQuestion\">" +
+                                                    "<IdSet xsi:type=\"xsd:string\">" + set.getIdSet() + "</IdSet>" +
+                                                    "<IdQuestion xsi:type=\"xsd:string\">" + Q.getIdQuestion() + "</IdQuestion>" +
+                                                    "<IdAnswer xsi:type=\"xsd:string\">" + Q.getAswerIDEN() + "</IdAnswer>" +
+                                                    "<IdType xsi:type=\"xsd:string\">" + Q.getIdType() + "</IdType>" +
+                                                    "<CountPhoto xsi:type=\"xsd:string\">" + countFoto + "</CountPhoto>";
+                                            if (!Q.getAswerIDEN().equalsIgnoreCase(""))
+                                                vacio=true;
+                                            answerXML += "<SetPhotos xsi:type=\"urn:SetPhotos\">" +
+                                                    xmlphotos +
+                                                    "</SetPhotos>";
+                                            answerXML += "</AnswerQuestion>";
+                                        }
+
+                                    }
+
+                                }
+                                answerXML += "</SetAnswerQuestion>";
+                                answerXML += "</SetAnswer>";
+                            }
+                        }
+                        xml += "<CountAnswerSet xsi:type=\"xsd:string\">" + count + "</CountAnswerSet>";
+                        xml += answerXML;
+                        xml += "</SetAnswerSet>";
+                    }
+                    xml += "</RptaItemDC>";
+                }
+
+            }
+            xml += "</SetRptaItemDC>";
+        }
+        xml += "</SystemsRptaDC>";
+    }
+
+    xml += "</RequestDC>" +
+            "</RequestAnswerDC>" +
+            "</urn:answerAnual>" +
+            "</soapenv:Body>" +
+            "</soapenv:Envelope>";
+
+    if (vacio) {
+        return xml;
+    }else{
+        return "false";
+    }
 }
 
     public static String sendAll(String xml, String action)throws IOException {

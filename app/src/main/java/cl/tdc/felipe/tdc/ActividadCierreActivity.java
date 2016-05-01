@@ -90,10 +90,10 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
     Context mContext;
     ProgressDialog dialog;
 
-    FormCierreReg REG, IDENREG, TRESGREG, FAENAREG, TRANSPREG, ACREG, SGREG, DCREG, AIRREG, GEREG, EMERGREG,WIMAXREG, PDHREG, AGREGAREG, SEMESTRALREG ;
+    FormCierreReg REG, IDENREG, TRESGREG, FAENAREG, TRANSPREG, ACREG, SGREG, DCREG, AIRREG, GEREG, EMERGREG,WIMAXREG, PDHREG, AGREGAREG, SEMESTRALREG, INSPECCIONREG, ANUALREG ;
     MaintenanceReg MAINREG;
 
-    Button IDEN, TRESG, AC, DC, SG, AIR, FAENA, TRANSPORTE, GE, RAN, EMERG, WIMAX, PDH, AGREGADOR, SEMESTRAL;
+    Button IDEN, TRESG, AC, DC, SG, AIR, FAENA, TRANSPORTE, GE, RAN, EMERG, WIMAX, PDH, AGREGADOR, SEMESTRAL, INSPECCION, ANUAL;
 
     String log;
 
@@ -126,6 +126,8 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         PDHREG = new FormCierreReg(this, "PDH");
         AGREGAREG = new FormCierreReg(this, "AGREGADOR");
         SEMESTRALREG = new FormCierreReg(this, "SEMESTRAL");
+        INSPECCIONREG = new FormCierreReg(this, "INSPECCION");
+        ANUALREG = new FormCierreReg(this, "ANUAL");
         MAINREG = new MaintenanceReg(this);
 
 
@@ -151,6 +153,8 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         PDH = (Button) this.findViewById(R.id.PDH);
         AGREGADOR = (Button) this.findViewById(R.id.AGREGA);
         SEMESTRAL = (Button) this.findViewById(R.id.SEMESTRAL);
+        INSPECCION = (Button) this.findViewById(R.id.INSPECCION);
+        ANUAL = (Button) this.findViewById(R.id.ANUAL);
 
         IDEN.setOnClickListener(this);
         TRESG.setOnClickListener(this);
@@ -167,6 +171,8 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         PDH.setOnClickListener(this);
         AGREGADOR.setOnClickListener(this);
         SEMESTRAL.setOnClickListener(this);
+        INSPECCION.setOnClickListener(this);
+        ANUAL.setOnClickListener(this);
 
         boolean state = REG.getBoolean("IDEN" + idMain);
         if (state)
@@ -198,6 +204,16 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         state = REG.getBoolean("FAENA"+idMain);
         if(state){
             FAENA.setEnabled(false);
+        }
+
+        state = REG.getBoolean("INSPECCION" + idMain);
+        if(state){
+            INSPECCION.setEnabled(false);
+        }
+
+        state = REG.getBoolean("ANUAL" + idMain);
+        if(state){
+            ANUAL.setEnabled(false);
         }
 
         state = REG.getBoolean("TRANSPORTE"+idMain);
@@ -299,6 +315,14 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                  if (temp.equalsIgnoreCase("Preventivo,13," + idMain)) {
                      SEMESTRAL.setVisibility(View.VISIBLE);
                  }
+
+                if (temp.equalsIgnoreCase("Preventivo,14," + idMain)) {
+                    INSPECCION.setVisibility(View.VISIBLE);
+                }
+
+                if (temp.equalsIgnoreCase("Preventivo,15," + idMain)) {
+                    ANUAL.setVisibility(View.VISIBLE);
+                }
 
 
                 //Determinamos si mostramos el boton de RAN o no
@@ -468,6 +492,14 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             buscar_form task = new buscar_form("SEMESTRAL");
             task.execute();
         }
+        if (view.getId() == R.id.INSPECCION) {
+            buscar_form task = new buscar_form("INSPECTION");
+            task.execute();
+        }
+        if (view.getId() == R.id.ANUAL) {
+            buscar_form task = new buscar_form("ANUAL");
+            task.execute();
+        }
         if (view.getId() == R.id.RAN) {
             mostrarBotonesAzules(2);
         }
@@ -488,6 +520,8 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         if (type.equals("PDH")) return SoapRequestTDC.ACTION_PDH;
         if (type.equals("AGREGADOR")) return SoapRequestTDC.ACTION_AGREGADOR;
         if (type.equals("SEMESTRAL")) return SoapRequestTDC.ACTION_SEMESTRAL;
+        if (type.equals("INSPECTION")) return SoapRequestTDC.ACTION_INSPECCION;
+        if (type.equals("ANUAL")) return SoapRequestTDC.ACTION_ANUAL;
         else return "";
     }
 
@@ -568,6 +602,10 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                     code = 13;
                 }else if(type.equals("SEMESTRAL")) {
                     code = 14;
+                }else if(type.equals("INSPECCION")) {
+                    code = 15;
+                }else if(type.equals("ANUAL")) {
+                    code = 16;
                 }else
                     code = -1;
 
@@ -647,6 +685,14 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             if (requestCode == 14) {
                 SEMESTRAL.setEnabled(false);
                 REG.addValue("SEMESTRAL" + idMain, true);
+            }
+            if (requestCode == 15) {
+                INSPECCION.setEnabled(false);
+                REG.addValue("INSPECCION" + idMain, true);
+            }
+            if (requestCode == 15) {
+                ANUAL.setEnabled(false);
+                REG.addValue("ANUAL" + idMain, true);
             }
         }
     }
@@ -784,6 +830,8 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                         PDHREG.clearPreferences();
                         AGREGAREG.clearPreferences();
                         SEMESTRALREG.clearPreferences();
+                        ANUALREG.clearPreferences();
+
                         if(AgendaActivity.actividad != null)
                             AgendaActivity.actividad.finish();
                         actividad.finish();
@@ -849,7 +897,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                                 String response = SoapRequestTDC.sendAll(xml, accion);
                                 log +="\n response = SoapRequestTDC.sendAll(xml, accion)::" +response ;
                                 //aqui
-                                cerrarMant = true;
+                               // cerrarMant = true;
                                 resp = "Datos exitosamente ingresados!";
                                 subir_fotos(resp, subS);                                             //subS es el nombre del checklist Iden 3g etc
 
@@ -859,7 +907,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                             }  catch (Exception e) {
                                 //error de foto
                                 log += "Exception e" + e;
-                               // cerrarMant=false;
+                                cerrarMant=false;
                                 return "Error al enviar la respuesta.";
 
                             }
@@ -880,14 +928,15 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
 
         @Override
         protected void onPostExecute(String s) {
-            if(cerrarMant){
-                Cierre t = new Cierre();
-                t.execute();
+            /*if(cerrarMant){
+               // Cierre t = new Cierre();
+                //t.execute();
             }
             else {
-                EnviarMantOff env = new EnviarMantOff();
-                env.execute();
-            }
+               // EnviarMantOff env = new EnviarMantOff();
+                //env.execute();
+            }*/
+            p.dismiss();
             log += "" + s;
             local.escribirFicheroMemoriaExterna("LogSubirXml"+ idMain ,log);
         }
@@ -908,78 +957,58 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             form = "Transporte";
         } else if (form.equalsIgnoreCase("system")) {
             form = "System Ground";
-        }
+        } /*else if (form.equalsIgnoreCase("Iden")) {
+            form = "IDEN";
+        }*/
 
         log = " Iniciamos con el formulario: " + form;
 
         for (SYSTEM S : ActividadCierreFormActivity.SYSTEMSMAP.get(idMain+","+form.toUpperCase())) {
                 log += " \n Obteniendo SYSTEM: " + idMain+","+form + " de SYSTEMSMAP";
             for (AREA A : S.getAreas()) {
-                //    log += " \nAREA A: " + A;
                 for (ITEM I : A.getItems()) {
-                    //        log += " \nITEM I: " + I;
                     if (I.getIdType().equals(Constantes.PHOTO)) {
                         if (I.getPhoto() != null) {
                             p.add(I.getPhoto());
-                            //        log += " \nI.getPhoto() != null: " + p;
                         }
                         if (I.getFotos() != null) {
-                            //    log += " \nI.getPhotos() != null: ";
                             for (PHOTO P : I.getFotos()) {
                                 p.add(P);
-                                //    log += " \nPHOTO P : I.getFotos(): " + P;
                             }
                         }
                     }
                     if (I.getQuestions() != null) {
-                        //    log += " \nI.getQuestions() != null ";
                         for (QUESTION Q : I.getQuestions()) {
-                            //        log += " \nQUESTION Q : I.getQuestions()";
                             if (Q.getFoto() != null) {
-                                //           log += " \nQ.getFoto() != null " + p;
                                 p.add(Q.getFoto());
                             }
 
                             if (Q.getFotos() != null) {
-                                //    log += " \nQ.getFotos() != null ";
                                 for (PHOTO P : Q.getFotos()) {
-                                    //   log += " \nPHOTO P : Q.getFotos() " + P;
                                     p.add(P);
                                 }
                             }
                             if (Q.getQuestions() != null){
-                                //    log += " \nQ.getQuestions() != null ";
                                 for (QUESTION QQ : Q.getQuestions()){
-                                    //        log += " \nQUESTION QQ : Q.getQuestions() ";
                                     if (QQ.getFoto() != null) {
-                                        //        log += " \nQQ.getFoto() != null" + p;
                                         p.add(QQ.getFoto());
                                     }
                                     if (QQ.getFotos() != null) {
-                                        //    log += " \nQQ.getFotos() != null ";
                                         for (PHOTO P : QQ.getFotos()) {
-                                            //    log += " \nPHOTO P : QQ.getFotos() " + P;
                                             p.add(P);
                                         }
                                     }
                                 }
                             }
                             if (Q.getValues() != null){
-                                //   log += " \nQ.getValues() != null ";
                                 for (VALUE V : Q.getValues()) {
-                                    //     log += " \nVALUE V : Q.getValues() ";
                                     if (V.getQuestions() != null) {
-                                        //      log += " \nV.getQuestions() != null ";
                                         for (QUESTION QQ : V.getQuestions()) {
-                                            //    log += " \nQUESTION QQ : V.getQuestions() ";
                                             if (QQ.getFoto() != null) {
-                                                //    log += " \nQQ.getFoto() != null " + QQ.getFoto();
                                                 p.add(QQ.getFoto());
                                             }
                                             if (QQ.getFotos() != null) {
-                                                //    log += " \nQQ.getFotos() != null ";
                                                 for (PHOTO P : QQ.getFotos()) {
-                                                    //        log += " \nPHOTO P : QQ.getFotos() " + P;
                                                     p.add(P);
                                                 }
                                             }
@@ -990,27 +1019,17 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                         }
                     }
                     if (I.getSetlistArrayList() != null && I.getValues() != null) {
-                        //log += " \nI.getSetlistArrayList() != null && I.getValues() != null ";
                         if (I.getIdType().equals(Constantes.TABLE)) {
-                          //  log += " \nI.getIdType().equals(Constantes.TABLE) ";
                             for (CheckBox c : I.getCheckBoxes()) {
-                            //    log += " \nCheckBox c : I.getCheckBoxes() ";
                                 if (c.isChecked()) {
-                              //      log += " \nc.isChecked() ";
                                     for (SET Set : I.getSetlistArrayList().get(I.getCheckBoxes().indexOf(c))) {
-                                //        log += " \nSET Set : I.getSetlistArrayList().get(I.getCheckBoxes().indexOf(c)) " + Set;
                                         if (Set.getQuestions() != null) {
-                                    //        log += " \nSet.getQuestions() != null ";
                                             for (QUESTION Q : Set.getQuestions()) {
-                                                //        log += " \nQUESTION Q : Set.getQuestions() ";
                                                 if (Q.getFoto() != null) {
-                                                    //        log += " \nQ.getFoto() != null " + Q.getFoto();
                                                     p.add(Q.getFoto());
                                                 }
                                                 if (Q.getFotos() != null) {
-                                                    //    log += " \nQ.getFotos() != null ";
                                                     for (PHOTO P : Q.getFotos()) {
-                                                        //    log += " \nPHOTO P : Q.getFotos() " + P;
                                                         p.add(P);
                                                     }
                                                 }
@@ -1021,31 +1040,19 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                             }
                         }
                         if (I.getIdType().equals(Constantes.RADIO)) {
-                            //    log += " \nI.getIdType().equals(Constantes.RADIO) ";
                             RadioGroup rg = (RadioGroup) I.getView();
-                            // log += " \nRadioGroup rg = (RadioGroup) I.getView() ";
                             if (rg.getCheckedRadioButtonId() != -1) {
-                                //    log += " \nrg.getCheckedRadioButtonId() != -1 ";
                                 RadioButton rb = (RadioButton) rg.findViewById(rg.getCheckedRadioButtonId());
-                                //   log += " \nRadioButton rb = (RadioButton) rg.findViewById(rg.getCheckedRadioButtonId()) ";
                                 int n = rg.indexOfChild(rb) + 1;
-                                //  log += " \nint n = rg.indexOfChild(rb) + 1 =  " + n;
                                 for (int i = 0; i < n; i++) {
-                                    //   log += " \nint i = 0; i < n; i++ ";
                                     for (SET Set : I.getSetlistArrayList().get(i)) {
-                                        //    log += " \nSET Set : I.getSetlistArrayList().get(i) ";
                                         if (Set.getQuestions() != null) {
-                                            //   log += " \nSet.getQuestions() != null ";
                                             for (QUESTION Q : Set.getQuestions()) {
-                                                //    log += " \nQUESTION Q : Set.getQuestions() ";
                                                 if (Q.getFoto() != null) {
-                                                    //        log += " \nQ.getFoto() != null " + Q.getFoto();
                                                     p.add(Q.getFoto());
                                                 }
                                                 if (Q.getFotos() != null) {
-                                                    //       log += " \nQ.getFotos() != null ";
                                                     for (PHOTO P : Q.getFotos()) {
-                                                        //       log += " \nPHOTO P : Q.getFotos() " + P;
                                                         p.add(P);
                                                     }
                                                 }
@@ -1062,16 +1069,16 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             ActividadCierreFormActivity.SYSTEMSMAP.remove(idMain+","+form.toUpperCase());
         }
         if (p.size() > 0) {
-            log += " \nP tiene valor de " + p.size();
-            for (int i = 0; i < p.size(); i++){
+            for (int i = 0; i < p.size(); i++){log += " \nP tiene valor de " + p.size();
                 redimencionarImagen(p.get(i).getNamePhoto());
             }
             log += " \nSubiremos imagenes ";
-            UploadImage up = new UploadImage(p, mensaje);
+            UploadImage up = new UploadImage(p, mensaje); // el memsaje que trae es el de confirmacion del formulario
             Log.e("UploadImage","UploadImage aquii:: " + up );
             up.execute(dummy.URL_UPLOAD_IMG_MAINTENANCE);
+        } else {
+            cerrarMant = true;
         }
-
     }
 
     private void redimencionarImagen(String dir) {
@@ -1106,6 +1113,8 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         ArrayList<PHOTO> allPhotos;
         String mensaje;
 
+        boolean cerrarMant = true;
+
         public UploadImage(ArrayList<PHOTO> ps, String msj) {
             for (PHOTO p: ps) {
                 log += " \n Foto recibida en el metodo UploadImage: " + p.getNamePhoto();
@@ -1119,7 +1128,6 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
 
         @Override
         protected void onPreExecute() {
-
         }
 
         @Override
@@ -1129,6 +1137,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
 
             DateFormat timestamp_name = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
            // log += " \n Valor de la variable timestamp_name: " + timestamp_name;
+            int count_photos = 0;
             for (PHOTO p : allPhotos) {
                 log += " \n iteramos sobre la variable allPhotos ";
                 try {
@@ -1208,12 +1217,16 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                             stringBuilder.append(line).append("\n");
                         }
                         responseStreamReader.close();
-
                         response = stringBuilder.toString();
+
+                        if (!response.equals("<TDC><CODE>CODEGEN</CODE><DESCRIBE>DESCRIBEGEN</DESCRIBE><MESSAGE>1</MESSAGE></TDC>   \n")){
+                            cerrarMant = false;
+                        }
 
                         Log.d("IMAGENES", p.getNamePhoto() + "   \n" + response);
                         log += "IMAGENES " + p.getNamePhoto() + "   \n" + response;
                     }
+                    count_photos++;
 
                 } catch (Exception e) {
                     Log.d("TAG", "Error: " + e.getMessage());
@@ -1228,6 +1241,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
 
         @Override
         protected void onPostExecute(String s) {
+            Log.d("VALOR DE S EN EL POST", s);
             local.escribirFicheroMemoriaExterna("LogSubirFoto"+ idMain ,log);
             REG.clearPreferences();
             setResult(RESULT_OK);

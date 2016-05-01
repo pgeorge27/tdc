@@ -159,6 +159,7 @@ public class XMLParser {
 
         DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         InputSource is = new InputSource();
+        Log.e("XML", "XML RECORS: " + xmlRecords);
         is.setCharacterStream(new StringReader(xmlRecords));
 
         Document doc = db.parse(is);

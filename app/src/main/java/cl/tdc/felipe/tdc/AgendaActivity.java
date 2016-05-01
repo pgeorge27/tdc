@@ -669,6 +669,9 @@ public class AgendaActivity extends Activity {
         if (type.equals("Preventivo,11")) return SoapRequestTDC.ACTION_PDH;
         if (type.equals("Preventivo,12")) return SoapRequestTDC.ACTION_AGREGADOR;
         if (type.equals("Preventivo,13")) return SoapRequestTDC.ACTION_SEMESTRAL;
+        if (type.equals("Preventivo,14")) return SoapRequestTDC.ACTION_INSPECCION;
+        if (type.equals("Preventivo,15")) return SoapRequestTDC.ACTION_ANUAL;
+
         if (type.equals("Preventivo G/E,8")) return SoapRequestTDC.ACTION_GE;
         else return "";
     }

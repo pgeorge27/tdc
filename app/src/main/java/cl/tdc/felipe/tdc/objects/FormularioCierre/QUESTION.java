@@ -131,7 +131,7 @@ public class QUESTION {
     }
 
     public View getView(){
-         return view;
+        return view;
     }
 
     public View generateView(final Context ctx) {
@@ -246,7 +246,7 @@ public class QUESTION {
             ((RadioGroup) view).setGravity(Gravity.LEFT);
             view.setLayoutParams(p);
             ((RadioGroup) view).setOrientation(LinearLayout.HORIZONTAL);
-            if(values.size() > 3)
+            if(values.size() > 2)
                 ((RadioGroup) view).setOrientation(LinearLayout.VERTICAL);
         }
         if (idType.equals(Constantes.CHECK)) {

@@ -139,8 +139,6 @@
                 android:layout_marginRight="8dp"
                 android:visibility="gone"/>
 
-
-
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -279,6 +277,34 @@
                 android:text="FAENA COMBUSTIBLE"
                 android:drawableRight="@drawable/flecha_32"
                 android:id="@+id/FAENA"
+                android:background="@drawable/custom_button_blue_right"
+                android:textColor="#3F51B5"
+                android:textStyle="bold"
+                android:layout_marginTop="6dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="8dp"
+                android:visibility="gone"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="INSPECCION"
+                android:drawableRight="@drawable/flecha_32"
+                android:id="@+id/INSPECCION"
+                android:background="@drawable/custom_button_blue_right"
+                android:textColor="#3F51B5"
+                android:textStyle="bold"
+                android:layout_marginTop="6dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="8dp"
+                android:visibility="gone"/>
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="ANUAL"
+                android:drawableRight="@drawable/flecha_32"
+                android:id="@+id/ANUAL"
                 android:background="@drawable/custom_button_blue_right"
                 android:textColor="#3F51B5"
                 android:textStyle="bold"

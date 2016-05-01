@@ -188,23 +188,23 @@ public class ITEM {
             tmp = new LinearLayout(ctx);
             tmp.setOrientation(LinearLayout.HORIZONTAL);
             for (VALUE v : values) {
-                LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
+                LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(8, ViewGroup.LayoutParams.MATCH_PARENT);
                 param.weight = 1;
                 CheckBox c = new CheckBox(ctx);
                 c.setText(v.getNameValue());
                 c.setLayoutParams(param);
                 c.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
                 checkBoxes.add(c);
-                if (count == 0) {
+              /*  if (count == 0) {
                     tmp.addView(c);
                     count++;
-                } else if (count == 1) {
+                } else if (count == 1) {*/
                     tmp.addView(c);
                     ((LinearLayout) view).addView(tmp);
                     tmp = new LinearLayout(ctx);
                     tmp.setOrientation(LinearLayout.HORIZONTAL);
-                    count = 0;
-                }
+                    count++;
+               // }
             }
         }
         if (idType.equals(Constantes.TEXT) || idType.equals(Constantes.NUM)) {
