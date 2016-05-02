@@ -80,7 +80,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
     private static String IMEI;
     public static Intent service_wifi, service_pos;
     String idMain;
-    boolean cerrarMant=true;
+    boolean cerrarMant;
     LocalText local = new LocalText();
     ArrayList<SYSTEM> SYSTEMS;
     ProgressDialog p;
@@ -129,8 +129,6 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         INSPECCIONREG = new FormCierreReg(this, "INSPECCION");
         ANUALREG = new FormCierreReg(this, "ANUAL");
         MAINREG = new MaintenanceReg(this);
-
-
 
         TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         IMEI = telephonyManager.getDeviceId();
@@ -733,9 +731,9 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                 b.setPositiveButton("SI", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        btn_Enviar.setEnabled(false);
-                        EnviarMantOff env = new EnviarMantOff();
-                        env.execute();
+                    btn_Enviar.setEnabled(false);
+                    EnviarMantOff env = new EnviarMantOff();
+                    env.execute();
                     }
                 });
                 b.setNegativeButton("NO", new DialogInterface.OnClickListener() {
@@ -858,7 +856,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
 
         private EnviarMantOff() {
             p = new ProgressDialog(actividad);
-            p.setMessage("Cerrando Mantenimiento...");
+            p.setMessage("Enviando Mantenimientos...");
             p.setCanceledOnTouchOutside(false);
             p.setCancelable(false);
         }
@@ -869,6 +867,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         @Override
         protected String doInBackground(String... strings) {
             String resp = "";                                                                       //Leeremos todos los archivos para enviar y cerrar el mantenimiento
+            cerrarMant=true;
             System.out.println("El valor es " + idMain);
             log +="\n El valor es " + idMain;
             if (local.itemAnsw.size() > 0) {
@@ -879,7 +878,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                         String[] parts = local.itemAnsw.get(j).split(",");                          //separamos el archivo antes y despues de la coma
                         String nombreArch = parts[1];                                               // nombre del archivo despues de la coma
                         System.out.println("Parte despues de la coma: " + nombreArch);
-                        if (nombreArch.contains(".")) {                                              //Verificamos si contiene punto el nombre
+                        if (nombreArch.contains(".")) {                                             //Verificamos si contiene punto el nombre
                             String[] nombre = nombreArch.split("\\.");                              //separamos antes y despues del punto
                             String accion = nombre[0];                                              //nombre del archivo antes del punto = a la accion
                             System.out.println("La Accion seria: " + accion);
@@ -896,60 +895,78 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                             try {                                                                   //Enviamos la petioncion al servidor SOAP (ESTO SE REALIZABA POR CADA CHECK ANTERIORMENTE AL PULSAR SOBRE ENVIAR)
                                 String response = SoapRequestTDC.sendAll(xml, accion);
                                 log +="\n response = SoapRequestTDC.sendAll(xml, accion)::" +response ;
-                                //aqui
-                               // cerrarMant = true;
                                 resp = "Datos exitosamente ingresados!";
-                                subir_fotos(resp, subS);                                             //subS es el nombre del checklist Iden 3g etc
-
+                                //subir_fotos(resp, subS);                                             //subS es el nombre del checklist Iden 3g etc
                             } catch (IOException e) {
+                                cerrarMant=false;
                                 return "Se agotó el tiempo de conexión.";
-
                             }  catch (Exception e) {
                                 //error de foto
                                 log += "Exception e" + e;
                                 cerrarMant=false;
                                 return "Error al enviar la respuesta.";
-
                             }
                         } else {
+                            cerrarMant=false;
                             resp = "String " + nombreArch + " No contiene limitador . ";
                         }
                     } else {
+                        cerrarMant=false;
                         resp = "String " + local.itemAnsw.get(j) + " No contiene limitador , ";
                     }
                 }
-            }  else {
+            } else {
                 cerrarMant=false;
             }
             log += "return resp" + resp;
             return resp;
-
         }
 
         @Override
         protected void onPostExecute(String s) {
-            /*if(cerrarMant){
-               // Cierre t = new Cierre();
-                //t.execute();
-            }
-            else {
-               // EnviarMantOff env = new EnviarMantOff();
-                //env.execute();
-            }*/
             p.dismiss();
+            if(cerrarMant){
+                int fin = local.itemAnsw.size();
+                for (int j = 0; j < fin; j++) {
+                    String[] parts = local.itemAnsw.get(j).split(",");                       //separamos el archivo antes y despues de la coma
+                    String nombreArch = parts[1];                                           // nombre del archivo despues de la coma
+                    String[] nombre = nombreArch.split("\\.");                              //separamos antes y despues del punto
+                    String accion = nombre[0];                                              //nombre del archivo antes del punto = a la accion
+                    String subS = accion.substring(6);
+                    if (fin==j+1) {
+                        subir_fotos("Ultimo", subS);
+                    }else{
+                        subir_fotos("", subS);
+                    }
+                }
+            } else {
+                AlertDialog.Builder b = new AlertDialog.Builder(actividad);
+                b.setTitle("Cerrar Mantenimiento");
+                b.setIcon(android.R.drawable.ic_dialog_alert);
+                b.setMessage("No se pudo cerrar el mantenimiento");
+
+                b.setNegativeButton("Aceptar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                        actividad.finish();
+                    }
+                });
+                b.show();
+            }
             log += "" + s;
             local.escribirFicheroMemoriaExterna("LogSubirXml"+ idMain ,log);
         }
     }
 
     public void subir_fotos(String mensaje, String form) {
-        ArrayList<PHOTO> p = new ArrayList<>();
+        ArrayList<PHOTO> fotosEnviar = new ArrayList<>();
 
         Log.d("LOG",form);
 
         if (form.equalsIgnoreCase("emerg")){
             form = "Emergency";
-        } else      if (form.equalsIgnoreCase("ge")){
+        } else if (form.equalsIgnoreCase("ge")){
             form = "Grupo Electrogen"; //STATIONARY AND PORTABLE POWER GENERATOR / FUEL SYSTEM / FUEL OPERATIONS
         } else if (form.equalsIgnoreCase("agregator")){
             form = "Agregador";
@@ -957,9 +974,9 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             form = "Transporte";
         } else if (form.equalsIgnoreCase("system")) {
             form = "System Ground";
-        } /*else if (form.equalsIgnoreCase("Iden")) {
+        } else if (form.equalsIgnoreCase("Iden")) {
             form = "IDEN";
-        }*/
+        }
 
         log = " Iniciamos con el formulario: " + form;
 
@@ -969,33 +986,33 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                 for (ITEM I : A.getItems()) {
                     if (I.getIdType().equals(Constantes.PHOTO)) {
                         if (I.getPhoto() != null) {
-                            p.add(I.getPhoto());
+                            fotosEnviar.add(I.getPhoto());
                         }
                         if (I.getFotos() != null) {
                             for (PHOTO P : I.getFotos()) {
-                                p.add(P);
+                                fotosEnviar.add(P);
                             }
                         }
                     }
                     if (I.getQuestions() != null) {
                         for (QUESTION Q : I.getQuestions()) {
                             if (Q.getFoto() != null) {
-                                p.add(Q.getFoto());
+                                fotosEnviar.add(Q.getFoto());
                             }
 
                             if (Q.getFotos() != null) {
                                 for (PHOTO P : Q.getFotos()) {
-                                    p.add(P);
+                                    fotosEnviar.add(P);
                                 }
                             }
                             if (Q.getQuestions() != null){
                                 for (QUESTION QQ : Q.getQuestions()){
                                     if (QQ.getFoto() != null) {
-                                        p.add(QQ.getFoto());
+                                        fotosEnviar.add(QQ.getFoto());
                                     }
                                     if (QQ.getFotos() != null) {
                                         for (PHOTO P : QQ.getFotos()) {
-                                            p.add(P);
+                                            fotosEnviar.add(P);
                                         }
                                     }
                                 }
@@ -1005,11 +1022,11 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                                     if (V.getQuestions() != null) {
                                         for (QUESTION QQ : V.getQuestions()) {
                                             if (QQ.getFoto() != null) {
-                                                p.add(QQ.getFoto());
+                                                fotosEnviar.add(QQ.getFoto());
                                             }
                                             if (QQ.getFotos() != null) {
                                                 for (PHOTO P : QQ.getFotos()) {
-                                                    p.add(P);
+                                                    fotosEnviar.add(P);
                                                 }
                                             }
                                         }
@@ -1026,11 +1043,11 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                                         if (Set.getQuestions() != null) {
                                             for (QUESTION Q : Set.getQuestions()) {
                                                 if (Q.getFoto() != null) {
-                                                    p.add(Q.getFoto());
+                                                    fotosEnviar.add(Q.getFoto());
                                                 }
                                                 if (Q.getFotos() != null) {
                                                     for (PHOTO P : Q.getFotos()) {
-                                                        p.add(P);
+                                                        fotosEnviar.add(P);
                                                     }
                                                 }
                                             }
@@ -1049,11 +1066,11 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                                         if (Set.getQuestions() != null) {
                                             for (QUESTION Q : Set.getQuestions()) {
                                                 if (Q.getFoto() != null) {
-                                                    p.add(Q.getFoto());
+                                                    fotosEnviar.add(Q.getFoto());
                                                 }
                                                 if (Q.getFotos() != null) {
                                                     for (PHOTO P : Q.getFotos()) {
-                                                        p.add(P);
+                                                        fotosEnviar.add(P);
                                                     }
                                                 }
                                             }
@@ -1066,18 +1083,24 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                 }
             }
             log += " \nEliminamos " + idMain+","+form.toUpperCase();
-            ActividadCierreFormActivity.SYSTEMSMAP.remove(idMain+","+form.toUpperCase());
+            //ActividadCierreFormActivity.SYSTEMSMAP.remove(idMain+","+form.toUpperCase());
         }
-        if (p.size() > 0) {
-            for (int i = 0; i < p.size(); i++){log += " \nP tiene valor de " + p.size();
-                redimencionarImagen(p.get(i).getNamePhoto());
+        if (fotosEnviar.size() > 0) {
+            for (int i = 0; i < fotosEnviar.size(); i++){
+                log += " \nP tiene valor de " + fotosEnviar.size();
+                redimencionarImagen(fotosEnviar.get(i).getNamePhoto());
             }
             log += " \nSubiremos imagenes ";
-            UploadImage up = new UploadImage(p, mensaje); // el memsaje que trae es el de confirmacion del formulario
+            UploadImage up = new UploadImage(fotosEnviar, mensaje); // el mensaje que trae es el de confirmacion del formulario
             Log.e("UploadImage","UploadImage aquii:: " + up );
             up.execute(dummy.URL_UPLOAD_IMG_MAINTENANCE);
         } else {
-            cerrarMant = true;
+            if (mensaje.equalsIgnoreCase("ultimo")){
+                //Cerramos mantenimiento
+                /*Cierre t = new Cierre();
+                t.execute();*/
+                Log.e("Cerramos", "Cerramos Mant");
+            }
         }
     }
 
@@ -1112,22 +1135,22 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
 
         ArrayList<PHOTO> allPhotos;
         String mensaje;
-
-        boolean cerrarMant = true;
+        boolean subioFoto;
 
         public UploadImage(ArrayList<PHOTO> ps, String msj) {
-            for (PHOTO p: ps) {
-                log += " \n Foto recibida en el metodo UploadImage: " + p.getNamePhoto();
-            }
-            this.allPhotos = ps;
             this.mensaje = msj;
-            for (PHOTO p: allPhotos) {
-                log += " \n Foto asignada a la variable allPhotos: " + p.getNamePhoto();
-            }
+            this.allPhotos = ps;
+            this.subioFoto = true;
+
+            p = new ProgressDialog(actividad);
+            p.setMessage("Subiendo Imagenes...");
+            p.setCanceledOnTouchOutside(false);
+            p.setCancelable(false);
         }
 
         @Override
         protected void onPreExecute() {
+            p.show();
         }
 
         @Override
@@ -1187,7 +1210,6 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                         bytesRead = fileInputStream.read(buf, 0, bufferSize);
 
                         while (bytesRead > 0) {
-
                             dos.write(buf, 0, bufferSize);
                             bytesAvailable = fileInputStream.available();
                             bufferSize = Math.min(bytesAvailable, 1 * 1024 * 1024);
@@ -1196,8 +1218,11 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
 
                         dos.writeBytes(lineEnd);
                         dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
+
                         int serverResponseCode = conn.getResponseCode();
                         String serverResponseMessage = conn.getResponseMessage();
+
+                        Log.e("Valor com", conn.toString());
 
                         Log.i("UploadManager", "HTTP response is: " + serverResponseMessage + ": " + serverResponseCode);
                         log += " \n UploadManage HTTP response is: " + serverResponseMessage + ": " + serverResponseCode;
@@ -1219,8 +1244,12 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                         responseStreamReader.close();
                         response = stringBuilder.toString();
 
-                        if (!response.equals("<TDC><CODE>CODEGEN</CODE><DESCRIBE>DESCRIBEGEN</DESCRIBE><MESSAGE>1</MESSAGE></TDC>   \n")){
-                            cerrarMant = false;
+                        /*if (!response.equals("<TDC><CODE>CODEGEN</CODE><DESCRIBE>DESCRIBEGEN</DESCRIBE><MESSAGE>1</MESSAGE></TDC>   \n")){
+                            subioFoto = false;
+                        }*/
+
+                        if(!serverResponseMessage.equalsIgnoreCase("OK")){
+                            subioFoto = false;
                         }
 
                         Log.d("IMAGENES", p.getNamePhoto() + "   \n" + response);
@@ -1230,8 +1259,8 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
 
                 } catch (Exception e) {
                     Log.d("TAG", "Error: " + e.getMessage());
-                    log += "Error --- " + e.getMessage();
-                    //error de conec
+                    subioFoto = false;
+                    log += "Error --- " + e.getMessage(); //error de conec
                     response = "ERROR";
                 }
             }
@@ -1241,13 +1270,37 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
 
         @Override
         protected void onPostExecute(String s) {
+            p.dismiss();
             Log.d("VALOR DE S EN EL POST", s);
             local.escribirFicheroMemoriaExterna("LogSubirFoto"+ idMain ,log);
+            if(subioFoto){
+                if (mensaje.equalsIgnoreCase("ultimo")){
+                    Log.e("ULTIMO", "ULTIMO FORM");
+                    //Cerramos mantenimiento
+                    /*Cierre t = new Cierre();
+                    t.execute();*/
+                    Log.e("Cerramos", "Cerramos Mant");
+                }
+            } else {
+                Log.e("Reenviamos", "Reenviamos Mant");
+                AlertDialog.Builder b = new AlertDialog.Builder(actividad);
+                b.setTitle("Cerrar Mantenimiento");
+                b.setIcon(android.R.drawable.ic_dialog_alert);
+                b.setMessage("No se pudo cerrar el mantenimiento");
+
+                b.setNegativeButton("Aceptar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                        actividad.finish();
+                    }
+                });
+                b.show();
+            }
             REG.clearPreferences();
             setResult(RESULT_OK);
             super.onPostExecute(s);
         }
-
     }
 
     protected void onDestroy(){
