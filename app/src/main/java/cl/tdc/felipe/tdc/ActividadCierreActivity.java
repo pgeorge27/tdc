@@ -89,6 +89,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
     public static Activity actividad;
     Context mContext;
     ProgressDialog dialog;
+    ArrayList<PHOTO> fotosEnviar;
 
     FormCierreReg REG, IDENREG, TRESGREG, FAENAREG, TRANSPREG, ACREG, SGREG, DCREG, AIRREG, GEREG, EMERGREG,WIMAXREG, PDHREG, AGREGAREG, SEMESTRALREG, INSPECCIONREG, ANUALREG ;
     MaintenanceReg MAINREG;
@@ -896,12 +897,10 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                                 String response = SoapRequestTDC.sendAll(xml, accion);
                                 log +="\n response = SoapRequestTDC.sendAll(xml, accion)::" +response ;
                                 resp = "Datos exitosamente ingresados!";
-                                //subir_fotos(resp, subS);                                             //subS es el nombre del checklist Iden 3g etc
                             } catch (IOException e) {
                                 cerrarMant=false;
                                 return "Se agotó el tiempo de conexión.";
                             }  catch (Exception e) {
-                                //error de foto
                                 log += "Exception e" + e;
                                 cerrarMant=false;
                                 return "Error al enviar la respuesta.";
@@ -927,17 +926,24 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             p.dismiss();
             if(cerrarMant){
                 int fin = local.itemAnsw.size();
+                fotosEnviar = new ArrayList<>();
                 for (int j = 0; j < fin; j++) {
                     String[] parts = local.itemAnsw.get(j).split(",");                       //separamos el archivo antes y despues de la coma
                     String nombreArch = parts[1];                                           // nombre del archivo despues de la coma
                     String[] nombre = nombreArch.split("\\.");                              //separamos antes y despues del punto
                     String accion = nombre[0];                                              //nombre del archivo antes del punto = a la accion
                     String subS = accion.substring(6);
-                    if (fin==j+1) {
-                        subir_fotos("Ultimo", subS);
-                    }else{
-                        subir_fotos("", subS);
+                    subir_fotos(subS);
+                }
+                if (fotosEnviar.size() > 0) {
+                    for (int i = 0; i < fotosEnviar.size(); i++){
+                        redimencionarImagen(fotosEnviar.get(i).getNamePhoto());
                     }
+                    UploadImage up = new UploadImage(fotosEnviar);
+                    up.execute(dummy.URL_UPLOAD_IMG_MAINTENANCE);
+                } else {
+                    Cierre t = new Cierre();
+                    t.execute();
                 }
             } else {
                 AlertDialog.Builder b = new AlertDialog.Builder(actividad);
@@ -959,15 +965,15 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         }
     }
 
-    public void subir_fotos(String mensaje, String form) {
-        ArrayList<PHOTO> fotosEnviar = new ArrayList<>();
+    public void subir_fotos(String form) {
+        //ArrayList<PHOTO> fotosEnviar = new ArrayList<>();
 
         Log.d("LOG",form);
 
         if (form.equalsIgnoreCase("emerg")){
             form = "Emergency";
         } else if (form.equalsIgnoreCase("ge")){
-            form = "Grupo Electrogen"; //STATIONARY AND PORTABLE POWER GENERATOR / FUEL SYSTEM / FUEL OPERATIONS
+            form = "Grupo Electrogen";      //STATIONARY AND PORTABLE POWER GENERATOR / FUEL SYSTEM / FUEL OPERATIONS
         } else if (form.equalsIgnoreCase("agregator")){
             form = "Agregador";
         }else if (form.equalsIgnoreCase("transport")){
@@ -1085,23 +1091,6 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             log += " \nEliminamos " + idMain+","+form.toUpperCase();
             //ActividadCierreFormActivity.SYSTEMSMAP.remove(idMain+","+form.toUpperCase());
         }
-        if (fotosEnviar.size() > 0) {
-            for (int i = 0; i < fotosEnviar.size(); i++){
-                log += " \nP tiene valor de " + fotosEnviar.size();
-                redimencionarImagen(fotosEnviar.get(i).getNamePhoto());
-            }
-            log += " \nSubiremos imagenes ";
-            UploadImage up = new UploadImage(fotosEnviar, mensaje); // el mensaje que trae es el de confirmacion del formulario
-            Log.e("UploadImage","UploadImage aquii:: " + up );
-            up.execute(dummy.URL_UPLOAD_IMG_MAINTENANCE);
-        } else {
-            if (mensaje.equalsIgnoreCase("ultimo")){
-                //Cerramos mantenimiento
-                /*Cierre t = new Cierre();
-                t.execute();*/
-                Log.e("Cerramos", "Cerramos Mant");
-            }
-        }
     }
 
     private void redimencionarImagen(String dir) {
@@ -1134,11 +1123,9 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
     private class UploadImage extends AsyncTask<String, String, String> {
 
         ArrayList<PHOTO> allPhotos;
-        String mensaje;
         boolean subioFoto;
 
-        public UploadImage(ArrayList<PHOTO> ps, String msj) {
-            this.mensaje = msj;
+        public UploadImage(ArrayList<PHOTO> ps) {
             this.allPhotos = ps;
             this.subioFoto = true;
 
@@ -1159,8 +1146,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             log += " \n Dentro del metodo doInBackground ";
 
             DateFormat timestamp_name = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
-           // log += " \n Valor de la variable timestamp_name: " + timestamp_name;
-            int count_photos = 0;
+
             for (PHOTO p : allPhotos) {
                 log += " \n iteramos sobre la variable allPhotos ";
                 try {
@@ -1244,10 +1230,6 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                         responseStreamReader.close();
                         response = stringBuilder.toString();
 
-                        /*if (!response.equals("<TDC><CODE>CODEGEN</CODE><DESCRIBE>DESCRIBEGEN</DESCRIBE><MESSAGE>1</MESSAGE></TDC>   \n")){
-                            subioFoto = false;
-                        }*/
-
                         if(!serverResponseMessage.equalsIgnoreCase("OK")){
                             subioFoto = false;
                         }
@@ -1255,7 +1237,6 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                         Log.d("IMAGENES", p.getNamePhoto() + "   \n" + response);
                         log += "IMAGENES " + p.getNamePhoto() + "   \n" + response;
                     }
-                    count_photos++;
 
                 } catch (Exception e) {
                     Log.d("TAG", "Error: " + e.getMessage());
@@ -1274,13 +1255,9 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             Log.d("VALOR DE S EN EL POST", s);
             local.escribirFicheroMemoriaExterna("LogSubirFoto"+ idMain ,log);
             if(subioFoto){
-                if (mensaje.equalsIgnoreCase("ultimo")){
-                    Log.e("ULTIMO", "ULTIMO FORM");
-                    //Cerramos mantenimiento
-                    /*Cierre t = new Cierre();
-                    t.execute();*/
-                    Log.e("Cerramos", "Cerramos Mant");
-                }
+                Log.e("Cerramos", "Cerramos Mant");
+                Cierre t = new Cierre();
+                t.execute();
             } else {
                 Log.e("Reenviamos", "Reenviamos Mant");
                 AlertDialog.Builder b = new AlertDialog.Builder(actividad);
