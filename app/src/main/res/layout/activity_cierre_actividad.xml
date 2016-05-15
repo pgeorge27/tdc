@@ -366,14 +366,13 @@
         android:id="@+id/button2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        fab:fab_icon="@drawable/ic_check_white"
+        fab:fab_icon="@drawable/ic_publish"
         fab:fab_colorNormal="#3F51B5"
         fab:fab_colorPressed="#2196F3"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:onClick="enviar"
         android:alpha="0.85"/>
-
 
     <!-- Footer -->
     <!-- <RelativeLayout

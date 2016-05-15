@@ -8,6 +8,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -89,6 +91,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
     public static Activity actividad;
     Context mContext;
     ProgressDialog dialog;
+    ProgressDialog dialogVerif;
     ArrayList<PHOTO> fotosEnviar;
 
     FormCierreReg REG, IDENREG, TRESGREG, FAENAREG, TRANSPREG, ACREG, SGREG, DCREG, AIRREG, GEREG, EMERGREG,WIMAXREG, PDHREG, AGREGAREG, SEMESTRALREG, INSPECCIONREG, ANUALREG ;
@@ -97,7 +100,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
     Button IDEN, TRESG, AC, DC, SG, AIR, FAENA, TRANSPORTE, GE, RAN, EMERG, WIMAX, PDH, AGREGADOR, SEMESTRAL, INSPECCION, ANUAL;
 
     String log;
-
+    FloatingActionButton btn_Enviar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -137,6 +140,8 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         PAGETITLE = (TextView) this.findViewById(R.id.header_actual);
         PAGETITLE.setText(TITLE);
 
+
+        btn_Enviar = (FloatingActionButton) findViewById(R.id.button2);
         IDEN = (Button) this.findViewById(R.id.IDEN);
         TRESG = (Button) this.findViewById(R.id.TRESG);
         AC = (Button) this.findViewById(R.id.AC);
@@ -174,80 +179,97 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         ANUAL.setOnClickListener(this);
 
         boolean state = REG.getBoolean("IDEN" + idMain);
-        if (state)
+        if (state) {
             IDEN.setEnabled(false);
+            IDEN.setBackgroundColor(Color.GRAY);
+        }
 
         state = REG.getBoolean("3G"+idMain);
         if(state){
             TRESG.setEnabled(false);
+            TRESG.setBackgroundColor(Color.GRAY);
         }
 
         state = REG.getBoolean("AC"+idMain);
         if(state){
             AC.setEnabled(false);
+            AC.setBackgroundColor(Color.GRAY);
         }
         state = REG.getBoolean("DC"+idMain);
         if(state){
             DC.setEnabled(false);
+            DC.setBackgroundColor(Color.GRAY);
         }
         state = REG.getBoolean("SG"+idMain);
         if(state){
             SG.setEnabled(false);
+            SG.setBackgroundColor(Color.GRAY);
         }
 
         state = REG.getBoolean("AIR"+idMain);
         if(state){
             AIR.setEnabled(false);
+            AIR.setBackgroundColor(Color.GRAY);
         }
 
         state = REG.getBoolean("FAENA"+idMain);
         if(state){
             FAENA.setEnabled(false);
+            FAENA.setBackgroundColor(Color.GRAY);
         }
 
-        state = REG.getBoolean("INSPECCION" + idMain);
+        state = REG.getBoolean("INSPECTION" + idMain);
         if(state){
             INSPECCION.setEnabled(false);
+            INSPECCION.setBackgroundColor(Color.GRAY);
         }
 
         state = REG.getBoolean("ANUAL" + idMain);
         if(state){
             ANUAL.setEnabled(false);
+            ANUAL.setBackgroundColor(Color.GRAY);
         }
 
         state = REG.getBoolean("TRANSPORTE"+idMain);
         if(state){
             TRANSPORTE.setEnabled(false);
+            TRANSPORTE.setBackgroundColor(Color.GRAY);
         }
 
         state = REG.getBoolean("GE" + idMain);
         if(state){
             GE.setEnabled(false);
+            GE.setBackgroundColor(Color.GRAY);
         }
 
         state = REG.getBoolean("EMERGENCY" + idMain);
         if(state){
             EMERG.setEnabled(false);
+            EMERG.setBackgroundColor(Color.GRAY);
         }
 
         state = REG.getBoolean("WIMAX" + idMain);
         if(state){
             WIMAX.setEnabled(false);
+            WIMAX.setBackgroundColor(Color.GRAY);
         }
 
         state = REG.getBoolean("PDH"+idMain);
         if(state){
             PDH.setEnabled(false);
+            PDH.setBackgroundColor(Color.GRAY);
         }
 
         state = REG.getBoolean("AGREGADOR"+idMain);
         if(state){
             AGREGADOR.setEnabled(false);
+            AGREGADOR.setBackgroundColor(Color.GRAY);
         }
 
         state = REG.getBoolean("SEMESTRAL"+idMain);
         if(state){
             SEMESTRAL.setEnabled(false);
+            SEMESTRAL.setBackgroundColor(Color.GRAY);
         }
         mostrarBotonesAzules(1);
 
@@ -601,7 +623,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                     code = 13;
                 }else if(type.equals("SEMESTRAL")) {
                     code = 14;
-                }else if(type.equals("INSPECCION")) {
+                }else if(type.equals("INSPECTION")) {
                     code = 15;
                 }else if(type.equals("ANUAL")) {
                     code = 16;
@@ -631,18 +653,22 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
         if (resultCode == RESULT_OK) {
             if (requestCode == 0) {
                 IDEN.setEnabled(false);
+                IDEN.setBackgroundColor(Color.GRAY);
                 REG.addValue("IDEN" + idMain, true);
             }
             if (requestCode == 1) {
                 TRESG.setEnabled(false);
+                TRESG.setBackgroundColor(Color.GRAY);
                 REG.addValue("3G" + idMain, true);
             }
             if (requestCode == 3) {
                 DC.setEnabled(false);
+                DC.setBackgroundColor(Color.GRAY);
                 REG.addValue("DC" + idMain, true);
             }
             if (requestCode == 4) {
                 SG.setEnabled(false);
+                SG.setBackgroundColor(Color.GRAY);
                 REG.addValue("SG" + idMain, true);
             }
             if (requestCode == 5) {
@@ -651,46 +677,57 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             }
             if (requestCode == 6) {
                 FAENA.setEnabled(false);
+                AIR.setBackgroundColor(Color.GRAY);
                 REG.addValue("FAENA" + idMain, true);
             }
             if (requestCode == 7) {
                 TRANSPORTE.setEnabled(false);
+                TRANSPORTE.setBackgroundColor(Color.GRAY);
                 REG.addValue("TRANSPORTE" + idMain, true);
             }
             if (requestCode == 9) {
                 AC.setEnabled(false);
+                AC.setBackgroundColor(Color.GRAY);
                 REG.addValue("AC" + idMain, true);
             }
             if (requestCode == 8) {
                 GE.setEnabled(false);
+                GE.setBackgroundColor(Color.GRAY);
                 REG.addValue("GE" + idMain, true);
             }
             if (requestCode == 10) {
                 EMERG.setEnabled(false);
+                EMERG.setBackgroundColor(Color.GRAY);
                 REG.addValue("EMERGENCY" + idMain, true);
             }
             if (requestCode == 11) {
                 WIMAX.setEnabled(false);
+                WIMAX.setBackgroundColor(Color.GRAY);
                 REG.addValue("WIMAX" + idMain, true);
             }
             if (requestCode == 12) {
                 PDH.setEnabled(false);
+                PDH.setBackgroundColor(Color.GRAY);
                 REG.addValue("PDH" + idMain, true);
             }
             if (requestCode == 13) {
                 AGREGADOR.setEnabled(false);
+                AGREGADOR.setBackgroundColor(Color.GRAY);
                 REG.addValue("AGREGADOR" + idMain, true);
             }
             if (requestCode == 14) {
                 SEMESTRAL.setEnabled(false);
+                SEMESTRAL.setBackgroundColor(Color.GRAY);
                 REG.addValue("SEMESTRAL" + idMain, true);
             }
             if (requestCode == 15) {
                 INSPECCION.setEnabled(false);
-                REG.addValue("INSPECCION" + idMain, true);
+                INSPECCION.setBackgroundColor(Color.GRAY);
+                REG.addValue("INSPECTION" + idMain, true);
             }
-            if (requestCode == 15) {
+            if (requestCode == 16) {
                 ANUAL.setEnabled(false);
+                ANUAL.setBackgroundColor(Color.GRAY);
                 REG.addValue("ANUAL" + idMain, true);
             }
         }
@@ -720,7 +757,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
     }
 
     public void enviar(View v) {
-        final FloatingActionButton btn_Enviar = (FloatingActionButton) findViewById(R.id.button2);
+       // final FloatingActionButton btn_Enviar = (FloatingActionButton) findViewById(R.id.button2);
         if (isOnline()) {
 
             local.listarFicheros(idMain);
@@ -789,6 +826,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                 ArrayList<String> parse = XMLParser.getReturnCode2(response);
                 if(parse.get(0).equals("0")){
                     ok = true;
+                    REG.clearPreferences();
                     return parse.get(1);
                 }else{
                     return "Error Code: "+parse.get(0)+"\n"+parse.get(1);
@@ -936,9 +974,9 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                     subir_fotos(subS);
                 }
                 if (fotosEnviar.size() > 0) {
-                    for (int i = 0; i < fotosEnviar.size(); i++){
+                   /* for (int i = 0; i < fotosEnviar.size(); i++){
                         redimencionarImagen(fotosEnviar.get(i).getNamePhoto());
-                    }
+                    }*/
                     UploadImage up = new UploadImage(fotosEnviar);
                     up.execute(dummy.URL_UPLOAD_IMG_MAINTENANCE);
                 } else {
@@ -980,10 +1018,7 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             form = "Transporte";
         } else if (form.equalsIgnoreCase("system")) {
             form = "System Ground";
-        } else if (form.equalsIgnoreCase("Iden")) {
-            form = "IDEN";
         }
-
         log = " Iniciamos con el formulario: " + form;
 
         for (SYSTEM S : ActividadCierreFormActivity.SYSTEMSMAP.get(idMain+","+form.toUpperCase())) {
@@ -1233,7 +1268,6 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                         if(!serverResponseMessage.equalsIgnoreCase("OK")){
                             subioFoto = false;
                         }
-
                         Log.d("IMAGENES", p.getNamePhoto() + "   \n" + response);
                         log += "IMAGENES " + p.getNamePhoto() + "   \n" + response;
                     }
@@ -1256,8 +1290,11 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
             local.escribirFicheroMemoriaExterna("LogSubirFoto"+ idMain ,log);
             if(subioFoto){
                 Log.e("Cerramos", "Cerramos Mant");
-                Cierre t = new Cierre();
-                t.execute();
+                //Aqui verificarlo
+               /* Cierre t = new Cierre();
+                t.execute();*/
+                VerificationPhotosTask verificationPhotosTaskTask = new VerificationPhotosTask(actividad);
+                verificationPhotosTaskTask.execute(idMain);
             } else {
                 Log.e("Reenviamos", "Reenviamos Mant");
                 AlertDialog.Builder b = new AlertDialog.Builder(actividad);
@@ -1269,14 +1306,85 @@ public class ActividadCierreActivity extends Activity implements View.OnClickLis
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialogInterface.dismiss();
+                        btn_Enviar.setEnabled(true);
                         actividad.finish();
                     }
                 });
                 b.show();
             }
-            REG.clearPreferences();
+           // REG.clearPreferences();
             setResult(RESULT_OK);
             super.onPostExecute(s);
+        }
+    }
+
+    private class VerificationPhotosTask extends AsyncTask<String, String, String> {
+        Context tContext;
+        ProgressDialog dialog;
+        String message;
+        boolean ok = false;
+
+        private VerificationPhotosTask(Context tContext) {
+            this.tContext = tContext;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            dialog = new ProgressDialog(tContext);
+            dialog.setMessage("Verificando fotos en el servidor...");
+            dialog.setCancelable(false);
+            dialog.show();
+        }
+
+        @Override
+        protected String doInBackground(String... strings) {
+            try {
+                String query = SoapRequest.verificationPhotos(idMain);
+                ArrayList<String> parse = XMLParser.getReturnCode2(query);
+
+                ok = parse.get(0).equals("0");
+
+                if (ok)
+
+                    return query;
+                else
+                    return parse.get(1);
+            } catch (SAXException | ParserConfigurationException | XPathExpressionException e) {
+                e.printStackTrace();
+                message = dummy.ERROR_PARSE;
+            } catch (IOException e) {
+                e.printStackTrace();
+                message = dummy.ERROR_CONNECTION;
+            } catch (Exception e) {
+                e.printStackTrace();
+                message = dummy.ERROR_GENERAL;
+            }
+            return dummy.ERROR_GENERAL;
+        }
+
+
+        @Override
+        protected void onPostExecute(String s) {
+            if (ok) {
+                Cierre t = new Cierre();
+                t.execute();
+               // Toast.makeText(ActividadCierreActivity.this, "Coordenadas enviadas Correctamente", Toast.LENGTH_SHORT).show();
+
+            } else {
+                AlertDialog.Builder b = new AlertDialog.Builder(mContext);
+                b.setTitle("Verificación de fotos");
+                b.setIcon(android.R.drawable.ic_dialog_alert);
+                b.setMessage("No se recibio el número de fotos correctas");
+                b.setNegativeButton("Aceptar", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                        actividad.finish();
+                    }
+                });
+                b.show();
+            }
+            if (dialog.isShowing()) dialog.dismiss();
         }
     }
 

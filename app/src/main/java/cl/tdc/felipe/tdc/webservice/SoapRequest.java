@@ -1398,5 +1398,99 @@ public class SoapRequest {
         response = EntityUtils.toString(resEntity);
         return response;
     }
+
+    public static String verificationPhotos(String ID_Mantenimiento) throws Exception {
+        final String SOAP_ACTION = "urn:Configurationwsdl#VerificationPhotos";
+        String response = null;
+        String xml = null;
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date fecha = new Date();
+
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpPost httpPost = new HttpPost(dummy.URL_TDC);
+
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+        envelope.encodingStyle = SoapSerializationEnvelope.ENC;
+        envelope.dotNet = false;
+        envelope.implicitTypes = true;
+
+        String bodyOut =
+                "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:bean=\"http://bean.ws.sefi.com/\">" +
+                        "<soapenv:Header/>" +
+                        "<soapenv:Body>" +
+                        "<urn:VerificationPhotos soapenv:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" +
+                        "<RequestPhotos xsi:type=\"urn:RequestPhotos\">" +
+                        "<!--Optional:-->" +
+                        "<RequestHeaderPhotos xsi:type=\"urn:RequestHeaderPhotos\">" +
+                        "<IdMaintenance xsi:type=\"xsd:string\">" + ID_Mantenimiento + "</IdMaintenance>" +
+                        "</RequestHeaderPhotos>" +
+                        "</RequestPhotos>" +
+                        "</urn:VerificationPhotos>" +
+                        "</soapenv:Body>" +
+                        "</soapenv:Envelope>";
+        xml = bodyOut;
+        StringEntity se = new StringEntity(xml, HTTP.UTF_8);
+        se.setContentType("text/xml");
+        httpPost.addHeader(SOAP_ACTION, dummy.URL_TDC);
+
+        httpPost.setEntity(se);
+        HttpResponse httpResponse = httpClient.execute(httpPost);
+        HttpEntity resEntity = httpResponse.getEntity();
+        response = EntityUtils.toString(resEntity);
+        return response;
+    }
+
+    public static String getAnswerGE(String ID_Mantenimiento ,String IMEI) throws Exception {
+        final String SOAP_ACTION = "urn:Configurationwsdl#GetAnswerSystemGround";
+        String response = null;
+        String xml = null;
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date fecha = new Date();
+
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpPost httpPost = new HttpPost(dummy.URL_TDC);
+
+        SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+        envelope.encodingStyle = SoapSerializationEnvelope.ENC;
+        envelope.dotNet = false;
+        envelope.implicitTypes = true;
+
+        String bodyOut =
+                "<soapenv:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:urn=\"urn:Configurationwsdl\">" +
+                        "<soapenv:Header/>" +
+                        "<soapenv:Body>" +
+                        "<urn:GetAnswerSystemGround soapenv:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" +
+                        "<Checklist xsi:type=\"urn:Checklist\">" +
+                        "<Request xsi:type=\"urn:Request\">" +
+                        " <!--Zero or more repetitions:-->\n" +
+                        "<Parameters xsi:type=\"urn:Parameters\">" +
+                        " <!--Zero or more repetitions:-->\n" +
+                        "<Parameter xsi:type=\"urn:Parameter\">" +
+                        "<Name xsi:type=\"xsd:string\"></Name>" +
+                        "<Value xsi:type=\"xsd:string\"></Value>" +
+                        "</Parameter>" +
+                        "</Parameters>"+
+                        "<Header xsi:type=\"urn:Header\">" +
+                        "<Date xsi:type=\"xsd:string\">" + formatter.format(fecha) + "</Date>" +
+                        "<Platafform xsi:type=\"xsd:string\">MOBILE</Platafform>" +
+                        "<Imei xsi:type=\"xsd:string\">" + IMEI + "</Imei>" +
+                        "<Maintenance xsi:type=\"xsd:string\">" + ID_Mantenimiento + "</Maintenance>" +
+                        "</Header>" +
+                        "</Request>" +
+                        "</Checklist>" +
+                        "</urn:GetAnswerSystemGround>" +
+                        "</soapenv:Body>" +
+                        "</soapenv:Envelope>";
+        xml = bodyOut;
+        StringEntity se = new StringEntity(xml, HTTP.UTF_8);
+        se.setContentType("text/xml");
+        httpPost.addHeader(SOAP_ACTION, dummy.URL_TDC);
+
+        httpPost.setEntity(se);
+        HttpResponse httpResponse = httpClient.execute(httpPost);
+        HttpEntity resEntity = httpResponse.getEntity();
+        response = EntityUtils.toString(resEntity);
+        return response;
+    }
 }
 

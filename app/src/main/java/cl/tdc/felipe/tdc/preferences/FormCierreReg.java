@@ -9,7 +9,6 @@ public class FormCierreReg {
     public static final String NAME = "FORMCIERRE";
 
     public SharedPreferences sharedPreferences;
-
     Context ctx;
 
     public FormCierreReg(Context c, String TYPE) {

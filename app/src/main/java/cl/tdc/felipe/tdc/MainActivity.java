@@ -156,7 +156,6 @@ public class MainActivity extends ActionBarActivity {
         proveedor = LocationManager.NETWORK_PROVIDER;
 
 
-
     }
 
     @Override
